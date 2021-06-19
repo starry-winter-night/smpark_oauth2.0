@@ -1,0 +1,67 @@
+extends ../layout
+block content
+  div.oauth-regapp-div  
+    h1.oauth-h1 APP 등록하기
+    div.oauth-logo-div
+      img.oauth-logo-image(src='/public/image/logo.png')
+    form.logoutForm(action="/logout", method='Post')
+      button.btn.btn-default.logout-button(type='submit') 로그아웃
+    .form-group
+      label.regIdlabel(for='regInputClientId') Client ID
+      input#regInputClientId.form-control(type='name',name='name', value=client.clientId,readonly=true)
+      input.copyButton.btn.btn-default.copy-button(type='button' id='idCopy',value='복사하기')
+    .form-group
+      label.regSecretlabel(for='regInputClientSecret') Client Secret
+      input#regInputClientSecret.form-control(type='name',name='name', value=client.clientSecret, readonly=true)
+      input.copyButton.btn.btn-default.copy-button(type='button' id='secretCopy', value='복사하기')
+    .form-group
+      label.regChatApiKeylabel(for='regInputChatApiKey') Chat Service Api Key
+      input#regInputChatApiKey.form-control(type='name',name='name', value=client.chatApiKey, readonly=true)
+      input.copyButton.btn.btn-default.copy-button(type='button' id='chatApiKeyCopy', value='복사하기')
+    .form-group
+      label(for='regInputAppName') Application Name
+      input#regInputAppName.form-control(type='name',name='name', placeholder='어플리케이션 이름를 입력하세요' value=client.appName)
+    .form-group
+      label(for='regInputHomepageAddr') Homepage Address
+      input#regInputHomepageAddr.form-control(type='url', name='url', placeholder='홈페이지 주소를 입력하세요.' value=client.homepageAddr)
+    .form-group
+      P.infomationP Check Required Information
+      .checkBoxForm       
+        label(for='regInputSelectInfo1' name='labelAgreement') 아이디
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo1', value='username')
+        label(for='regInputSelectInfo2' name='labelAgreement') 이메일
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo2', value='email')
+        label(for='regInputSelectInfo3' name='labelAgreement') 이름
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo3', value='name')
+        script.
+          const reqInfo = #{client}.reqInfo
+          for(word in reqInfo)
+            switch (reqInfo[word]){        
+              case "username" :
+                document.getElementById("regInputSelectInfo1").checked = true
+                break;
+              case "email" :
+                document.getElementById("regInputSelectInfo2").checked = true
+                break;
+              case "name" : 
+                document.getElementById("regInputSelectInfo3").checked = true
+                break;
+              default :
+                break;
+            }
+
+    .form-group
+      label(for='regInputCallBackUrl') Authorization Callback URL
+      input#regInputCallBackUrl.form-control(type='email', name='email', placeholder='허가요청을 위한 콜백 주소를 입력하세요.' value=client.redirectUris)
+    .form-group
+      label.regSmpChatManagerIdlabel(for='regInputSmpChatManagerId') smpChatService Manager ID
+      input#regInputSmpChatManagerId.form-control(type='name',placeholder='채팅서비스의 관리자 아이디를 등록하세요.')
+      input.addButton.btn.btn-default.copy-button(type='button' id='chatManagerIdAdd', value='추가')
+      input.reMoveButton.btn.btn-default.copy-button(type='button' id='chatManagerIdRemove', value='삭제')
+    div.divSmpChatManagerList  
+      textarea#regListSmpChatManagerId.form-control(type='name',rows="2" cols="20", readonly=true)=client.chatManagerList
+    div.oauth-button-div
+      button#oauthRegisterButton.btn.btn-default.oauthReg-button(type='submit') 등록하기
+    
+
+  block contents

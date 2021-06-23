@@ -6,16 +6,33 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 [📑[rfc6749]](https://datatracker.ietf.org/doc/html/rfc6749)의 구조와 권고를 베이스로 제작하였습니다.
 
+<br>
+
 ## Version
-`SMP Oauth Server` - v1.0.0
+
+`SMP Oauth Server`_(v1.0.0)_
+
+<br>
+
 ## IDE
 
-- Tool : `VSCode v1.57`
-- Back End : `NodeJS(Express) v12.16.4`
-- Front End : `ES5(jQuery, CommonJS)`
-- Data Base : `MongoDB(Mongoose) v4.4.6`
-- Web Server : `Ubuntu v18.04.5 LTS`, `Nginx v1.14.0`
-- Cloud Computing :`AWS EC2 Prettier`
+<img alt="vscode" src ="https://img.shields.io/badge/Vscode-007ACC.svg?&style=for-the-badge&logo=Visual Studio Code&logoColor=white"/>  
+<img alt="nodejs" src ="https://img.shields.io/badge/Nodejs-339933.svg?&style=for-the-badge&logo=Node.js&logoColor=white"/>    
+<img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/>   
+<img alt="jquery" src ="https://img.shields.io/badge/jquery-0769AD.svg?&style=for-the-badge&logo=jquery&logoColor=white"/>     
+<img alt="MongoDB" src ="https://img.shields.io/badge/MongoDB-47A248.svg?&style=for-the-badge&logo=MongoDB&logoColor=white"/>  
+<img alt="Ubuntu" src ="https://img.shields.io/badge/Ubuntu-E95420.svg?&style=for-the-badge&logo=Ubuntu&logoColor=white"/>
+<img alt="NGINX" src ="https://img.shields.io/badge/NGINX-009639.svg?&style=for-the-badge&logo=NGINX&logoColor=white"/>
+<img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
+
+- **Tool** - `VSCode`_(v1.57)_
+- **Back End** - `NodeJS(Express)`_(v12.16.4)_
+- **Front End** - `ES5(jQuery, CommonJS)`
+- **Data Base** - `MongoDB(Mongoose)`_(v4.4.6)_
+- **Web Server** - `Ubuntu`_(v18.04.5 LTS)_, `Nginx`_(v1.14.0)_
+- **Cloud Computing** - `AWS EC2 Prettier`
+
+<br>
 
 ## Flow (Oauth 2.0)
 
@@ -89,7 +106,7 @@ this.smp_resource.defaults.headers.common = {
 
 #### Word
 
-- `Client ID(client_id)` - 유저식별 ID 
+- `Client ID(client_id)` - 유저식별 ID
 - `Client Secret(secret_key)` - access_token 발급 전 최종적인 유저 확인용 비밀키
 - `Check Required Information (scope)` - `Resource Server`가 Client Site에 전달할 유저정보 범위
 - `Authorization Callback URL (redirect_uri)` - callback redirect 할 URL -> 해당 URL로만 데이터 전송
@@ -97,6 +114,7 @@ this.smp_resource.defaults.headers.common = {
 - `Access Token` - `Resource Server`로 데이터를 요구하기 위한 Token -> 유효시간 10분
 - `State` - 통신 데이터의 무결성을 확인하기 위한 고유 문자열
 - `Code` - User Resource Owner의 Client Site 로그인 성공시 발급하는 코드
+
 #### Register
 
 1. [📝[smp-oauth.link]](https://smp-oauth.link)에서 회원가입 후 로그인
@@ -162,28 +180,34 @@ const response = await this.smp_resource.get('scope');
 // finish
 const userData = resourceRes.data.userData;
 ```
+
 ## ETC
+
 #### Log
+
 `SMP Oauth Login` 유저의 접속 기록과 에러상황을 Log를 통해 각각 기록
+
 ```javascript
-const winston = require("winston");
+const winston = require('winston');
 const infoTransport = new winston.transports.File({
-  filename: "info.log",
+  filename: 'info.log',
   dirname: logDir,
-  level: "info",
+  level: 'info',
 });
 
 const errorTransport = new winston.transports.File({
-  filename: "error.log",
+  filename: 'error.log',
   dirname: logDir,
-  level: "error",
+  level: 'error',
 });
 ```
+
 info.log
 <img src="src/public/image/info.png" alt='info-log'>
 
 #### End Comment
-`smpark` - 해당 프로젝트는 그동안 사용해온 es5와 commonJS를 제 안에서 갈무리한다는 생각으로 만들어본 마지막 es5 프로젝트 입니다.   
+
+`smpark` - 해당 프로젝트는 그동안 사용해온 es5와 commonJS를 제 안에서 갈무리한다는 생각으로 만들어본 마지막 es5 프로젝트 입니다.  
 번아웃으로 개발에 흥미를 잃었던 저에게 최소한의 단서로 Flow를 따라가며 '아마 이렇게 구현하면 되지 않을까?' 상상하는 재미를, 그리고 그것을 내뜻대로 구현하는 개발의 즐거움을 다시 일깨워준 프로젝트 입니다.
-Read me는 여기까지 입니다.    
-읽어주셔서 감사합니다. 
+Read me는 여기까지 입니다.  
+읽어주셔서 감사합니다.

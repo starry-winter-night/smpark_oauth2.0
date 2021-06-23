@@ -27,7 +27,6 @@ const errHandler = (err, req, res, next) => {
 
     logger.error(`${moment().format("YYYY-MM-DD HH:mm:ss")}`, errObj);
   } else {
-    console.log('여기와?');
     // res.locals.message = apiError.message;
     // res.locals.error = apiError;
   }

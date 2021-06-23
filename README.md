@@ -16,7 +16,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 ## IDE
 
-<img alt="vscode" src ="https://img.shields.io/badge/VSCode-v1.57-007ACC.svg?&flat&logo=appveyor&logo=VisualStudioCode&logoColor=white"/> <img alt="nodejs" src ="https://img.shields.io/badge/NodeJS-v12.16.4- 339933.svg?&flat&logo=appveyor&logo=Node.js&logoColor=white"/> <img alt="Express" src ="https://img.shields.io/badge/Express-v4.17.1-000000.svg?&flat&logo=appveyor&logo=Express&logoColor=white"/> <img alt="jQuery" src ="https://img.shields.io/badge/jQuery-v3.4.1-0769AD.svg?&flat&logo=appveyor&logo=jquery&logoColor=white"/>   <img alt="MongoDB" src ="https://img.shields.io/badge/MongoDB-v4.4.6-47A248.svg?&flat&logo=appveyor&logo=MongoDB&logoColor=white"/> <img alt="Ubuntu" src ="https://img.shields.io/badge/Ubuntu-18.04.5 LTS-E95420.svg?&flat&logo=appveyor&logo=Ubuntu&logoColor=white"/> <img alt="NGINX" src ="https://img.shields.io/badge/Nginx-v1.14.0-009639.svg?&flat&logo=appveyor&logo=NGINX&logoColor=white"/> <img alt="Amazon AWS" src ="https://img.shields.io/badge/AWS-EC2 Prettier-232F3E.svg?&flat&logo=appveyor&logo=AmazonAWS&logoColor=white"/>
+<img alt="vscode" src ="https://img.shields.io/badge/VSCode-v1.57-007ACC.svg?&flat&logo=appveyor&logo=VisualStudioCode&logoColor=white"/> <img alt="nodejs" src ="https://img.shields.io/badge/NodeJS-v12.16.4- 339933.svg?&flat&logo=appveyor&logo=Node.js&logoColor=white"/> <img alt="Express" src ="https://img.shields.io/badge/Express-v4.17.1-000000.svg?&flat&logo=appveyor&logo=Express&logoColor=white"/> <img alt="jQuery" src ="https://img.shields.io/badge/jQuery-v3.4.1-0769AD.svg?&flat&logo=appveyor&logo=jquery&logoColor=white"/> <img alt="MongoDB" src ="https://img.shields.io/badge/MongoDB-v4.4.6-47A248.svg?&flat&logo=appveyor&logo=MongoDB&logoColor=white"/> <img alt="Ubuntu" src ="https://img.shields.io/badge/Ubuntu-18.04.5 LTS-E95420.svg?&flat&logo=appveyor&logo=Ubuntu&logoColor=white"/> <img alt="NGINX" src ="https://img.shields.io/badge/Nginx-v1.14.0-009639.svg?&flat&logo=appveyor&logo=NGINX&logoColor=white"/> <img alt="Amazon AWS" src ="https://img.shields.io/badge/AWS-EC2 Prettier-232F3E.svg?&flat&logo=appveyor&logo=AmazonAWS&logoColor=white"/>
 
 - **Tool** - `VSCode`_(v1.57)_
 - **Back End** - `NodeJS(Express)`_(v12.16.4)_
@@ -127,7 +127,7 @@ this.smp_resource.defaults.headers.common = {
 #### Register
 
 1. [📝[smp-oauth.link]](https://smp-oauth.link)에서 회원가입 후 로그인
-2. Homepage Address, Authorization Callback URL, Check Required Information 항목 기재 후 등록 <img src="src/public/image/register.png" alt='Oauth Flow'>
+2. Homepage Address, Authorization Callback URL, Check Required Information 항목 기재 후 등록 <img src="src/public/image/register.PNG" alt='Oauth Flow'>
 
 <br>
 
@@ -160,8 +160,8 @@ window.open(uri, 'oauthServer', 'width=520,height=680');
 <br>
 
 2. Redirect\*uri에 로그인 페이지 Load 후 로그인 진행 (2.Flow )
-<img src="src/public/image/login.png" alt='login'>
-<br>
+   <img src="src/public/image/login.PNG" alt='login'>
+   <br>
 
 3. `SMP Oauth Server`에서 callback으로 전달받은 code, state parsing 후 redirect token (3.Flow -> 4.Flow)
 
@@ -223,7 +223,7 @@ const errorTransport = new winston.transports.File({
 ```
 
 info.log
-<img src="src/public/image/info.png" alt='info-log'>
+<img src="src/public/image/info.PNG" alt='info-log'>
 
 <br>
 

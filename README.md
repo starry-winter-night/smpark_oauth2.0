@@ -16,14 +16,14 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 ## IDE
 
-<img alt="vscode" src ="https://img.shields.io/badge/Vscode-007ACC.svg?&style=for-the-badge&logo=Visual Studio Code&logoColor=white"/>  
-<img alt="nodejs" src ="https://img.shields.io/badge/Nodejs-339933.svg?&style=for-the-badge&logo=Node.js&logoColor=white"/>    
-<img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/>   
-<img alt="jquery" src ="https://img.shields.io/badge/jquery-0769AD.svg?&style=for-the-badge&logo=jquery&logoColor=white"/>     
-<img alt="MongoDB" src ="https://img.shields.io/badge/MongoDB-47A248.svg?&style=for-the-badge&logo=MongoDB&logoColor=white"/>  
+<img alt="vscode" src ="https://img.shields.io/badge/Vscode-007ACC.svg?&style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
+<img alt="nodejs" src ="https://img.shields.io/badge/Nodejs-339933.svg?&style=for-the-badge&logo=Node.js&logoColor=white"/>
+<img alt="Express" src ="https://img.shields.io/badge/Express-000000.svg?&style=for-the-badge&logo=Express&logoColor=white"/>
+<img alt="jquery" src ="https://img.shields.io/badge/jquery-0769AD.svg?&style=for-the-badge&logo=jquery&logoColor=white"/>  
+<img alt="MongoDB" src ="https://img.shields.io/badge/MongoDB-47A248.svg?&style=for-the-badge&logo=MongoDB&logoColor=white"/>
 <img alt="Ubuntu" src ="https://img.shields.io/badge/Ubuntu-E95420.svg?&style=for-the-badge&logo=Ubuntu&logoColor=white"/>
 <img alt="NGINX" src ="https://img.shields.io/badge/NGINX-009639.svg?&style=for-the-badge&logo=NGINX&logoColor=white"/>
-<img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
+<img alt="Amazon AWS" src ="https://img.shields.io/badge/Amazon AWS-232F3E.svg?&style=for-the-badge&logo=AmazonAWS&logoColor=white"/>
 
 - **Tool** - `VSCode`_(v1.57)_
 - **Back End** - `NodeJS(Express)`_(v12.16.4)_
@@ -38,10 +38,14 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <img src="src/public/image/oauth-flow.png" alt='Oauth Flow'>
 
+<br>
+
 ## Secure
 
 `SMP Oauth Server`를 제작하면서 가장 중점을 두었던 부분은 보안입니다.
 아래와 같은 보안 검증을 구현하였습니다.
+
+<br>
 
 - state : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback된 state를 검증합니다.
 
@@ -56,6 +60,8 @@ const valid = await bcrypt.compare(prevState, state);
 if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습니다.`);
 ```
 
+<br>
+
 - redirect_uri : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
@@ -67,6 +73,8 @@ const redirectCheck = (redirectUri, redirect_uri) => {
   return true;
 };
 ```
+
+<br>
 
 - xss : Helmet의 xssFilter와 xss 패키지를 사용 하여 스크립트 삽입 공격에 대비합니다.
 
@@ -81,6 +89,8 @@ const refererCheck = xss(referer); // script uri escape
 return referer !== refererCheck ? false : true;
 ```
 
+<br>
+
 - dos : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
 
 ```javascript
@@ -94,6 +104,8 @@ const limiter = rateLimit({
 });
 ```
 
+<br>
+
 - etc : SSL 적용, Code & Token 만료시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
 
 ```javascript
@@ -101,6 +113,8 @@ this.smp_resource.defaults.headers.common = {
   Authorization: `bearer ${token.accessToken}`,
 };
 ```
+
+<br>
 
 ## Usage
 
@@ -115,10 +129,14 @@ this.smp_resource.defaults.headers.common = {
 - `State` - 통신 데이터의 무결성을 확인하기 위한 고유 문자열
 - `Code` - User Resource Owner의 Client Site 로그인 성공시 발급하는 코드
 
+<br>
+
 #### Register
 
 1. [📝[smp-oauth.link]](https://smp-oauth.link)에서 회원가입 후 로그인
 2. Homepage Address, Authorization Callback URL, Check Required Information 항목 기재 후 등록 <img src="src/public/image/register.png" alt='Oauth Flow'>
+
+<br>
 
 #### Code (Example FE JavaScript Code)
 
@@ -146,7 +164,12 @@ const uri = `${this.smp_oauth}/authorize?client_id=${client_id}&redirect_uri=${r
 window.open(uri, 'oauthServer', 'width=520,height=680');
 ```
 
+<br>
+
 2. Redirect\*uri에 로그인 페이지 Load 후 로그인 진행 (2.Flow )
+<img src="src/public/image/login.png" alt='login'>
+<br>
+
 3. `SMP Oauth Server`에서 callback으로 전달받은 code, state parsing 후 redirect token (3.Flow -> 4.Flow)
 
 ```javascript
@@ -168,6 +191,8 @@ const data = {
 const response = await this.smp_oauth.post('token', data);
 ```
 
+<br>
+
 4. `SMP Oauth Server`에서 전달받은 access_token을 `SMP Resource Server`로 bearer 전달 (5.Flow -> 6.Flow)
 
 ```javascript
@@ -180,6 +205,8 @@ const response = await this.smp_resource.get('scope');
 // finish
 const userData = resourceRes.data.userData;
 ```
+
+<br>
 
 ## ETC
 
@@ -204,6 +231,8 @@ const errorTransport = new winston.transports.File({
 
 info.log
 <img src="src/public/image/info.png" alt='info-log'>
+
+<br>
 
 #### End Comment
 

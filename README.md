@@ -40,7 +40,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <br>
 
-- state : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback된 state를 검증합니다.
+- `state` : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback된 state를 검증합니다.
 
 ```javascript
 // 1번 Flow, 코드생성
@@ -55,7 +55,7 @@ if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습�
 
 <br>
 
-- redirect_uri : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
+- `redirect_uri` : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
 ```javascript
@@ -69,7 +69,7 @@ const redirectCheck = (redirectUri, redirect_uri) => {
 
 <br>
 
-- xss : Helmet의 xssFilter와 xss 패키지를 사용 하여 스크립트 삽입 공격에 대비합니다.
+- `xss` : Helmet의 xssFilter와 xss 패키지를 사용 하여 스크립트 삽입 공격에 대비합니다.
 
 ```javascript
 const helmet = require('helmet');
@@ -84,7 +84,7 @@ return referer !== refererCheck ? false : true;
 
 <br>
 
-- dos : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
+- `dos` : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
 
 ```javascript
 const rateLimit = require('express-rate-limit');
@@ -99,7 +99,7 @@ const limiter = rateLimit({
 
 <br>
 
-- etc : SSL 적용, Code & Token 만료시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
+- `etc` : SSL 적용, Code & Token 만료시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
 
 ```javascript
 this.smp_resource.defaults.headers.common = {

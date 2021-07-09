@@ -2,7 +2,7 @@
 
 `SMP Oauth Server`는 직접 만든 Oauth 2.0 서버입니다.  
 JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 대해서 깊게 공부해 보고 싶었습니다.  
-항상 반복하는 CRUD가 아닌 색다른 BE개발을 해보고 싶었고 스스로에게 흥미로운 주제 였기에 직접 제작해보았습니다.
+항상 반복하는 CRUD가 아닌 색다른 BE 개발을 해보고 싶었고 스스로 흥미로운 주제였기에 직접 제작해보았습니다.
 
 [📑[rfc6749]](https://datatracker.ietf.org/doc/html/rfc6749)의 구조와 권고를 베이스로 제작하였습니다.
 
@@ -40,7 +40,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <br>
 
-- state : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback된 state를 검증합니다.
+- `state` : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback 된 state를 검증합니다.
 
 ```javascript
 // 1번 Flow, 코드생성
@@ -55,7 +55,7 @@ if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습�
 
 <br>
 
-- redirect_uri : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
+- `redirect_uri` : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
 ```javascript
@@ -69,7 +69,7 @@ const redirectCheck = (redirectUri, redirect_uri) => {
 
 <br>
 
-- xss : Helmet의 xssFilter와 xss 패키지를 사용 하여 스크립트 삽입 공격에 대비합니다.
+- `xss` : Helmet의 xssFilter와 xss 패키지를 사용하여 스크립트 삽입 공격에 대비합니다.
 
 ```javascript
 const helmet = require('helmet');
@@ -84,7 +84,7 @@ return referer !== refererCheck ? false : true;
 
 <br>
 
-- dos : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
+- `dos` : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
 
 ```javascript
 const rateLimit = require('express-rate-limit');
@@ -99,7 +99,7 @@ const limiter = rateLimit({
 
 <br>
 
-- etc : SSL 적용, Code & Token 만료시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
+- `etc` : SSL 적용, Code & Token 만료 시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
 
 ```javascript
 this.smp_resource.defaults.headers.common = {
@@ -115,12 +115,12 @@ this.smp_resource.defaults.headers.common = {
 
 - `Client ID(client_id)` - 유저식별 ID
 - `Client Secret(secret_key)` - access_token 발급 전 최종적인 유저 확인용 비밀키
-- `Check Required Information (scope)` - `Resource Server`가 Client Site에 전달할 유저정보 범위
+- `Check Required Information (scope)` - `Resource Server`가 Client Site에 전달할 유저 정보 범위
 - `Authorization Callback URL (redirect_uri)` - callback redirect 할 URL -> 해당 URL로만 데이터 전송
 - `Homepage Address` - referer 도메인 검사를 위한 Address
 - `Access Token` - `Resource Server`로 데이터를 요구하기 위한 Token -> 유효시간 10분
 - `State` - 통신 데이터의 무결성을 확인하기 위한 고유 문자열
-- `Code` - User Resource Owner의 Client Site 로그인 성공시 발급하는 코드
+- `Code` - User Resource Owner의 Client Site 로그인 성공 시 발급하는 코드
 
 <br>
 
@@ -159,7 +159,7 @@ window.open(uri, 'oauthServer', 'width=520,height=680');
 
 <br>
 
-2. Redirect\*uri에 로그인 페이지 Load 후 로그인 진행 (2.Flow )
+2. Redirect_uri에 로그인 페이지 Load 후 로그인 진행 (2.Flow )
    <img src="src/public/image/login.PNG" alt='login'>
    <br>
 
@@ -205,7 +205,7 @@ const userData = resourceRes.data.userData;
 
 #### Log
 
-`SMP Oauth Login` 유저의 접속 기록과 에러상황을 Log를 통해 각각 기록
+`SMP Oauth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록
 
 ```javascript
 const winston = require('winston');
@@ -230,6 +230,6 @@ info.log
 #### End Comment
 
 `smpark` - 해당 프로젝트는 그동안 사용해온 es5와 commonJS를 제 안에서 갈무리한다는 생각으로 만들어본 마지막 es5 프로젝트 입니다.  
-번아웃으로 개발에 흥미를 잃었던 저에게 최소한의 단서로 Flow를 따라가며 '아마 이렇게 구현하면 되지 않을까?' 상상하는 재미를, 그리고 그것을 내뜻대로 구현하는 개발의 즐거움을 다시 일깨워준 프로젝트 입니다.
-Read me는 여기까지 입니다.  
+번아웃으로 개발에 흥미를 잃었던 저에게 최소한의 단서로 Flow를 따라가며 '아마 이렇게 구현하면 되지 않을까?' 상상하는 재미를, 그리고 그것을 내 뜻대로 구현하는 개발의 즐거움을 다시 일깨워준 프로젝트입니다.
+Readme는 여기까지입니다.  
 읽어주셔서 감사합니다.

@@ -265,14 +265,14 @@ const token = async (bodyData) => {
         };
         return error;
       }
-      // 접속 토큰 3시간
-      const acsTknTime = 3;
+      // 접속 토큰 10분
+      const acsTknTime = 10;
       // 만료시간 구하기
-      const acsTknExpiresAt = await createExpiresAt('hour', acsTknTime);
-      // 재발행 토큰 1일
-      const refTknTime = 1;
+      const acsTknExpiresAt = await createExpiresAt('minute', acsTknTime);
+      // 재발행 토큰 5시간
+      const refTknTime = 5;
       // 만료시간 구하기
-      const refTknExpiresAt = await createExpiresAt('day', refTknTime);
+      const refTknExpiresAt = await createExpiresAt('hour', refTknTime);
 
       // access token 생성
       const access_token = createAccessToken({
@@ -318,10 +318,10 @@ const token = async (bodyData) => {
       // decode 값과 파라미터 값이 같으면
       if (jwtResult.id == client_id && jwtResult.secret == clientSecret) {
         const oauth = await Oauth.findByUsername(decoded.user);
-        // 접속 토큰 3시간
-        const acsTknTime = 3;
+        // 접속 토큰 10분
+        const acsTknTime = 10;
         // 만료시간 구하기
-        const acsTknExpiresAt = await createExpiresAt('hour', acsTknTime);
+        const acsTknExpiresAt = await createExpiresAt('minute', acsTknTime);
         // access token 생성
         const access_token = createAccessToken({
           id: client_id,

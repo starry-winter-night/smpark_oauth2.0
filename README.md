@@ -42,70 +42,86 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 - `state` : CSRF 공격에 대비하여 공격자가 예상할 수 없는 state 데이터를 생성하여 URI에 담고 code와 함께 callback 된 state를 검증합니다.
 
-```javascript
-// 1번 Flow, 코드생성
-const randomStarg = Math.random().toString();
-const state = await bcrypt.hash(randomStarg, 10);
-const uri = `${oauthURL}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
+  ```javascript
+  // 1번 Flow, 코드생성
+  const randomStarg = Math.random().toString();
+  const state = await bcrypt.hash(randomStarg, 10);
+  const uri = `${oauthURL}/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}`;
 
-// 2 -> 3번 Flow, 코드검증
-const valid = await bcrypt.compare(prevState, state);
-if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습니다.`);
-```
+  // 2 -> 3번 Flow, 코드검증
+  const valid = await bcrypt.compare(prevState, state);
+  if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습니다.`);
+  ```
 
 <br>
 
 - `redirect_uri` : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
-```javascript
-const redirectCheck = (redirectUri, redirect_uri) => {
-  if (redirectUri !== redirect_uri) {
-    return false;
-  }
-  return true;
-};
-```
+  ```javascript
+  const redirectCheck = (redirectUri, redirect_uri) => {
+    if (redirectUri !== redirect_uri) {
+      return false;
+    }
+    return true;
+  };
+  ```
 
 <br>
 
 - `xss` : Helmet의 xssFilter와 xss 패키지를 사용하여 스크립트 삽입 공격에 대비합니다.
 
-```javascript
-const helmet = require('helmet');
-app.use(helmet.xssFilter());
+  ```javascript
+  const helmet = require('helmet');
+  app.use(helmet.xssFilter());
 
-const xss = require('xss');
-const refererCheck = xss(referer); // script uri escape
+  const xss = require('xss');
+  const refererCheck = xss(referer); // script uri escape
 
-// xss 검사
-return referer !== refererCheck ? false : true;
-```
+  // xss 검사
+  return referer !== refererCheck ? false : true;
+  ```
 
 <br>
 
 - `dos` : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
 
-```javascript
-const rateLimit = require('express-rate-limit');
+  ```javascript
+  const rateLimit = require('express-rate-limit');
 
-const limiter = rateLimit({
-  windowMs: time,
-  max: maxConnect,
-  headers: true,
-  message: '해당 IP의 요청이 너무 많습니다. 잠시 후에 다시 시도하십시오',
-});
-```
+  const limiter = rateLimit({
+    windowMs: time,
+    max: maxConnect,
+    headers: true,
+    message: '해당 IP의 요청이 너무 많습니다. 잠시 후에 다시 시도하십시오',
+  });
+  ```
 
 <br>
 
-- `etc` : SSL 적용, Code & Token 만료 시간(10분) 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
+- `Refresh Token` : 통신 중 `Access Token`을 탈취당할 위험을 최소화하기 위해 유효시간을 10분 이하로 설정하고 `Refresh Token`을 통해 재발급하도록 구현하였습니다. 유효시간이 만료되면 자동으로 로그아웃됩니다.
 
-```javascript
-this.smp_resource.defaults.headers.common = {
-  Authorization: `bearer ${token.accessToken}`,
-};
-```
+  ```javascript
+  const refTknTime = 5;
+  const refTknExpiresAt = await createExpiresAt('hour', refTknTime);
+
+  const refresh_token = createRefreshToken({
+    id: client_id,
+    secret: clientSecret,
+    user: username,
+    expiresIn: refTknExpiresAt,
+  });
+  ```
+
+<br>
+
+- `etc` : SSL 적용, HTTP Only Cookies 적용, Code & Token 만료 시간 준수, Query parameter 방식이 아닌 Bearer Authentication 방식 사용 [[📑[rfc6750]](https://datatracker.ietf.org/doc/html/rfc6750)] 권고
+
+  ```javascript
+  this.smp_resource.defaults.headers.common = {
+    Authorization: `bearer ${token.accessToken}`,
+  };
+  ```
 
 <br>
 
@@ -119,6 +135,7 @@ this.smp_resource.defaults.headers.common = {
 - `Authorization Callback URL (redirect_uri)` - callback redirect 할 URL -> 해당 URL로만 데이터 전송
 - `Homepage Address` - referer 도메인 검사를 위한 Address
 - `Access Token` - `Resource Server`로 데이터를 요구하기 위한 Token -> 유효시간 10분
+- `Refresh Token` - `Access Token`을 갱신하기 위한 Token -> 유효시간 5시간
 - `State` - 통신 데이터의 무결성을 확인하기 위한 고유 문자열
 - `Code` - User Resource Owner의 Client Site 로그인 성공 시 발급하는 코드
 
@@ -203,9 +220,28 @@ const userData = resourceRes.data.userData;
 
 ## ETC
 
+#### Structure
+
+처음 해당 프로젝트를 설계할 때 고민했던 프로젝트 구조입니다.  
+모든 로직을 하나의 폴더 혹은 파일에 구현하여 발생하는 스파게티 코드가 아닌 효율적으로 코드 구조를 나누고 싶었습니다.  
+유지보수를 위해서 각각 폴더와 파일에 역할을 부여하고 파일의 로직을 함수로 명명함으로써 함수형 프로그래밍 구조를 구현해보고 싶었습니다.
+
+- **Middleware** : API 통신을 하기 전 실행할 로직을 수행하는 곳입니다. JWT를 통한 인가, 웹 통신의 제한, 검증, 로깅 등을 실행합니다.
+- **API** : 브라우저와 웹 통신에 대한 것만을 처리하는 공간입니다.
+- **Ctrl** : API 통신을 통해 들어오는 데이터를 혹은 로직을 처리하는 공간입니다. `Ctrl`에서 `Functions`를 통해 로직을 수행하고 `Models`를 통해 DB와 통신합니다.
+- **Functions** : 오직 데이터를 가공하는 공간입니다.
+- **Models** : 가공된 데이터를 `Ctrl`을 통해 받아, DB 통신을 통해 CRUD를 수행합니다.
+
+Project structure
+<img src="src/public/image/structure.png" alt='structure'>
+
+위와 같은 `Structure`를 구현하여 이용해본 결과, 폴더와 파일 각각의 위치와 역할이 정해져 있고 그 안에서 로직을 함수로 명명함으로써 시간이 지나도 헷갈리지 않고 유지보수 시 필요한 요소를 빠르게 찾을 수 있으며, 문제 발생 시 문제의 원인을 빠르게 구분할 수 있었습니다.
+
+<br>
+
 #### Log
 
-`SMP Oauth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록
+`SMP Oauth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록합니다. 특히 Error의 경우 어느 곳, 어떤 함수에서 에러가 발생했는지 기록하고 있습니다.
 
 ```javascript
 const winston = require('winston');

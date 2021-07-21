@@ -6,6 +6,8 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 [📑[rfc6749]](https://datatracker.ietf.org/doc/html/rfc6749)의 구조와 권고를 베이스로 제작하였습니다.
 
+[🚀[smp-oauth.link]](https://smp-oauth.link) 사이트 이동
+
 <br>
 
 ## Version

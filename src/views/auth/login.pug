@@ -2,15 +2,16 @@ extends ../layout
 block content
   div.logo-div
     a(href='/')
-     img.logo-image(src='/public/image/logo.png')
-    .form-group
-      label(for='InputId') 아이디
-      input#InputId.form-control(type='id',name='username', placeholder='아이디를 입력하세요')
-    .form-group
-      label(for='InputPassword') 패스워드
-      input#InputPassword.form-control(type='password', name='password', placeholder='암호')
-    div.login-button-div
-      button#loginButton.btn.btn-default.login-button(type='submit') 로그인
-      
+      img.logo-image(src='/public/image/logo.png')
+    form(action='/login', method='POST') 
+      .form-group
+        label(for='InputId') 아이디
+        input#InputId.form-control(type='text', name='username', placeholder='아이디를 입력하세요' autocomplete='username')
+      .form-group
+        label(for='InputPassword') 패스워드
+        input#InputPassword.form-control(type='password', name='password', placeholder='암호' autocomplete='current-password')
+      div.login-button-div
+        button#loginButton.btn.btn-default.login-button(type='submit') 로그인
+
 
   block contents

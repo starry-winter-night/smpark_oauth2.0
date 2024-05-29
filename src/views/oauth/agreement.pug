@@ -12,11 +12,11 @@ block content
     p 위의 표기된 정보를 resourceServer에서 받아옵니다. 동의하십니까?
   .agree-buttonBox
     form(action=`/oauth/callback/`, method='post') 
-      input(type='hidden',name='client_id' ,value=client_id)
-      input(type='hidden',name='redirect_uri' ,value=redirect_uri)
-      input(type='hidden',name='state' ,value=state)
-      input(type='hidden',name='manager' ,value=1)
-      input(type='hidden',name='reqInfo' ,value=reqInfo)
+      input(type='hidden', name='client_id', value=client_id)
+      input(type='hidden', name='redirect_uri', value=redirect_uri)
+      input(type='hidden', name='state', value=state)
+      input(type='hidden', name='manager', value=1)
+      input(type='hidden', name='reqInfo', value=reqInfo)
       button.agreeButton(type='submit') 동의함
     
     button.noAgreeButton(type='button') 동의안함

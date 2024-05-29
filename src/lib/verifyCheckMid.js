@@ -1,15 +1,11 @@
-const Oauth = require("../models/oauth");
-const createError = require("http-errors");
-const {
-  referrerCheck,
-  xssCheck,
-  redirectCheck,
-} = require("../services/oauth/oauth.functions");
+const Oauth = require('../models/oauth');
+const createError = require('http-errors');
+const { referrerCheck, xssCheck, redirectCheck } = require('../services/oauth/oauth.functions');
 
 // 각종 검증 로직 미들웨어
 const verifyCheck = async (req, res, next) => {
   let client_id, redirect_uri, manager;
-  if (Object.keys(req.query).length === 0) {
+  if (!Object.keys(req.query).length) {
     client_id = req.body.client_id;
     redirect_uri = req.body.redirect_uri;
     manager = req.body.manager;
@@ -19,7 +15,7 @@ const verifyCheck = async (req, res, next) => {
     manager = req.query.manager;
   }
 
-  const referer = req.headers.referer;
+  const referer = req.headers['referer'] || req.headers['referrer'];
   const originUri = req.originalUrl;
   let code = null;
   let message = null;
@@ -37,7 +33,6 @@ const verifyCheck = async (req, res, next) => {
       //referer 검증
       const hpAddr = oauth.client.homepageAddr;
       const refResult = referrerCheck(referer, hpAddr);
-
       if (!refResult) {
         code = 412;
         message = `function verifyCheck 파라미터 검증 오류:: referrer 불일치 `;
@@ -60,6 +55,7 @@ const verifyCheck = async (req, res, next) => {
     //redirect 대조 검증
     const redirectUri = oauth.client.redirectUris;
     const redirResult = redirectCheck(redirectUri, redirect_uri);
+
     if (!redirResult) {
       code = 412;
       message = `function verifyCheck 파라미터 검증 오류:: redirectUri 불일치 `;
@@ -71,7 +67,7 @@ const verifyCheck = async (req, res, next) => {
     code = 500;
     message = `api :: ${req.method} ${req.path}, 에러:: ${e}`;
     next(createError(code, message));
-    return res.render("main/error", { code });
+    return res.render('main/error', { code });
   }
   return next();
 };

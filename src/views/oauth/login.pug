@@ -9,13 +9,11 @@ block content
       label(for='oauthInputPassword') 패스워드
       input#oauthInputPassword.form-control(type='password', name='password', placeholder='암호')
     div.login-button-div
-      script.
-        const params = {
-          client_id: '#{client_id}',
-          redirect_uri: '#{redirect_uri}',
-          state: '#{state}',
-        }
-      button#oauthLoginButton.btn.btn-default.oauthLogin-button(type='submit') 로그인
+      form#oauthForm(action=`/oauth/authorize`, method='post') 
+        input(type='hidden',name='client_id' ,value=client_id)
+        input(type='hidden',name='redirect_uri' ,value=redirect_uri)
+        input(type='hidden',name='state' ,value=state)
+        button#oauthLoginButton.btn.btn-default.oauthLogin-button(type='submit') 로그인
     
 
   block contents

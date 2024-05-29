@@ -1,6 +1,7 @@
-const mongoose = require("../configs/mongoose");
+const mongoose = require('../configs/mongoose');
 const { Schema } = mongoose;
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 const memberSchema = new Schema(
   {
@@ -37,20 +38,19 @@ memberSchema.statics.findById = function (id) {
 };
 
 memberSchema.methods.setClientId = async function (clientId) {
-  let hash = await bcrypt.hash(clientId, 10);
+  let hash = uuidv4();
   hash = hash.substring(1, 15);
-  hash = hash + ":" + this.username;
+  hash = hash + '-' + this.username;
   this.client.clientId = hash;
 };
 memberSchema.methods.setClientSecret = async function (clientSecret) {
-  let hash = await bcrypt.hash(clientSecret, 10);
+  let hash = uuidv4();
   hash = hash.substring(1, 20);
   this.client.clientSecret = hash;
 };
 
 memberSchema.methods.setChatApiKey = async function (chatApiKey) {
-  let hash = await bcrypt.hash(chatApiKey, 10);
-  // hash = hash.substring(1,20);
+  let hash = uuidv4();
   this.client.chatApiKey = hash;
 };
 
@@ -61,4 +61,4 @@ memberSchema.methods.serialize = function () {
   return data;
 };
 
-module.exports = mongoose.model("member", memberSchema);
+module.exports = mongoose.model('member', memberSchema);

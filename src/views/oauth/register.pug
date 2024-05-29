@@ -28,27 +28,11 @@ block content
       P.infomationP Check Required Information
       .checkBoxForm       
         label(for='regInputSelectInfo1' name='labelAgreement') 아이디
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo1', value='username')
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo1', value='username', checked=client.reqInfo['아이디'])
         label(for='regInputSelectInfo2' name='labelAgreement') 이메일
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo2', value='email')
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo2', value='email', checked=client.reqInfo['이메일'])
         label(for='regInputSelectInfo3' name='labelAgreement') 이름
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo3', value='name')
-        script.
-          const reqInfo = #{client}.reqInfo
-          for(word in reqInfo)
-            switch (reqInfo[word]){        
-              case "username" :
-                document.getElementById("regInputSelectInfo1").checked = true
-                break;
-              case "email" :
-                document.getElementById("regInputSelectInfo2").checked = true
-                break;
-              case "name" : 
-                document.getElementById("regInputSelectInfo3").checked = true
-                break;
-              default :
-                break;
-            }
+          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo3', value='name', checked=client.reqInfo['이름'])
 
     .form-group
       label(for='regInputCallBackUrl') Authorization Callback URL

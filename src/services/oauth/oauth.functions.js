@@ -1,30 +1,33 @@
-const Joi = require("joi");
-const jwt = require("jsonwebtoken");
-const xss = require("xss");
-const bcrypt = require("bcrypt");
+const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+const xss = require('xss');
+const { v4: uuidv4 } = require('uuid');
 
 const createVerifyRule = (state) => {
-  if (state === "regappPost") {
+  if (state === 'regappPost') {
     const schema = Joi.object().keys({
       homepageAddr: Joi.string().required(),
       redirectUris: Joi.string().required(),
       appName: Joi.string(),
-      chkReqInfo: Joi.object({
-        아이디: Joi.string(),
-        이메일: Joi.string(),
-        이름: Joi.string(),
-      }),
-      chatManagerList: Joi.array().items(Joi.string().allow(null, "")),
+      reqInfo: Joi.object({
+        아이디: Joi.string().optional().allow(null, ''),
+        이메일: Joi.string().optional().allow(null, ''),
+        이름: Joi.string().optional().allow(null, ''),
+      })
+        .optional()
+        .allow(null, {}),
+      chatManagerList: Joi.array().items(Joi.string().allow(null, '')),
+      grants: Joi.array().items(Joi.string()).required(),
     });
     return schema;
-  } else if (state === "authorizeGet") {
+  } else if (state === 'authorizeGet') {
     const schema = Joi.object().keys({
       clientId: Joi.string().required(),
       redirectUris: Joi.string().required(),
       state: Joi.string(),
     });
     return schema;
-  } else if (state === "authorizePost") {
+  } else if (state === 'authorizePost') {
     const schema = Joi.object().keys({
       clientId: Joi.string().required(),
       redirectUris: Joi.string().required(),
@@ -34,7 +37,7 @@ const createVerifyRule = (state) => {
       password: Joi.string().required(),
     });
     return schema;
-  } else if (state === "callbackPost") {
+  } else if (state === 'callbackPost') {
     const schema = Joi.object().keys({
       clientId: Joi.string().required(),
       redirectUris: Joi.string().required(),
@@ -42,7 +45,7 @@ const createVerifyRule = (state) => {
       username: Joi.string().required(),
     });
     return schema;
-  } else if (state === "tokenPost") {
+  } else if (state === 'tokenPost') {
     const schema = Joi.object().keys({
       client_id: Joi.string().required(),
       redirect_uri: Joi.string(),
@@ -60,10 +63,10 @@ const referrerCheck = (referer, hpAddr) => {
   const refererLastStr = referer.charAt(referer.length - 1);
   const hpAddrLastStr = hpAddr.charAt(hpAddr.length - 1);
 
-  if (refererLastStr == "/") {
+  if (refererLastStr == '/') {
     referer = referer.slice(0, -1);
   }
-  if (hpAddrLastStr == "/") {
+  if (hpAddrLastStr == '/') {
     hpAddr = hpAddr.slice(0, -1);
   }
   if (referer != hpAddr) {
@@ -98,9 +101,9 @@ const redirectCheck = (redirectUri, redirect_uri) => {
   return true;
 };
 
-const createCode = async (data) => {
-  const hash = await bcrypt.hash(data, 10);
-  return hash;
+const createCode = () => {
+  let hash = uuidv4();
+  return hash.substring(1, 10);
 };
 
 const createRedirect = (uri, code, state) => {
@@ -110,17 +113,17 @@ const createRedirect = (uri, code, state) => {
 };
 
 const createExpiresAt = (type, time) => {
-  if (type === "minute") {
+  if (type === 'minute') {
     const expiresAt = Date.now() + 3600000 * 9 + 60 * time * 1000;
     return expiresAt;
-  } else if (type === "hour") {
+  } else if (type === 'hour') {
     const expiresAt = Date.now() + 3600000 * 9 + 60 * time * 60000;
     return expiresAt;
-  } else if (type === "day") {
+  } else if (type === 'day') {
     const expiresAt = Date.now() + 3600000 * 9 + 60 * time * 60000 * 24;
     return expiresAt;
   } else {
-    time = "TypeError";
+    time = 'TypeError';
     return time;
   }
 };
@@ -148,7 +151,7 @@ const createAccessToken = ({ id, secret, user, expiresIn }) => {
       secret,
       user,
     },
-    process.env.OAUTH_JWT_ACCESS_SECRET_KEY,
+    process.env.SMPARK_JWT_ACCESS_SECRET_KEY,
     {
       expiresIn,
     }
@@ -164,7 +167,7 @@ const createRefreshToken = ({ id, secret, user, expiresIn }) => {
       secret,
       user,
     },
-    process.env.OAUTH_JWT_REFRESH_SECRET_KEY,
+    process.env.SMPARK_JWT_REFRESH_SECRET_KEY,
     {
       expiresIn,
     }
@@ -173,11 +176,11 @@ const createRefreshToken = ({ id, secret, user, expiresIn }) => {
 };
 
 const jwtVerify = async (type, token) => {
-  let key = "";
-  if (type === "access_token") {
-    key = process.env.OAUTH_JWT_ACCESS_SECRET_KEY;
-  } else if (type === "refresh_token") {
-    key = process.env.OAUTH_JWT_REFRESH_SECRET_KEY;
+  let key = '';
+  if (type === 'access_token') {
+    key = process.env.SMPARK_JWT_ACCESS_SECRET_KEY;
+  } else if (type === 'refresh_token') {
+    key = process.env.SMPARK_JWT_REFRESH_SECRET_KEY;
   }
   const data = jwt.verify(token, key, async (err, decoded) => {
     if (err) {
@@ -204,7 +207,7 @@ const serialize = (body) => {
 };
 
 const replaceManagerListArr = (list) => {
-  let strWord = "";
+  let strWord = '';
 
   list.map((word, i) => {
     if (i === 0) {

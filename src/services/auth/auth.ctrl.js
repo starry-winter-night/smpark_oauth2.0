@@ -1,28 +1,28 @@
-const Joi = require("joi");
-const Member = require("../../models/member");
-const authFunctions = require("./auth.functions");
+const Member = require('../../models/member');
+const authFunctions = require('./auth.functions');
 const { createVerifyRule, createLoginToken, createExpiresAt } = authFunctions;
 
 const userRegister = async (regData) => {
   // Joi 파라미터 검증 규칙 생성
-  const schema = createVerifyRule("signUp");
+  const schema = createVerifyRule('signUp');
+  //Joi 파라미터 검증 실행
+  const { error, value } = schema.validate(regData);
+  if (error) {
+    const error = {
+      code: 400,
+      message: `function userRegister 파라미터 검증 오류:: ${error}`,
+    };
+    return error;
+  }
   try {
-    //Joi 파라미터 검증 실행
-    const data = Joi.validate(regData, schema);
-    if (data.error) {
-      const error = {
-        code: 400,
-        message: `function userRegister 파라미터 검증 오류:: ${data.error}`,
-      };
-      return error;
-    }
-    const { username, password, email, name } = regData;
+    const { username, password, email, name } = value;
     // 유저 가입 여부 db 탐색
+
     const exists = await Member.findByUsername(username);
     if (exists !== null) {
       const error = {
         code: 401,
-        message: "이미 존재하는 아이디입니다.",
+        message: '이미 존재하는 아이디입니다.',
       };
       return error;
     }
@@ -32,14 +32,13 @@ const userRegister = async (regData) => {
       name,
       agree: false,
     });
-    // 랜덤 수 생성
-    const clientRandom = Math.random().toString();
-    // clientId 생성 및 db 저장
-    await member.setClientId(clientRandom);
-    // clientSecret 생성 및 db 저장
-    await member.setClientSecret(clientRandom);
+  
+    // clientId 생성
+    await member.setClientId();
+    // clientSecret 생성
+    await member.setClientSecret();
     // chatApiKey 생성 및 db 저장
-    await member.setChatApiKey(clientRandom);
+    await member.setChatApiKey();
     // password 생성 및 db 저장
     await member.setPassword(password);
     // username에 index 생성하고 유일 속성 적용
@@ -57,15 +56,15 @@ const userRegister = async (regData) => {
 };
 
 const userLogin = async (user) => {
-  const { username, password } = user;
   // 파라미터 검증 규칙
-  const schema = createVerifyRule("signIn");
+  const schema = createVerifyRule('signIn');
   // 파라미터 검증
-  const data = Joi.validate(user, schema);
-  if (data.error) {
+  const { error, value } = schema.validate(user);
+  const { username, password } = value;
+  if (error) {
     const error = {
       code: 400,
-      message: `function userLogin 파라미터 검증 오류:: ${data.error}`,
+      message: `function userLogin 파라미터 검증 오류:: ${error}`,
     };
     return error;
   }
@@ -76,7 +75,7 @@ const userLogin = async (user) => {
     if (member === null) {
       const error = {
         code: 401,
-        message: "등록되지 않은 계정입니다.",
+        message: '등록되지 않은 계정입니다.',
       };
       return error;
     }
@@ -85,7 +84,7 @@ const userLogin = async (user) => {
     if (!valid) {
       const error = {
         code: 401,
-        message: "아이디 또는 비밀번호가 일치하지 않습니다.",
+        message: '아이디 또는 비밀번호가 일치하지 않습니다.',
       };
       return error;
     }

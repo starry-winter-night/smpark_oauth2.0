@@ -1,14 +1,12 @@
-
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTopology:true, useFindAndModify:false })
+mongoose
+  .connect('mongodb://localhost:27017/oauth')
   .then(() => {
     console.log('Connected to MongoDB');
   })
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
-  })
+  });
 
 module.exports = mongoose;
-
-

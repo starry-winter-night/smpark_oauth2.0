@@ -19,7 +19,15 @@ const authSchema = new Schema(
       chatManagerList: [],
       grants: [], // grant에 따라 인증방식이 바뀌는데, 현재는 grant_code방식만 구현했기 때문에 사용되지 않음
       redirectUris: String, // client가 사용하겠다고 등록한 callback 주소
-      reqInfo: {}, // client가 요구한 user의 정보 범위
+      reqInfo: {
+        type: {
+          아이디: { type: String, required: false },
+          이메일: { type: String, required: false },
+          이름: { type: String, required: false },
+        },
+        required: false,
+        _id: false,
+      }, // client가 요구한 user의 정보 범위
       appName: String, // client의 어플리케이션 이름
       homepageAddr: String, // client의 웹 주소 referer 인증에 사용.
       username: String, // client의 oauthServer ID
@@ -34,7 +42,7 @@ const authSchema = new Schema(
         type: Date, // 만료기간 1일, 만료기간이 다 된다면 재로그인 하여 재발급
       },
       client: String, // 현재 해당 토큰에 연결되어 있는 client
-      _id: mongoose.Types.ObjectId, // 현재 해당 토큰에 연결되어 있는 client의 고유 id
+      _id: mongoose.Schema.Types.ObjectId, // 현재 해당 토큰에 연결되어 있는 client의 고유 id
     },
   },
   {
@@ -46,10 +54,7 @@ authSchema.statics.findByUsername = function (username) {
   return this.findOne({ 'client.username': username });
 };
 authSchema.statics.findByClientId = function (client_id) {
-  return this.findOne(
-    { 'client.clientId': client_id },
-    { 'client.clientSecret': false }
-  );
+  return this.findOne({ 'client.clientId': client_id }, { 'client.clientSecret': false });
 };
 authSchema.statics.findByVerifyClient = function (data) {
   return this.findOne({
@@ -60,10 +65,7 @@ authSchema.statics.findByVerifyClient = function (data) {
   });
 };
 authSchema.statics.findByAccesstoken = function (token) {
-  return this.findOne(
-    { 'token.accessToken': token },
-    { 'client.clientSecret': false }
-  );
+  return this.findOne({ 'token.accessToken': token }, { 'client.clientSecret': false });
 };
 
 authSchema.methods.updateByRegAppData = function (regData) {
@@ -77,12 +79,7 @@ authSchema.methods.updateByRegAppData = function (regData) {
   });
 };
 
-authSchema.methods.updateByAuthCode = function (
-  code,
-  expiresAt,
-  redirect_uri,
-  username
-) {
+authSchema.methods.updateByAuthCode = function (code, expiresAt, redirect_uri, username) {
   return this.updateOne({
     authorizationCode: {
       authorizationCode: code,

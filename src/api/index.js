@@ -5,8 +5,8 @@ const oauth = require('./oauth');
 api.use('/', auth);
 api.use('/oauth', oauth);
 
-api.get('/', function(req, res, next){
-  if(res.locals.user){
+api.get('/', function (req, res, next) {
+  if (res.locals.user) {
     res.redirect('/oauth/regapp');
     return;
   }
@@ -14,5 +14,3 @@ api.get('/', function(req, res, next){
 });
 
 module.exports = api;
-
- 

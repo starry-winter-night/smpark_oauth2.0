@@ -4,6 +4,7 @@
     "connect-mongo": "^3.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
     "date-utils": "^1.2.21",
     "dotenv": "^16.4.5",
@@ -16,10 +17,16 @@
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.1",
+    "path": "^0.12.7",
     "pug": "^3.0.3",
     "uuid": "^9.0.1",
     "winston": "^3.13.0",
     "winston-daily-rotate-file": "^5.0.0",
     "xss": "^1.0.15"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "prod": "cross-env NODE_ENV=production nodemon index.js"
   }
 }

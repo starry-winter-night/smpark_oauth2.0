@@ -61,8 +61,8 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
   ```javascript
-  const redirectCheck = (redirectUri, redirect_uri) => {
-    if (redirectUri !== redirect_uri) {
+  const redirectCheck = (clientRedirectUri, redirect_uri) => {
+    if (clientRedirectUri !== redirect_uri) {
       return false;
     }
     return true;
@@ -105,11 +105,11 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
   ```javascript
   const refTknTime = 5;
-  const refTknExpiresAt = await createExpiresAt('hour', refTknTime);
+  const refTknExpiresAt = await createExpiresIn('hour', refTknTime);
 
   const refresh_token = createRefreshToken({
     id: client_id,
-    secret: clientSecret,
+    secret: client_secret,
     user: username,
     expiresIn: refTknExpiresAt,
   });
@@ -121,7 +121,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
   ```javascript
   this.smp_resource.defaults.headers.common = {
-    Authorization: `bearer ${token.accessToken}`,
+    Authorization: `bearer ${token.access_token}`,
   };
   ```
 
@@ -194,7 +194,7 @@ if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습�
 const data = {
   code,
   client_id: process.env.CLIENT_ID,
-  clientSecret: process.env.SECRET_KEY, //  smp-oauth.link -> Client_secret
+  client_secret: process.env.SECRET_KEY, //  smp-oauth.link -> Client_secret
   redirect_uri: process.env.REDIRECT_URI,
   grant_type: 'code',
 };
@@ -210,7 +210,7 @@ const response = await this.smp_oauth.post('token', data);
 ```javascript
 const token = oauthRes.data.access_token;
 this.smp_resource.defaults.headers.common = {
-  Authorization: `bearer ${token.accessToken}`,
+  Authorization: `bearer ${token.access_token}`,
 };
 
 const response = await this.smp_resource.get('scope');

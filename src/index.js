@@ -7,9 +7,9 @@ const cors = require('cors');
 const path = require('path');
 const api = require('./api');
 
-const jwtMiddleware = require('./lib/jwtMid');
-const limitMiddleware = require('./lib/limiterMid');
-const errHandlerMiddleware = require('./lib/errorHandlerMid');
+const jwtMiddleware = require('./middleware/globalMiddleware/jwtMid');
+const limitMiddleware = require('./middleware/globalMiddleware/limiterMid');
+const errHandlerMiddleware = require('./middleware/globalMiddleware/errorHandlerMid');
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'pug');
@@ -28,7 +28,7 @@ app.use(api);
 
 app.use(errHandlerMiddleware);
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4001;
 app.listen(port, () => {
   console.log(`Server Connected, ${port} port!`);
 });

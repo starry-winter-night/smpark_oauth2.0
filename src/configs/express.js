@@ -1,9 +1,14 @@
 module.exports = function (express) {
+  const dotenv = require('dotenv');
   require('dotenv').config();
   const session = require('express-session');
-  const MongoosStore = require('connect-mongo')(session);
   const cookieParser = require('cookie-parser');
-  const { SESSION_KEY, DATABASE_SESSION_URI } = process.env;
+  if (process.env.NODE_ENV === 'production') {
+    dotenv.config({ path: '.env.production' });
+  } else {
+    dotenv.config({ path: '.env.local' });
+  }
+
   const cors = require('cors');
 
   const helmet = require('helmet');
@@ -19,7 +24,8 @@ module.exports = function (express) {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          formAction: ["'self'", 'http://localhost:4000'],
+          formAction: ["'self'"],
+          scriptSrc: ["'self'"],
         },
       },
     })
@@ -27,17 +33,14 @@ module.exports = function (express) {
   app.use(helmet.xssFilter());
   app.use(cors());
 
-  const expiryDate = new Date(Date.now() + 3600000 * 9 + 60 * 60 * 1000); // 1 hour
-
   app.use(
     session({
-      secret: 'SESSION_KEY',
+      secret: process.env.SESSION_KEY,
       resave: false,
       name: 'sessionId',
       cookie: {
-        secure: true, //https를 통해서만 쿠키전송
-        httpOnly: true, // javascript가 아닌 https를 통해서만 전송, xss공격 보호
-        expires: expiryDate,
+        secure: true, // https를 통해서만 쿠키 전송
+        httpOnly: true, // JavaScript가 아닌 https를 통해서만 전송, XSS 공격 보호
       },
       saveUninitialized: true,
     })

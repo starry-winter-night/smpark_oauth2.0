@@ -1,10 +1,12 @@
 $('#InputId').keydown(function (e) {
   if (e.keyCode == 13) {
+    e.preventDefault();
     loginCheck();
   }
 });
 $('#InputPassword').keydown(function (e) {
   if (e.keyCode == 13) {
+    e.preventDefault();
     loginCheck();
   }
 });
@@ -55,13 +57,12 @@ function loginCheck() {
         type: 'POST',
         data: { username: id, password: pw },
         success: function (result) {
-          if (result.message) {
-            alert(result.message);
-            return;
-          }
           if (result.redirect) {
             window.location.replace(result.redirect);
           }
+        },
+        error: function (jqXHR) {
+          alert(jqXHR.responseJSON.message);
         },
       });
     }

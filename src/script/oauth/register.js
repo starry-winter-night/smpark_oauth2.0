@@ -130,9 +130,19 @@ function oauthRegCheck() {
   let HomepageAddr = $('#regInputHomepageAddr').val();
   let chkReqInfo = {};
 
-  $('input[name=agreement]:checked').each(function (i) {
-    chkReqInfo[$(this).parent().text()] = $(this).val();
-    return chkReqInfo;
+  // 기본적으로 chkReqInfo에 아이디 값을 true로 설정
+  chkReqInfo['id'] = true;
+
+  // 나머지 체크박스 값을 처리
+  $('input[name=agreement]').each(function () {
+    const key = $(this).val();
+    // 아이디 키가 아닌 경우에만 체크된 값을 반영
+    if (key !== 'id') {
+      const value = $(this).is(':checked');
+      chkReqInfo[key] = value;
+    } else {
+      chkReqInfo[key] = true;
+    }
   });
 
   let AuthCallbackURL = $('#regInputCallBackUrl').val();
@@ -202,18 +212,14 @@ function oauthRegCheck() {
     type: 'POST',
     data: {
       homepageAddr: HomepageAddr,
-      redirectUris: AuthCallbackURL,
+      redirect_uri: AuthCallbackURL,
       appName: AppName,
       reqInfo: JSON.stringify(chkReqInfo),
       chatManagerList: JSON.stringify(managerList),
     },
     success: function (result) {
-      if (result.message === true) {
-        alert('Application 등록완료!');
-        return window.location.replace('/');
-      } else if (result.code >= 400) {
-        alert('형식에 맞지 않는 항목이 있습니다.');
-      }
+      alert('Application 등록완료!');
+      return window.location.replace('/');
     },
   });
 }

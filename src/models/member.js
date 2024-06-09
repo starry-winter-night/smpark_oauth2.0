@@ -5,21 +5,28 @@ const { v4: uuidv4 } = require('uuid');
 
 const memberSchema = new Schema(
   {
-    username: String,
-    hashedPassword: String,
-    email: String,
-    name: String,
-    agree: Boolean,
+    username: { type: String, required: true, unique: true },
+    hashedPassword: { type: String, required: true },
+    email: { type: String, required: false },
+    name: { type: String, required: false },
+    agree: { type: Boolean, default: false },
     client: {
-      clientId: String,
-      clientSecret: String,
-      chatApiKey: String,
+      client_id: { type: String },
+      client_secret: { type: String },
+      chatApiKey: { type: String },
     },
   },
   {
-    timestamps: { currentTime: () => Date.now() + 3600000 * 9 },
+    timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
+      currentTime: () => Date.now() + 3600000 * 9, // 한국 표준시 (KST) 시간 적용
+    },
   }
 );
+
+// 스키마 수준에서 유니크 인덱스 설정
+memberSchema.index({ username: 1 }, { unique: true });
 
 memberSchema.methods.setPassword = async function (password) {
   const hash = await bcrypt.hash(password, 10);
@@ -30,35 +37,46 @@ memberSchema.methods.checkPassword = async function (password) {
   const result = await bcrypt.compare(password, this.hashedPassword);
   return result;
 };
+
+memberSchema.methods.setClientId = async function () {
+  let hash = uuidv4();
+  hash = hash.substring(1, 15);
+  hash = hash + '-' + this.username;
+  this.client.client_id = hash;
+};
+memberSchema.methods.setClientSecret = async function () {
+  let hash = uuidv4();
+  hash = hash.substring(1, 20);
+  this.client.client_secret = hash;
+};
+
+memberSchema.methods.setChatApiKey = async function () {
+  let hash = uuidv4();
+  this.client.chatApiKey = hash;
+};
+
+memberSchema.methods.serialize = function () {
+  const {
+    hashedPassword,
+    client: { client_secret, ...clientRest },
+    ...rest
+  } = this.toJSON();
+  return { ...rest, client: { ...clientRest } };
+};
+
 memberSchema.statics.findByUsername = function (username) {
   return this.findOne({ username });
 };
 memberSchema.statics.findById = function (id) {
   return this.findOne({ _id: id });
 };
-
-memberSchema.methods.setClientId = async function (clientId) {
-  let hash = uuidv4();
-  hash = hash.substring(1, 15);
-  hash = hash + '-' + this.username;
-  this.client.clientId = hash;
+memberSchema.statics.findByClientId = function (client_id) {
+  return this.findOne({ 'client.client_id': client_id }, { 'client.client_secret': 0, hashedPassword: 0 });
 };
-memberSchema.methods.setClientSecret = async function (clientSecret) {
-  let hash = uuidv4();
-  hash = hash.substring(1, 20);
-  this.client.clientSecret = hash;
+memberSchema.statics.updateByAgree = function (client_id, agree) {
+  return this.findOneAndUpdate({ 'client.client_id': client_id }, { agree }, { new: true });
 };
 
-memberSchema.methods.setChatApiKey = async function (chatApiKey) {
-  let hash = uuidv4();
-  this.client.chatApiKey = hash;
-};
+const Member = mongoose.model('Member', memberSchema);
 
-memberSchema.methods.serialize = function () {
-  const data = this.toJSON();
-  delete data.hashedPassword;
-  delete data.client.clientSecret;
-  return data;
-};
-
-module.exports = mongoose.model('member', memberSchema);
+module.exports = Member;

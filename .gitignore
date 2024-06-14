@@ -1,3 +1,16 @@
+# 기존 항목들
 node_modules
 .env
-info.log
+.env.local
+.DS_Store
+
+# Yarn Berry 항목들
+.yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+.pnp.js

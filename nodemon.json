@@ -1,0 +1,6 @@
+{
+  "watch": ["src/**/*.ts", "src/**/*.js"],
+  "ignore": [],
+  "exec": "eslint && pnpify node --import './loader.mjs' ./src/index.ts",
+  "ext": "ts,js"
+}

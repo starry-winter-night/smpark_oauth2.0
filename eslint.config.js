@@ -2,6 +2,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
+
 import globals from 'globals';
 
 export default [
@@ -42,9 +43,21 @@ export default [
     files: ['src/**/*.ts'],
     languageOptions: {
       parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json',
+      },
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
+      prettier: prettierPlugin,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+      },
     },
     rules: {
       ...prettierConfig.rules,
@@ -63,6 +76,13 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'warn', // 모듈 경계의 타입 명시 요구
       '@typescript-eslint/no-var-requires': 'error', // require 사용 금지
       '@typescript-eslint/prefer-namespace-keyword': 'error', // namespace 대신 module 사용 금지
+      'no-restricted-imports': [
+        // .를 통한 상대경로 임포트를 금지 시켜 alias 강제
+        'error',
+        {
+          patterns: ['.*'],
+        },
+      ],
     },
   },
 ];

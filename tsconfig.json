@@ -17,11 +17,25 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": ["src/components/*"],
-      "@utils/*": ["src/utils/*"]
-    }
+      "@controllers/*": ["src/adapters/controllers/*"],
+      "@usecases/*": ["src/application/usecases/*"],
+      "@entities/*": ["src/domain/entities/*"],
+      "@services/*": ["src/domain/services/*"],
+      "@configs/*": ["src/configs/*"],
+      "@utils/*": ["src/utils/*"],
+      "@dtos/*": ["src/adapters/dtos/*"],
+      "@mapper/*": ["src/adapters/mapper/*"],
+      "@repository/*": ["src/infrastructure/repository/*"],
+      "@database/*": ["src/infrastructure/database/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@middleware/*": ["src/middleware/*"],
+      "@routes/*": ["src/routes/*"]
+    },
+    // 실제로 노드 모듈이 없더라도 명시해놓아야 찾기 시작.
+    "typeRoots": ["src/types", "./node_modules/@types"]
   },
   "include": ["src/**/*.ts"],
+
   "exclude": [
     "node_modules", // build 시 제외
     "tests"

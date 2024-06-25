@@ -1,6 +1,6 @@
 {
   "watch": ["src/**/*.ts", "src/**/*.js"],
   "ignore": [],
-  "exec": "eslint && pnpify node --import './loader.mjs' ./src/index.ts",
+  "exec": "eslint && tsx watch --tsconfig tsconfig.json ./src/index.ts",
   "ext": "ts,js"
 }

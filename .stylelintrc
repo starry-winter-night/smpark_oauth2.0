@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "stylelint-config-recommended",
-    "stylelint-config-concentric-order"
-  ],
-  "rules": {
-    "color-named": "never"
-  }
-}

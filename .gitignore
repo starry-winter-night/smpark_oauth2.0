@@ -6,9 +6,6 @@
 # 빌드 폴더
 dist/
 
-# 패키지 파일 및 폴더
-
-
 # Cypress 테스트 폴더
 cypress/videos/
 cypress/screenshots/

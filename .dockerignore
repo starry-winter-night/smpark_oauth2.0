@@ -17,6 +17,7 @@ node_modules/
 
 # 로그
 *.log*
+log*
 
 # 깃
 .git

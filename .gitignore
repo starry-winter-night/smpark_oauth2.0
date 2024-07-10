@@ -15,6 +15,7 @@ cypress/screenshots/
 
 # 로그
 *.log*
+log*
 
 # 환경설정 파일
 .env*

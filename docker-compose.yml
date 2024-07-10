@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  oauth:
+    build:
+      context: .
+      target: production
+    image: smpark/oauth2.0:${VERSION}
+    container_name: smpark_oauth2.0_${VERSION}
+    ports:
+      - '4000:4000'
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+    command: yarn prod
+
+networks:
+  default:
+    name: smpark_oauth_network_prod

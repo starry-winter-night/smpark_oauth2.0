@@ -1,0 +1,33 @@
+# Yarn Berry (Zero Install)
+.yarn/install-state.gz
+
+# 빌드 폴더
+dist/
+
+# 패키지 파일 및 폴더
+node_modules/
+
+# 환경설정 파일
+.env*
+
+# macOS
+.DS_Store
+
+# 로그
+*.log*
+
+# 깃
+.git
+.gitignore
+
+# 도커 파일
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# vscode 설정
+.vscode/
+
+# 기타
+*.md
+

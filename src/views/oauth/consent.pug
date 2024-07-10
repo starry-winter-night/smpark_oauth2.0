@@ -1,0 +1,24 @@
+extends ../layout
+block content
+  
+  .logo-div
+    img.logo-image(src='/public/image/logo.png')
+  .agree-title
+    h2 oauth 서버 로그인 서비스 동의
+
+  .agree-listBox
+    ul  
+      each value, key in scope
+        if value
+          li= translations[key]
+    if updated
+      p 위의 표기된 정보가 업데이트되었습니다. smpark.dev 홈페이지의 로그인 및 채팅의 유저 식별용도 외 사용되지 않습니다. 동의하십니까?
+    else
+      p 위의 표기된 정보를 smpark.dev 홈페이지의 로그인 및 채팅의 유저 식별용도 외 사용되지 않습니다. 동의하십니까?
+  .agree-buttonBox
+    form#consentForm(action='/oauth/consent', method='get') 
+      button.agreeButton(type='submit') 동의함
+    
+    button.noAgreeButton(type='button') 동의안함
+
+  block contents

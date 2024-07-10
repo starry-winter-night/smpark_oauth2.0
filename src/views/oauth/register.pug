@@ -1,51 +1,53 @@
 extends ../layout
 block content
   div.oauth-regapp-div  
-    h1.oauth-h1 APP 등록하기
-    div.oauth-logo-div
-      img.oauth-logo-image(src='/public/image/logo.png')
-    form.logoutForm(action="/logout", method='Post')
-      button.btn.btn-default.logout-button(type='submit') 로그아웃
+    div.oauth-header-div
+      div.oauth-logo-div
+        img.oauth-logo-image(src='/public/image/logo.png')
+      h1.oauth-h1 OAuth App 등록
+      form.logoutForm(action="/logout", method='Post')
+        button.btn.btn-default.logout-button(type='submit') 로그아웃
     .form-group
       label.regIdlabel(for='regInputClientId') Client ID
-      input#regInputClientId.form-control(type='name',name='name', value=client.client_id,readonly=true)
-      input.copyButton.btn.btn-default.copy-button(type='button' id='idCopy',value='복사하기')
+      input#regInputClientId.form-control(type='text', name='client_id', value=client && client.client_id ? client.client_id : '', readonly=true)
+      button.actionButton.btn.btn-default.copy-button(type='submit', id='idCreate') 생성하기
+      input.actionButton.btn.btn-default.copy-button(type='button', id='idCopy', value='복사하기')
     .form-group
       label.regSecretlabel(for='regInputClientSecret') Client Secret
-      input#regInputClientSecret.form-control(type='name',name='name', value=client.client_secret, readonly=true)
-      input.copyButton.btn.btn-default.copy-button(type='button' id='secretCopy', value='복사하기')
+      input#regInputClientSecret.form-control(type='text', name='client_secret', value=client && client.client_secret ? client.client_secret : '', readonly=true)
+      button.actionButton.btn.btn-default.copy-button(type='submit', id='secretCreate') 생성하기
+      input.actionButton.btn.btn-default.copy-button(type='button', id='secretCopy', value='복사하기')
     .form-group
       label.regChatApiKeylabel(for='regInputChatApiKey') Chat Service Api Key
-      input#regInputChatApiKey.form-control(type='name',name='name', value=client.chatApiKey, readonly=true)
-      input.copyButton.btn.btn-default.copy-button(type='button' id='chatApiKeyCopy', value='복사하기')
+      input#regInputChatApiKey.form-control(type='text', name='chatApiKey', value=client && client.api_key ? client.api_key : '', readonly=true)
+      button.actionButton.btn.btn-default.copy-button(type='submit', id='chatApiKeyCreate') 생성하기
+      input.actionButton.btn.btn-default.copy-button(type='button', id='chatApiKeyCopy', value='복사하기')
     .form-group
       label(for='regInputAppName') Application Name
-      input#regInputAppName.form-control(type='name',name='name', placeholder='어플리케이션 이름를 입력하세요' value=client.appName)
+      input#regInputAppName.form-control(type='text', name='appName', placeholder='어플리케이션 이름을 입력하세요', value=client && client.application_name ? client.application_name : '')
     .form-group
       label(for='regInputHomepageAddr') Homepage Address
-      input#regInputHomepageAddr.form-control(type='url', name='url', placeholder='홈페이지 주소를 입력하세요.' value=client.homepageAddr)
+      input#regInputHomepageAddr.form-control(type='url', name='homepageAddr', placeholder='홈페이지 주소를 입력하세요.', value=client && client.address_uri ? client.address_uri : '')
     .form-group
       P.infomationP Check Required Information
       .checkBoxForm       
-        label(for='regInputSelectInfo1' name='labelAgreement') 아이디
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo1', value='id', checked=true disabled=true)
-        label(for='regInputSelectInfo2' name='labelAgreement') 이메일
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo2', value='email', checked=client.reqInfo['email'])
-        label(for='regInputSelectInfo3' name='labelAgreement') 이름
-          input.form-control(type='checkbox', name='agreement', id='regInputSelectInfo3', value='name', checked=client.reqInfo['name'])
-
+        label(for='regInputSelectInfo1') 아이디
+          input.form-control(type='checkbox', name='consent', id='regInputSelectInfo1', value='id', checked=true, disabled=true)
+        label(for='regInputSelectInfo2') 이메일
+          input.form-control(type='checkbox', name='consent', id='regInputSelectInfo2', value='email', checked=client && client.clientAllowedScopes && client.clientAllowedScopes.email)
+        label(for='regInputSelectInfo3') 이름
+          input.form-control(type='checkbox', name='consent', id='regInputSelectInfo3', value='name', checked=client && client.clientAllowedScopes && client.clientAllowedScopes.name)
     .form-group
       label(for='regInputCallBackUrl') Authorization Callback URL
-      input#regInputCallBackUrl.form-control(type='email', name='email', placeholder='허가요청을 위한 콜백 주소를 입력하세요.' value=client.redirect_uri)
+      input#regInputCallBackUrl.form-control(type='text', name='redirect_uri', placeholder='허가요청을 위한 콜백 주소를 입력하세요.', value=client && client.redirect_uri ? client.redirect_uri : '')
     .form-group
       label.regSmpChatManagerIdlabel(for='regInputSmpChatManagerId') smpChatService Manager ID
-      input#regInputSmpChatManagerId.form-control(type='name',placeholder='채팅서비스의 관리자 아이디를 등록하세요.')
-      input.addButton.btn.btn-default.copy-button(type='button' id='chatManagerIdAdd', value='추가')
-      input.reMoveButton.btn.btn-default.copy-button(type='button' id='chatManagerIdRemove', value='삭제')
+      input#regInputSmpChatManagerId.form-control(type='text', placeholder='채팅서비스의 관리자 아이디를 등록하세요.')
+      input.addButton.btn.btn-default.copy-button(type='button', id='chatManagerIdAdd', value='추가')
+      input.reMoveButton.btn.btn-default.copy-button(type='button', id='chatManagerIdRemove', value='삭제')
     div.divSmpChatManagerList  
-      textarea#regListSmpChatManagerId.form-control(type='name',rows="2" cols="20", readonly=true)=client.chatManagerList
+      textarea#regListSmpChatManagerId.form-control(rows="2", cols="20", readonly=true)= client && client.manager_list ? client.manager_list : ''
     div.oauth-button-div
       button#oauthRegisterButton.btn.btn-default.oauthReg-button(type='submit') 등록하기
-    
 
   block contents

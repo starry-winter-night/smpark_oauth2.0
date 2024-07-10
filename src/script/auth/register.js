@@ -1,116 +1,78 @@
-$('#regInputId').keydown(function (e) {
-  if (e.keyCode == 13) {
-    registerCheck();
-  }
-});
-$('#regInputPassword').keydown(function (e) {
-  if (e.keyCode == 13) {
-    registerCheck();
-  }
-});
-$('#regInputEmail').keydown(function (e) {
-  if (e.keyCode == 13) {
-    registerCheck();
+import {
+  checkSpace,
+  validateId,
+  validateEmail,
+  addEnterKeyListener,
+} from '../utils/utils.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  addEnterKeyListener('regInputId', registerCheck);
+  addEnterKeyListener('regInputPassword', registerCheck);
+  addEnterKeyListener('regInputEmail', registerCheck);
+
+  const registerButton = document.getElementById('registerButton');
+  if (registerButton) {
+    registerButton.addEventListener('click', registerCheck);
   }
 });
 
-$('#registerButton').on('click', function (e) {
-  registerCheck();
-});
+const registerCheck = async () => {
+  const id = document.getElementById('regInputId').value.trim();
+  const pw = document.getElementById('regInputPassword').value.trim();
+  const email = document.getElementById('regInputEmail').value.trim();
+  const name = document.getElementById('regInputName').value.trim();
 
-function registerCheck() {
-  let id = $('#regInputId').val();
-  let pw = $('#regInputPassword').val();
-  let email = $('#regInputEmail').val();
-  let name = $('#regInputName').val();
-  //로그인 폼 빈칸 검사
-  if (id.replace(/\s/g, '').length == 0) {
+  if (!id) {
     alert('아이디를 입력해주세요.');
-    $('#regInputId').val('');
-    $('#regInputId').focus();
+    document.getElementById('regInputId').focus();
     return false;
   }
-  if (pw.replace(/\s/g, '').length == 0) {
+  if (!pw) {
     alert('패스워드를 입력해주세요.');
-    $('#regInputPassword').val('');
-    $('#regInputPassword').focus();
+    document.getElementById('regInputPassword').focus();
     return false;
   }
-  if (email.replace(/\s/g, '').length == 0) {
+  if (!email) {
     alert('이메일을 입력해주세요.');
-    $('#regInputEmail').val('');
-    $('#regInputEmail').focus();
+    document.getElementById('regInputEmail').focus();
     return false;
   }
 
-  //로그인 폼 공백 검사
-  let id_check = checkSpace(id);
-  let pw_check = checkSpace(pw);
-  let email_check = checkSpace(email);
-  if (id_check == true || pw_check == true || email_check == true) {
+  if (checkSpace(id) || checkSpace(pw) || checkSpace(email)) {
     alert('공백은 사용하실 수 없습니다.');
-    $('#regInputId').val('');
-    $('#regInputPassword').val('');
-    $('#regInputEmail').val('');
-    $('#regInputId').focus();
+    document.getElementById('regInputId').focus();
     return false;
-  } else {
-    //로그인 아이디 특수문자 검사
-    id_check = validateId(id);
-    email_check = validateEmail(email);
-    if (id_check == false) {
-      alert('특수문자는 사용하실 수 없습니다.');
-      $('#regInputId').val('');
-      $('#regInputPassword').val('');
-      $('#regInputId').focus();
-      return false;
-    }
-    if (email_check == false) {
-      alert('이메일 아이디 @ 도메인주소 형식을 지켜주세요.');
-      $('#regInputEmail').val('');
-      $('#regInputEmail').focus('');
-      return false;
-    }
+  }
 
-    if (id_check && email_check) {
-      $.ajax({
-        url: '/register',
-        dataType: 'json',
-        type: 'POST',
-        data: { username: id, password: pw, email: email, name: name },
-        success: function (result) {
-          if (result.redirect) {
-            alert('회원가입 완료!!');
-            window.location.replace(result.redirect);
-          }
-        },
-      });
-    }
+  if (!validateId(id)) {
+    alert('특수문자는 사용하실 수 없습니다.');
+    document.getElementById('regInputId').focus();
+    return false;
   }
-}
+  if (!validateEmail(email)) {
+    alert('이메일 아이디 @ 도메인주소 형식을 지켜주세요.');
+    document.getElementById('regInputEmail').focus();
+    return false;
+  }
 
-//공백검사 함수
-function checkSpace(str) {
-  if (str.search(/\s/) != -1) {
-    return true;
-  } else {
-    return false;
+  try {
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, password: pw, email, name }),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      if (result.redirect) {
+        window.location.replace(result.redirect);
+      }
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    alert(error.message);
   }
-}
-//특수문자검사 함수
-function validateId(id) {
-  let id_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
-  if (id_pattern.test(id) == false) {
-    return true;
-  } else {
-    return false;
-  }
-}
-function validateEmail(email) {
-  let email_pattern = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-  if (email_pattern.test(email) == true) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};

@@ -1,88 +1,79 @@
-$('#InputId').keydown(function (e) {
-  if (e.keyCode == 13) {
-    e.preventDefault();
-    loginCheck();
-  }
-});
-$('#InputPassword').keydown(function (e) {
-  if (e.keyCode == 13) {
-    e.preventDefault();
-    loginCheck();
+import { checkSpace, checkSpecial } from '../utils/utils.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#InputId, #InputPassword').forEach((input) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        loginCheck();
+      }
+    });
+  });
+
+  // 버튼 클릭으로 로그인 체크 함수 호출
+  const oauthLoginButton = document.getElementById('loginButton');
+  if (oauthLoginButton) {
+    oauthLoginButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginCheck();
+    });
   }
 });
 
-$('#loginButton').on('click', function (e) {
-  e.preventDefault();
-  loginCheck();
-});
+const loginCheck = async () => {
+  const id = document.getElementById('InputId').value;
+  const pw = document.getElementById('InputPassword').value;
 
-function loginCheck() {
-  let id = $('#InputId').val();
-  let pw = $('#InputPassword').val();
   // 로그인 폼 빈칸 검사
-  if (id.replace(/\s/g, '').length == 0) {
+  if (id.replace(/\s/g, '').length === 0) {
     alert('아이디를 입력해주세요.');
-    $('#InputId').val('');
-    $('#InputId').focus();
+    document.getElementById('InputId').value = '';
+    document.getElementById('InputId').focus();
     return false;
   }
-  if (pw.replace(/\s/g, '').length == 0) {
+  if (pw.replace(/\s/g, '').length === 0) {
     alert('패스워드를 입력해주세요.');
-    $('#InputPassword').val('');
-    $('#InputPassword').focus();
+    document.getElementById('InputPassword').value = '';
+    document.getElementById('InputPassword').focus();
     return false;
   }
-  //로그인 폼 공백 검사
-  let id_check = checkSpace(id);
-  let pw_check = checkSpace(pw);
-  if (id_check == true || pw_check == true) {
+
+  // 로그인 폼 공백 검사
+  if (checkSpace(id) || checkSpace(pw)) {
     alert('공백은 사용하실 수 없습니다.');
-    $('#InputId').val('');
-    $('#InputPassword').val('');
-    $('#InputId').focus();
+    document.getElementById('InputId').value = '';
+    document.getElementById('InputPassword').value = '';
+    document.getElementById('InputId').focus();
     return false;
   } else {
-    //로그인 아이디 특수문자 검사
-    id_check = checkSpecial(id);
-    if (id_check == true) {
+    // 로그인 아이디 특수문자 검사
+    if (checkSpecial(id)) {
       alert('특수문자는 사용하실 수 없습니다.');
-      $('#InputId').val('');
-      $('#InputPassword').val('');
-      $('#InputId').focus();
+      document.getElementById('InputId').value = '';
+      document.getElementById('InputPassword').value = '';
+      document.getElementById('InputId').focus();
       return false;
     } else {
-      $.ajax({
-        url: '/login',
-        dataType: 'json',
-        type: 'POST',
-        data: { username: id, password: pw },
-        success: function (result) {
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, password: pw }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
           if (result.redirect) {
             window.location.replace(result.redirect);
           }
-        },
-        error: function (jqXHR) {
-          alert(jqXHR.responseJSON.message);
-        },
-      });
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        alert(error.message);
+      }
     }
   }
-}
-
-//공백검사 함수
-function checkSpace(str) {
-  if (str.search(/\s/) != -1) {
-    return true;
-  } else {
-    return false;
-  }
-}
-//특수문자검사 함수
-function checkSpecial(str) {
-  var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
-  if (special_pattern.test(str) == true) {
-    return true;
-  } else {
-    return false;
-  }
-}
+};

@@ -1,7 +1,7 @@
-# SMP Oauth Server
+# SMP OAuth Server
 
-`SMP Oauth Server`는 직접 만든 Oauth 2.0 서버입니다.  
-JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 대해서 깊게 공부해 보고 싶었습니다.  
+`SMP OAuth Server`는 직접 만든 OAuth 2.0 서버입니다.  
+JWT 로그인 기능을 제작하면서 평소에도 사용하는 OAuth 2.0에 대해서 깊게 공부해 보고 싶었습니다.  
 항상 반복하는 CRUD가 아닌 색다른 BE 개발을 해보고 싶었고 스스로 흥미로운 주제였기에 직접 제작해보았습니다.
 
 [📑[rfc6749]](https://datatracker.ietf.org/doc/html/rfc6749)의 구조와 권고를 베이스로 제작하였습니다.
@@ -12,7 +12,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 ## Version
 
-`SMP Oauth Server`_(v1.0.0)_
+`SMP OAuth Server`_(v1.0.0)_
 
 <br>
 
@@ -29,15 +29,15 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <br>
 
-## Flow (Oauth 2.0)
+## Flow (OAuth 2.0)
 
-<img src="src/public/image/oauth-flow.png" alt='Oauth Flow'>
+<img src="src/public/image/oauth-flow.png" alt='OAuth Flow'>
 
 <br>
 
 ## Secure
 
-`SMP Oauth Server`를 제작하면서 가장 중점을 두었던 부분은 보안입니다.
+`SMP OAuth Server`를 제작하면서 가장 중점을 두었던 부분은 보안입니다.
 아래와 같은 보안 검증을 구현하였습니다.
 
 <br>
@@ -57,7 +57,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <br>
 
-- `redirect_uri` : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP Oauth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
+- `redirect_uri` : redirect_uri 변조를 통한 code 탈취를 막기 위해 `SMP OAuth Server`에 등록된 redirect_uri와 실제로 요청된 redirect_uri의 동일성 검증합니다.
   [[📑[rfc6819]](https://datatracker.ietf.org/doc/html/rfc6819#section-5.2.3.5)] 권고
 
   ```javascript
@@ -86,7 +86,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 
 <br>
 
-- `dos` : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP Oauth Server`의 마비를 방지합니다.
+- `dos` : Express-rate-limit module의 사용으로 반복된 요청을 통한 `SMP OAuth Server`의 마비를 방지합니다.
 
   ```javascript
   const rateLimit = require('express-rate-limit');
@@ -146,7 +146,7 @@ JWT 로그인 기능을 제작하면서 평소에도 사용하는 Oauth 2.0에 �
 #### Register
 
 1. [📝[smp-oauth.link]](https://smp-oauth.link)에서 회원가입 후 로그인
-2. Homepage Address, Authorization Callback URL, Check Required Information 항목 기재 후 등록 <img src="src/public/image/register.PNG" alt='Oauth Flow'>
+2. Homepage Address, Authorization Callback URL, Check Required Information 항목 기재 후 등록 <img src="src/public/image/register.PNG" alt='OAuth Flow'>
 
 <br>
 
@@ -182,7 +182,7 @@ window.open(uri, 'oauthServer', 'width=520,height=680');
    <img src="src/public/image/login.PNG" alt='login'>
    <br>
 
-3. `SMP Oauth Server`에서 callback으로 전달받은 code, state parsing 후 redirect token (3.Flow -> 4.Flow)
+3. `SMP OAuth Server`에서 callback으로 전달받은 code, state parsing 후 redirect token (3.Flow -> 4.Flow)
 
 ```javascript
 // example const code = params.get('code');
@@ -205,7 +205,7 @@ const response = await this.smp_oauth.post('token', data);
 
 <br>
 
-4. `SMP Oauth Server`에서 전달받은 access_token을 `SMP Resource Server`로 bearer 전달 (5.Flow -> 6.Flow)
+4. `SMP OAuth Server`에서 전달받은 access_token을 `SMP Resource Server`로 bearer 전달 (5.Flow -> 6.Flow)
 
 ```javascript
 const token = oauthRes.data.access_token;
@@ -243,7 +243,7 @@ Project structure
 
 #### Log
 
-`SMP Oauth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록합니다. 특히 Error의 경우 어느 곳, 어떤 함수에서 에러가 발생했는지 기록하고 있습니다.
+`SMP OAuth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록합니다. 특히 Error의 경우 어느 곳, 어떤 함수에서 에러가 발생했는지 기록하고 있습니다.
 
 ```javascript
 const winston = require('winston');

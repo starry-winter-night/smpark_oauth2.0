@@ -7,18 +7,14 @@
   "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "editor.codeActionsOnSave": {
-    // "source.fixAll.eslint": "always"
-    // "source.organizeImports": "always"
-    // "source.fixAll.stylelint": "always"
-  },
   "eslint.validate": [
     "javascript",
-    // "javascriptreact",
-    "typescript"
-    // "typescriptreact"
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
   ],
   "editor.formatOnSave": true,
   "prettier.requireConfig": true,
-  "tsimporter.filesToScan": ["src/**/*.ts"]
+  "tsimporter.filesToScan": ["src/**/*.ts"],
+  "liveServer.settings.multiRootWorkspaceName": "oauth"
 }

@@ -1,18 +1,25 @@
-# 기존 항목들
-node_modules
-log
-.env
-.env.local
+# Yarn Berry (Zero Install)
+.yarn/install-state.gz
+
+# 빌드 폴더
+dist/
+
+# 패키지 파일 및 폴더
+node_modules/
+
+# Cypress 테스트 폴더
+cypress/videos/
+cypress/screenshots/
+
+# macOS
 .DS_Store
 
-# Yarn Berry 항목들
-.yarn
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
-.pnp.js
+# 로그
+*.log*
+
+# 환경설정 파일
+.env*
+
+
+
 

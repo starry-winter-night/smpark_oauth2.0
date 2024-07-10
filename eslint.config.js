@@ -2,6 +2,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import prettierConfig from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
+import cypressPlugin from 'eslint-plugin-cypress';
 
 import globals from 'globals';
 
@@ -83,6 +84,32 @@ export default [
           patterns: ['.*'],
         },
       ],
+    },
+  },
+  {
+    files: ['cypress/**/*.js', 'cypress/**/*.ts', '**/*.cy.js', '**/*.cy.ts'],
+    plugins: {
+      cypress: cypressPlugin,
+    },
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        cy: 'readonly',
+        Cypress: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+      },
+    },
+    rules: {
+      ...cypressPlugin.configs.recommended.rules,
+      'cypress/no-assigning-return-values': 'error',
+      'cypress/no-unnecessary-waiting': 'error',
+      'cypress/assertion-before-screenshot': 'warn',
+      'cypress/no-force': 'warn',
+      'no-unused-vars': 'off', // Cypress 명령에서 사용되는 변수들을 위해
+      '@typescript-eslint/no-unused-vars': 'off', // TypeScript 사용 시
     },
   },
 ];

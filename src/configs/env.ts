@@ -4,7 +4,7 @@ import type { EnvConfig } from '@lib/dotenv-env';
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
 } else {
-  dotenv.config({ path: '.env.local' });
+  dotenv.config({ path: '.env.development' });
 }
 
 const env: EnvConfig = {

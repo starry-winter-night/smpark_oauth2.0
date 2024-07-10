@@ -4,9 +4,11 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+RUN yarn install --immutable
+
 FROM base AS production
 ENV NODE_ENV=production
-EXPOSE 4000
+EXPOSE 3333
 CMD ["yarn", "prod"]
 
 FROM base AS development

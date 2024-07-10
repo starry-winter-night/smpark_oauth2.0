@@ -1,16 +1,15 @@
 # Yarn Berry (Zero Install)
 .yarn/install-state.gz
-# .yarn/unplugged 내의 node_modules 포함
-!.yarn/unplugged/**/node_modules
+.yarn/unplugged
 
 # 빌드 폴더
 dist/
 
-# 패키지 파일 및 폴더
-node_modules/
-
 # 환경설정 파일
 .env*
+
+# 패키지 파일 및 폴더
+node_modules/
 
 # macOS
 .DS_Store

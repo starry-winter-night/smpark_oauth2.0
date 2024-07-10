@@ -81,12 +81,12 @@
     "start:dev": "yarn docker:dev-build && yarn docker:dev-up",
     "test": "jest && cypress run",
     "lint": "eslint .",
-    "docker:prod-build": "docker-compose --env-file .env.production build",
-    "docker:prod-up": "docker-compose --env-file .env.production up -d",
-    "docker:prod-down": "docker-compose --env-file .env.production down",
-    "docker:dev-build": "docker-compose --env-file .env.local build",
-    "docker:dev-up": "docker-compose --env-file .env.local up -d",
-    "docker:dev-down": "docker-compose --env-file .env.local down"
+    "docker:prod-build": "docker-compose -f docker-compose.yml --env-file .env.production build",
+    "docker:prod-up": "docker-compose -f docker-compose.yml --env-file .env.production up -d",
+    "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down",
+    "docker:dev-build": "docker-compose -f docker-compose.dev.yml --env-file .env.development build",
+    "docker:dev-up": "docker-compose -f docker-compose.dev.yml --env-file .env.development up",
+    "docker:dev-down": "docker-compose -f docker-compose.dev.yml --env-file .env.development down"
   },
   "packageManager": "yarn@4.3.1"
 }

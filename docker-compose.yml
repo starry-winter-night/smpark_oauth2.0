@@ -8,7 +8,7 @@ services:
     image: smpark/oauth2.0:${VERSION}
     container_name: smpark_oauth2.0_${VERSION}
     ports:
-      - '4000:4000'
+      - '3333:3333'
     env_file:
       - .env.production
     environment:

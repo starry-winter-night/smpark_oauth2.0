@@ -1,6 +1,12 @@
 body {
   background: #f4f9fe;
   overflow-y: auto !important;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+  box-sizing: border-box;
 }
 a {
   cursor: pointer;
@@ -9,6 +15,204 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+button,
+html input[type='button'],
+input[type='reset'],
+input[type='submit'] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+textarea {
+  overflow: auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group > label {
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
+  display: block;
+}
+
+.form-control {
+  width: 100%;
+  height: 34px;
+  margin: 0;
+  display: block;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition:
+    border-color ease-in-out 0.15s,
+    -webkit-box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
+}
+
+.btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.btn.active.focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn:active:focus,
+.btn:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.btn.focus,
+.btn:focus,
+.btn:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.btn.active,
+.btn:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  opacity: 0.65;
+}
+
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.btn-default.active,
+.btn-default.focus,
+.btn-default:active,
+.btn-default:focus,
+.btn-default:hover,
+.open > .dropdown-toggle.btn-default {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.btn-default.active,
+.btn-default:active,
+.open > .dropdown-toggle.btn-default {
+  background-image: none;
+}
+
+.btn-default.disabled,
+.btn-default.disabled.active,
+.btn-default.disabled.focus,
+.btn-default.disabled:active,
+.btn-default.disabled:focus,
+.btn-default.disabled:hover,
+.btn-default[disabled],
+.btn-default[disabled].active,
+.btn-default[disabled].focus,
+.btn-default[disabled]:active,
+.btn-default[disabled]:focus,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default,
+fieldset[disabled] .btn-default.active,
+fieldset[disabled] .btn-default.focus,
+fieldset[disabled] .btn-default:active,
+fieldset[disabled] .btn-default:focus,
+fieldset[disabled] .btn-default:hover {
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.btn-default .badge {
+  color: #fff;
+  background-color: #333;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+  margin: 4px 0 0;
+  margin-top: 1px \9;
+  line-height: normal;
+}
+
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control {
+  cursor: not-allowed;
+  background-color: #eee;
+  opacity: 1;
+}
+
+textarea.form-control {
+  height: auto;
 }
 
 /******************** 동의 페이지 ****************/
@@ -77,34 +281,37 @@ ul {
 .main-title h2 {
   margin-top: 60px;
   text-align: center;
+  font-weight: 500;
+  font-size: 30px;
 }
 .main-button {
   margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .main-button form {
-  display: inline-block;
-  text-align: center;
+  width: 165px;
+  margin: 0 60px;
 }
 .main-alert {
   color: red;
   text-align: center;
 }
-.loginForm {
-  width: 20%;
-  margin-left: 30%;
-}
-.regForm {
-  width: 20%;
-  margin-right: 30%;
-}
 .main-button form button {
-  font-size: 25px;
+  width: 100%;
+  font-size: 22px;
   padding: 10px;
   background-color: #fff;
   border: 1px solid #000;
   outline: 0;
 }
 /***************** 인증 등록 페이지 ***************/
+.oauth-header-div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .infomationP {
   font-weight: 700;
 }
@@ -117,16 +324,10 @@ ul {
 .regChatApiKeylabel {
   display: block;
 }
-#regInputClientId {
-  width: 80%;
-  display: inline-block;
-}
-#regInputClientSecret {
-  width: 80%;
-  display: inline-block;
-}
+#regInputClientId,
+#regInputClientSecret,
 #regInputChatApiKey {
-  width: 80%;
+  width: 60%;
   display: inline-block;
 }
 .regSmpChatManagerIdlabel {
@@ -166,19 +367,22 @@ ul {
 
 .checkBoxForm {
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.copyButton {
-  width: 18%;
-  margin: 0 0 0 2%;
+.actionButton {
+  width: calc(20% - 10px);
+  margin-left: 10px;
 }
 
 .addButton {
-  width: 18%;
-  margin: 0 0 0 2%;
+  width: calc(20% - 10px);
+  margin-left: 10px;
 }
 .reMoveButton {
-  width: 18%;
-  margin: 0 0 0 2%;
+  width: calc(20% - 10px);
+  margin-left: 10px;
 }
 
 .checkBoxForm label {
@@ -191,20 +395,18 @@ ul {
   width: 20px;
 }
 .oauth-regapp-div {
-  width: 50%;
+  max-width: 1024px;
+  padding: 0px 10%;
   margin: 30px auto 60px auto;
 }
 .oauth-logo-div {
-  width: 25%;
-  display: inline-block;
   text-align: center;
+  width: 20%;
 }
 .oauth-h1 {
-  vertical-align: middle;
-  display: inline-block;
   font-size: 50px;
   cursor: default;
-  width: 55%;
+  width: 60%;
   text-align: center;
 }
 .oauthReg-button {
@@ -223,30 +425,41 @@ ul {
   text-align: center;
 }
 .logoutForm {
-  display: inline-block;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 .oauth-logo-image {
-  height: 180px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 110px;
   cursor: pointer;
 }
 /********************** 로고 ***********************/
 .logo-div {
-  width: 35%;
+  max-width: 486px;
   margin: 20px auto 0px auto;
+}
+.logo-div > a {
+  width: 250px;
+  display: flex;
+  margin: 0 auto;
 }
 .login-button-div {
   text-align: center;
 }
 .logo-image {
-  height: 250px;
-  margin: 40px auto 60px auto;
+  height: 230px;
+  margin: 40px auto 40px auto;
   display: block;
   cursor: pointer;
 }
 .login-button {
   display: inline-block;
-  margin: 1%;
+  margin: 30px auto 0 auto;
+  width: 100px;
 }
 
 .login-oauth-button {
@@ -323,7 +536,6 @@ ul {
 /********************** 로그아웃버튼 ***********************/
 .logout-button {
   cursor: pointer;
-  transform: translate(54%, -50%);
 }
 .logout-button input {
   background: #ffb836;
@@ -839,33 +1051,13 @@ ul {
   .oauth-h1 {
     font-size: 40px;
   }
-  .oauth-logo-image {
-    height: 180px;
-  }
-  .oauth-regapp-div {
-    width: 60%;
-  }
-  .logo-div { 
-    width:70%;
-  }
-  .logo-image {
-    margin: 20px auto 40px auto;
-  }
-
 }
 @media screen and (max-width: 1024px) {
   .oauth-h1 {
-    font-size: 3rem;
+    font-size: 2rem;
   }
   .oauth-logo-image {
     height: 130px;
-  }
-  .oauth-regapp-div {
-    width: 70%;
-  }
-
-  .logout-button {
-    transform: translate(110%, -100%);
   }
   .regForm {
     width: 40%;
@@ -875,46 +1067,18 @@ ul {
     width: 40%;
     margin-left: 10%;
   }
-  .main-button form button {
-    width: 80%;
-    font-weight: 700;
-    font-size: 16px;
-  }
   .main-title h2 {
     font-size: 28px;
-  }
-  .logo-div { 
-    width:80%;
-  }
-  .logo-image {
-    margin: 10px auto 40px auto;
   }
 }
 @media screen and (max-width: 768px) {
   /************ 어플 등록페이지 *************/
-  .form-control {
-    width: 97%;
+  .main-button form {
+    width: 140px;
+    margin: 0 40px;
   }
-  .oauth-regapp-div {
-    width: 90%;
-  }
-  .oauth-logo-div {
-    width: 30%;
-  }
-  #regInputClientId,
-  #regInputClientSecret,
-  #regInputChatApiKey {
-    width: 70%;
-  }
-  #regInputSmpChatManagerId {
-    width: 50%;
-  }
-  .addButton,
-  .reMoveButton {
-    width: 22%;
-  }
-  .copyButton {
-    width: 25%;
+  .actionButton {
+    padding: 6px 0;
   }
   .checkBoxForm label {
     width: 30%;
@@ -922,7 +1086,7 @@ ul {
   }
   .oauth-h1 {
     width: 42%;
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
   }
   .oauth-logo-image {
@@ -930,7 +1094,6 @@ ul {
   }
   /************ 메뉴 *************/
   .logout-button {
-    transform: translate(10%, -100%);
     font-size: 12px;
   }
   .logout-button input {
@@ -954,9 +1117,9 @@ ul {
     margin-left: 10%;
   }
   .main-button form button {
-    width: 80%;
-    font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
+    padding: 6px 0;
+    min-width: 65px;
   }
   .main-title h2 {
     font-size: 28px;
@@ -1045,10 +1208,7 @@ ul {
   .titleCss h4 {
     width: 100%;
   }
-  .logo-div { 
-    width:90%;
-  }
-  .logo-image {
-    margin: 0 auto 20px auto;
+  .logo-div {
+    width: 90%;
   }
 }

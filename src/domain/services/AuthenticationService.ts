@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 import createError from 'http-errors';
 import { injectable } from 'inversify';
 
@@ -8,19 +8,19 @@ import { ERROR_MESSAGES } from '@constants/errorMessages';
 @injectable()
 class AuthenticationService {
   async hashedPassword(password: string): Promise<string> {
-    return await bcrypt.hash(password, 10);
+    return await argon2.hash(password);
   }
 
   async comparePassword(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword);
+    return await argon2.verify(hashedPassword, password);
   }
 
   validateSignupInfo(user: User): void {
     const isId = user.isValidId(user.id);
-    
+
     if (!isId) {
       throw createError(400, ERROR_MESSAGES.VALIDATION.FORMAT.USERNAME);
     }

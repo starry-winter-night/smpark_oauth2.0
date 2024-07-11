@@ -1,9 +1,9 @@
 import AuthenticationService from '@services/AuthenticationService';
 import User from '@entities/User';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 
-jest.mock('bcrypt');
+jest.mock('argon2');
 jest.mock('@entities/User');
 
 describe('AuthenticationService', () => {
@@ -23,22 +23,22 @@ describe('AuthenticationService', () => {
 
   describe('hashedPassword', () => {
     it('패스워드 해시', async () => {
-      jest.mocked(bcrypt.hash).mockImplementation(() => 'hashedPassword');
+      jest.mocked(argon2.hash).mockImplementation(async () => 'hashedPassword');
       const result = await authService.hashedPassword('password');
       expect(result).toBe('hashedPassword');
-      expect(bcrypt.hash).toHaveBeenCalledWith('password', 10);
+      expect(argon2.hash).toHaveBeenCalledWith('password', 10);
     });
   });
 
   describe('comparePassword', () => {
     it('패스워드 비교', async () => {
-      jest.mocked(bcrypt.compare).mockImplementation(() => true);
+      jest.mocked(argon2.verify).mockImplementation(async () => true);
       const result = await authService.comparePassword(
-        'password',
         'hashedPassword',
+        'password',
       );
       expect(result).toBe(true);
-      expect(bcrypt.compare).toHaveBeenCalledWith('password', 'hashedPassword');
+      expect(argon2.verify).toHaveBeenCalledWith('hashedPassword', 'password');
     });
   });
 
@@ -104,7 +104,7 @@ describe('AuthenticationService', () => {
     it('로그인 인증 성공 시 에러 미발생', async () => {
       mockUser.isValidId.mockReturnValue(true);
       mockUser.isValidPassword.mockReturnValue(true);
-      jest.mocked(bcrypt.compare).mockImplementation(() => true);
+      jest.mocked(argon2.verify).mockImplementation(async () => true);
       await expect(
         authService.authenticate(mockUser, 'password', 'hashedPassword'),
       ).resolves.not.toThrow();

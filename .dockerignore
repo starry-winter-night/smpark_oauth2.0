@@ -1,6 +1,5 @@
 # Yarn Berry (Zero Install)
 .yarn/install-state.gz
-.yarn/unplugged
 
 # 빌드 폴더
 dist/

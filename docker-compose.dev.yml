@@ -13,8 +13,14 @@ services:
       - .env.development
     environment:
       - NODE_ENV=development
+    volumes:
+    - .:/usr/src/oauth2.0
+    - smpark_log:/usr/src/oauth2.0/src/log
     command: yarn dev
-
+    
 networks:
   default:
     name: smpark_oauth_network_dev
+
+volumes:
+  smpark_log:

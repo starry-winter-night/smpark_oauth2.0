@@ -23,7 +23,7 @@ const app = express();
 
 await configureExpress(app, sessionStore, env);
 
-const port = env.port || 4001;
+const port = env.port || 5555;
 app.listen(port, async () => {
   console.log(`Server Connected, ${port} port!`);
 });

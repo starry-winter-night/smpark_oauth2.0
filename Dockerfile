@@ -1,7 +1,6 @@
 FROM node:20.14.0 AS base
 
 WORKDIR /usr/src/oauth2.0
-RUN corepack enable && corepack prepare yarn@4.3.1 --activate
 
 # Yarn PnP Zero Install 관련 파일들
 COPY .yarn .yarn

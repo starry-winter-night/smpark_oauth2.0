@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@esbuild/linux-arm64": "^0.23.0",
     "argon2": "^0.40.3",
     "compression": "^1.7.4",
     "connect-mongo": "^5.1.0",
@@ -67,27 +66,26 @@
     "ts-jest": "^29.1.5",
     "tsc-alias": "^1.8.10",
     "tsx": "^4.15.7",
-    "typescript": "^5.5.2",
-    "yarn": "^1.22.22"
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": "20"
   },
   "type": "module",
   "scripts": {
-    "build": "node build.mjs",
     "dev": "cross-env NODE_ENV=development nodemon",
     "prod": "cross-env NODE_ENV=production node ./dist/index.js",
-    "start:prod": "yarn docker:prod-build && yarn docker:prod-up",
-    "start:dev": "yarn docker:dev-build && yarn docker:dev-up",
+    "build": "node build.mjs",
     "test": "jest && cypress run",
     "lint": "eslint .",
-    "docker:prod-build": "docker-compose -f docker-compose.yml --env-file .env.production build",
-    "docker:prod-up": "docker-compose -f docker-compose.yml --env-file .env.production up -d",
-    "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down",
+    "start:dev": "yarn docker:dev-build && yarn docker:dev-up",
+    "start:prod": "yarn build && yarn docker:prod-build && yarn docker:prod-up",
     "docker:dev-build": "docker-compose -f docker-compose.dev.yml --env-file .env.development build",
     "docker:dev-up": "docker-compose -f docker-compose.dev.yml --env-file .env.development up",
-    "docker:dev-down": "docker-compose -f docker-compose.dev.yml --env-file .env.development down"
+    "docker:dev-down": "docker-compose -f docker-compose.dev.yml --env-file .env.development down",
+    "docker:prod-build": "docker-compose -f docker-compose.yml --env-file .env.production build",
+    "docker:prod-up": "docker-compose -f docker-compose.yml --env-file .env.production up -d",
+    "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down"
   },
   "packageManager": "yarn@4.3.1"
 }

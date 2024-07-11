@@ -1,10 +1,20 @@
 FROM node:20.14.0 AS base
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/oauth2.0
+RUN corepack enable && corepack prepare yarn@4.3.1 --activate
 
-COPY . .
+# Yarn PnP Zero Install 관련 파일들
+COPY .yarn .yarn
+COPY .pnp.* ./
+COPY package.json yarn.lock ./
 
-RUN yarn install --immutable
+# 설정 파일들
+COPY nodemon.json .prettierrc ./
+COPY *.config.js *.config.mjs ./
+COPY tsconfig.json ./
+
+# 소스 코드
+COPY src ./src
 
 FROM base AS production
 ENV NODE_ENV=production

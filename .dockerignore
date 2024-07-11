@@ -1,9 +1,6 @@
 # Yarn Berry (Zero Install)
 .yarn/install-state.gz
 
-# 빌드 폴더
-dist/
-
 # 환경설정 파일
 .env*
 

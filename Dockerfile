@@ -16,8 +16,14 @@ COPY tsconfig.json ./
 COPY src ./src
 
 FROM base AS production
+# 빌드 파일
+COPY dist ./dist 
+
+# Prod 글로벌 yarn을 사용 -> corepack 연결 -> 지정 yarn 사용 변경
+RUN corepack enable 
+
 ENV NODE_ENV=production
-EXPOSE 3333
+EXPOSE 5555
 CMD ["yarn", "prod"]
 
 FROM base AS development

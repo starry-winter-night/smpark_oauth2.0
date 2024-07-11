@@ -6,6 +6,9 @@
 # 빌드 폴더
 dist/
 
+# 환경설정 파일
+.env*
+
 # Cypress 테스트 폴더
 cypress/videos/
 cypress/screenshots/
@@ -17,8 +20,7 @@ cypress/screenshots/
 *.log*
 log*
 
-# 환경설정 파일
-.env*
+
 
 
 

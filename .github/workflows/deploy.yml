@@ -25,7 +25,6 @@ jobs:
 
       - name: Create environment file
         run: |
-          cat << EOF > .env.${{ vars.NODE_ENV }}
           LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
           LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}
           MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
@@ -67,7 +66,7 @@ jobs:
             yarn ${{ env.ENV_NAME }}
 
       - name: Update Nginx configuration (Production only)
-        if: ${{ github.event.deployment.environment == 'production' }}
+        if: ${{ env.NODE_ENV == 'production' }}
         run: |
           sudo tee /opt/homebrew/etc/nginx/nginx.conf > /dev/null <<EOT
           user smpark admin;
@@ -104,8 +103,8 @@ jobs:
           EOT
 
       - name: Validate Nginx configuration (Production only)
-        if: ${{ github.event.deployment.environment == 'production' }}
+        if: ${{ env.NODE_ENV == 'production' }}
         run: sudo nginx -t
       - name: Restart Nginx (Production only)
-        if: ${{ github.event.deployment.environment == 'production' }}
+        if: ${{ env.NODE_ENV == 'production' }}
         run: sudo brew services restart nginx

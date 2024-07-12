@@ -1,4 +1,3 @@
-import 'date-utils';
 import 'winston-daily-rotate-file';
 import fs from 'fs';
 import path from 'path';
@@ -9,52 +8,73 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const logDir = path.join(__dirname, '/../log');
-const logLevel = 'info';
-const { combine, timestamp, colorize, simple, json, align } = winston.format;
+const { combine, colorize, simple, printf } = winston.format;
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-// 로그 포맷 정의
-const logFormat = combine(
-  colorize({ all: true }),
-  timestamp({ format: 'YYYY-MM-DD hh:mm:ss.SSS A' }),
-  align(),
-  json(),
-);
+// 한국 시간 적용을 위한 함수
+const appendTimestamp = winston.format((info, opts) => {
+  if (opts.tz)
+    info.timestamp = new Date().toLocaleString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+    });
+  return info;
+});
 
-// info 레벨 파일 트랜스포트
-const infoTransport = new winston.transports.DailyRotateFile({
-  filename: 'info-%DATE%.log',
-  dirname: logDir,
-  level: 'info',
+// 커스텀 로그 포맷
+const customFormat = printf((info) => {
+  return `${info.level.toUpperCase()}: ${info.timestamp} ${info.message}`;
+});
+
+// 필터 설정
+const infoAndWarnFilter = winston.format((info) => {
+  return info.level === 'info' || info.level === 'warn' ? info : false;
+});
+
+const errorFilter = winston.format((info) => {
+  return info.level === 'error' ? info : false;
+});
+
+// info와 warn 레벨 파일 트랜스포트
+const infoAndWarnTransport = new winston.transports.DailyRotateFile({
+  filename: 'application-%DATE%.log',
+  dirname: path.join(logDir, 'info'),
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '180d',
+  maxSize: '128m',
+  maxFiles: '14d',
+  level: 'info',
+  format: combine(
+    infoAndWarnFilter(),
+    appendTimestamp({ tz: true }),
+    customFormat,
+  ),
 });
 
 // error 레벨 파일 트랜스포트
 const errorTransport = new winston.transports.DailyRotateFile({
-  filename: 'error-%DATE%.log',
-  dirname: logDir,
-  level: 'error',
+  filename: 'application-%DATE%.log',
+  dirname: path.join(logDir, 'error'),
   datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '180d',
+  maxSize: '128m',
+  maxFiles: '14d',
+  level: 'error',
+  format: combine(errorFilter(), appendTimestamp({ tz: true }), customFormat),
 });
 
-// 콘솔 트랜스포트 (개발 중에 유용)
+// 콘솔 트랜스포트
 const consoleTransport = new winston.transports.Console({
-  format: combine(simple()),
-  level: logLevel,
+  level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+  format: combine(colorize(), appendTimestamp({ tz: true }), simple()),
 });
 
 const logger = winston.createLogger({
-  format: logFormat,
-  transports: [infoTransport, errorTransport, consoleTransport],
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: combine(appendTimestamp({ tz: true }), customFormat),
+  transports: [infoAndWarnTransport, errorTransport, consoleTransport],
 });
 
 const stream = {

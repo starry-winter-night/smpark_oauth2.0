@@ -80,6 +80,7 @@ const RAW_RUNTIME_STATE =
           ["jest-mock", "npm:29.7.0"],\
           ["joi", "npm:17.13.3"],\
           ["jsonwebtoken", "npm:9.0.2"],\
+          ["logform", "npm:2.6.1"],\
           ["mongodb", "virtual:9f8e16caa77ad1ba652d060eaac75d52ee8a70a592ae1064fe295ce963d398fdd0fd09a14776e3b3230d4eaf547e9f6954a981713705ba10f06bdb151914d630#npm:6.8.0"],\
           ["morgan", "npm:1.10.0"],\
           ["nodemon", "npm:3.1.4"],\
@@ -10184,6 +10185,7 @@ const RAW_RUNTIME_STATE =
           ["jest-mock", "npm:29.7.0"],\
           ["joi", "npm:17.13.3"],\
           ["jsonwebtoken", "npm:9.0.2"],\
+          ["logform", "npm:2.6.1"],\
           ["mongodb", "virtual:9f8e16caa77ad1ba652d060eaac75d52ee8a70a592ae1064fe295ce963d398fdd0fd09a14776e3b3230d4eaf547e9f6954a981713705ba10f06bdb151914d630#npm:6.8.0"],\
           ["morgan", "npm:1.10.0"],\
           ["nodemon", "npm:3.1.4"],\

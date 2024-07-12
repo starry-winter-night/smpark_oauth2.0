@@ -22,7 +22,7 @@ const logFormat = combine(
   printf(
     (info: winston.Logform.TransformableInfo) =>
       `${info.timestamp} ${info.level}: ${info.message}`,
-  ),
+  ), 
 );
 
 // info 레벨 파일 트랜스포트

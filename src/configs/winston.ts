@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const logDir = path.join(__dirname, '/../log');
 const logLevel = 'info';
-const { combine, timestamp, printf, colorize, simple } = winston.format;
+const { combine, timestamp, colorize, simple, json, align } = winston.format;
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
@@ -18,8 +18,10 @@ if (!fs.existsSync(logDir)) {
 
 // 로그 포맷 정의
 const logFormat = combine(
-  timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  printf((info: any) => `${info.timestamp} ${info.level}: ${info.message}`),
+  colorize({ all: true }),
+  timestamp({ format: 'YYYY-MM-DD hh:mm:ss.SSS A' }),
+  align(),
+  json(),
 );
 
 // info 레벨 파일 트랜스포트
@@ -46,7 +48,7 @@ const errorTransport = new winston.transports.DailyRotateFile({
 
 // 콘솔 트랜스포트 (개발 중에 유용)
 const consoleTransport = new winston.transports.Console({
-  format: combine(colorize(), simple()),
+  format: combine(simple()),
   level: logLevel,
 });
 

@@ -49,6 +49,7 @@ jobs:
           APP_PORT=${{ env.APP_PORT }}
           VERSION=${{ env.VERSION }}
           EOF
+          cat .env.${{ env.NODE_ENV }}
 
       - name: Build and push Docker image
         run: |

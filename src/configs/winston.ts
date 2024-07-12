@@ -20,7 +20,7 @@ if (!fs.existsSync(logDir)) {
 const logFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   printf(
-    (info: winston.Logform.TransformableInfo) =>
+    (info) =>
       `${info.timestamp} ${info.level}: ${info.message}`,
   ), 
 );

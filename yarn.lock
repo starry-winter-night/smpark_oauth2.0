@@ -8323,6 +8323,7 @@ __metadata:
     jest-mock: "npm:^29.7.0"
     joi: "npm:^17.13.1"
     jsonwebtoken: "npm:^9.0.2"
+    logform: "npm:^2.6.1"
     mongodb: "npm:^6.7.0"
     morgan: "npm:^1.10.0"
     nodemon: "npm:^3.1.3"

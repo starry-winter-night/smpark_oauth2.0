@@ -5,6 +5,7 @@ import path from 'path';
 import winston from 'winston';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { TransformableInfo } from 'logform';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,7 +21,8 @@ if (!fs.existsSync(logDir)) {
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
+    (info: TransformableInfo) =>
+      `${info.timestamp} ${info.level}: ${info.message}`,
   ),
 );
 

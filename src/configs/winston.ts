@@ -19,7 +19,10 @@ if (!fs.existsSync(logDir)) {
 // 로그 포맷 정의
 const logFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+  printf(
+    (info: winston.Logform.TransformableInfo) =>
+      `${info.timestamp} ${info.level}: ${info.message}`,
+  ),
 );
 
 // info 레벨 파일 트랜스포트

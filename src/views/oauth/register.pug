@@ -4,7 +4,10 @@ block content
     div.oauth-header-div
       div.oauth-logo-div
         img.oauth-logo-image(src='/public/image/logo.png')
-      h1.oauth-h1 OAuth App 등록
+      h1.oauth-h1 
+        | OAuth App
+        span.breakpoint 
+        | 등록
       form.logoutForm(action="/logout", method='Post')
         button.btn.btn-default.logout-button(type='submit') 로그아웃
     .form-group

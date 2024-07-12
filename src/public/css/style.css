@@ -214,6 +214,10 @@ textarea.form-control {
   height: auto;
 }
 
+.breakpoint {
+  display: inline;
+}
+
 /******************** 동의 페이지 ****************/
 .agree-title {
   text-align: center;
@@ -306,6 +310,7 @@ textarea.form-control {
   outline: 0;
 }
 /***************** 인증 등록 페이지 ***************/
+
 .oauth-header-div {
   display: flex;
   align-items: center;
@@ -409,7 +414,7 @@ textarea.form-control {
   text-align: center;
 }
 .oauthReg-button {
-  margin: 30px 0;
+  margin: 15px 0;
 }
 .oauth-logo-div .form-group p {
   font-weight: 700;
@@ -448,17 +453,17 @@ textarea.form-control {
 }
 .login-button-div {
   text-align: center;
-  margin: 30px 0;
+  margin: 15px 0;
 }
 .logo-image {
   height: 230px;
-  margin: 40px auto 40px auto;
+  margin: 5px auto 40px auto;
   display: block;
   cursor: pointer;
 }
 .login-button {
   display: inline-block;
-  margin: 30px auto;
+  margin: 15px auto 30px auto;
   width: 100px;
 }
 
@@ -1210,6 +1215,12 @@ textarea.form-control {
   }
   .logo-div {
     width: 90%;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .breakpoint {
+    display: block;
   }
 }
 

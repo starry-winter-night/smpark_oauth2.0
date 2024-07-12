@@ -5,7 +5,7 @@ import path from 'path';
 import winston from 'winston';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { TransformableInfo } from 'logform';
+import { TransformableInfo } from '@lib/logform';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

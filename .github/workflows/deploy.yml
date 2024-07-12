@@ -47,8 +47,8 @@ jobs:
           NODE_ENV=${{ env.NODE_ENV }}
           OAUTH_ISSUER=${{ env.OAUTH_ISSUER }}
           NGINX_PORT=${{ env.NGINX_PORT }}
-          APP_PORT=${{ env.APP_PORT }}
-          VERSION=${{ env.VERSION }}
+          APP_PORT=${{ vars.APP_PORT }}
+          VERSION=${{ vars.VERSION }}
           EOF
           cat .env.${{ env.ENVIRONMENT }}
 

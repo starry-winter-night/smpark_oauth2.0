@@ -1,8 +1,5 @@
 # Yarn Berry (Zero Install)
 .yarn/install-state.gz
-!.yarn/cache/**/node_modules
-# .yarn/unplugged 내의 node_modules 포함
-!.yarn/unplugged/**/node_modules
 
 # 빌드 폴더
 dist/
@@ -18,9 +15,7 @@ cypress/screenshots/
 .DS_Store
 
 # 로그
-*.log*
-log*
-
+src/log/*
 
 
 

@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const env: EnvConfig = {
   nodeEnv: process.env.NODE_ENV as string,
-  port: process.env.PORT as string,
+  port: process.env.APP_PORT as string,
   mongoDBUri: process.env.MONGO_DATABASE_URI as string,
   mongoDBSessionKey: process.env.MONGO_DATABASE_SESSION_KEY as string,
   mongoDBUser: process.env.MONGO_DATABASE_USER as string,

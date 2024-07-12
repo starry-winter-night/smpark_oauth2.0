@@ -2,17 +2,14 @@ name: Deploy to MacBook
 
 on:
   push:
-    branches: [main]
-
-env:
-  DOCKER_IMAGE: smpark9596/oauth2.0
-  VERSION: 1.0.0
-  APP_PORT: 5555
-  NGINX_PORT: 3333
-
+    branches: 
+      - main
+      - develop
 jobs:
   deploy:
     runs-on: self-hosted
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} # 브랜치에 따라 구분
+
     steps:
       - uses: actions/checkout@v2
 
@@ -22,27 +19,51 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Create environment file
+        run: |
+          cat << EOF > .env.${{ vars.NODE_ENV }}
+          LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
+          LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}
+          MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
+          MONGO_DATABASE_PASSWORD=${{ secrets.MONGO_DATABASE_PASSWORD }}
+          MONGO_DATABASE_SESSION_COLLECTION=${{ secrets.MONGO_DATABASE_SESSION_COLLECTION }}
+          MONGO_DATABASE_SESSION_KEY=${{ secrets.MONGO_DATABASE_SESSION_KEY }}
+          MONGO_DATABASE_URI=${{ secrets.MONGO_DATABASE_URI }}
+          MONGO_DATABASE_USER=${{ secrets.MONGO_DATABASE_USER }}
+          OAUTH_ACCESS_SECRET_KEY=${{ secrets.OAUTH_ACCESS_SECRET_KEY }}
+          OAUTH_ACCESS_TOKEN_EXPIRES_IN=${{ secrets.OAUTH_ACCESS_TOKEN_EXPIRES_IN }}
+          OAUTH_CODE_EXPIRES_IN=${{ secrets.OAUTH_CODE_EXPIRES_IN }}
+          OAUTH_REFRESH_SECRET_KEY=${{ secrets.OAUTH_REFRESH_SECRET_KEY }}
+          OAUTH_REFRESH_TOKEN_EXPIRES_IN=${{ secrets.OAUTH_REFRESH_TOKEN_EXPIRES_IN }}
+          NODE_ENV=${{ vars.NODE_ENV }}
+          OAUTH_ISSUER=${{ vars.OAUTH_ISSUER }}
+          NGINX_PORT=${{ vars.NGINX_PORT }}
+          APP_PORT=${{ vars.APP_PORT }}
+          VERSION=${{ vars.VERSION }}
+          EOF
+
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }} .
-          docker push ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+          docker build -t ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} .
+          docker push ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
 
       - name: Deploy application
         run: |
-          docker pull ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
-          docker stop oauth2.0_${{ env.VERSION }} || true
-          docker rm oauth2.0_${{ env.VERSION }} || true
-          docker network create smpark_oauth_network_prod || true
-          docker run -d --name oauth2.0_${{ env.VERSION }} \
-            -p ${{ env.NGINX_PORT }}:${{ env.APP_PORT }} \
-            -e NODE_ENV=production \
-            --env-file .env.production \
+          docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
+          docker stop oauth2.0_${{ vars.VERSION }} || true
+          docker rm oauth2.0_${{ vars.VERSION }} || true
+          docker network create smpark_oauth_network_${{ github.event.deployment.environment }} || true
+          docker run -d --name oauth2.0_${{ vars.VERSION }} \
+            -p ${{ vars.NGINX_PORT }}:${{ vars.APP_PORT }} \
+            -e NODE_ENV=${{ vars.NODE_ENV }} \
+            --env-file .env.${{ github.event.deployment.environment }} \
             -v smpark_log:/usr/src/oauth2.0/src/log \
-            --network smpark_oauth_network_prod \
-            ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }} \
-            yarn prod
+            --network smpark_oauth_network_${{ github.event.deployment.environment }} \
+            ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} \
+            yarn ${{ vars.NODE_ENV }}
 
-      - name: Update Nginx configuration
+      - name: Update Nginx configuration (Production only)
+        if: ${{ github.event.deployment.environment == 'production' }}
         run: |
           sudo tee /opt/homebrew/etc/nginx/nginx.conf > /dev/null <<EOT
           user smpark admin;
@@ -67,7 +88,7 @@ jobs:
                   ssl_certificate_key /etc/letsencrypt/live/smpark.ddns.net/privkey.pem;
                   ssl_protocols TLSv1.2 TLSv1.3;
                   location / {
-                      proxy_pass http://localhost:${{ env.NGINX_PORT }};
+                      proxy_pass http://localhost:${{ vars.NGINX_PORT }};
                       proxy_http_version 1.1;
                       proxy_set_header Upgrade \$http_upgrade;
                       proxy_set_header Connection 'upgrade';
@@ -78,5 +99,9 @@ jobs:
           }
           EOT
 
-      - name: Restart Nginx
+      - name: Validate Nginx configuration (Production only)
+        if: ${{ github.event.deployment.environment == 'production' }}
+        run: sudo nginx -t
+      - name: Restart Nginx (Production only)
+        if: ${{ github.event.deployment.environment == 'production' }}
         run: sudo brew services restart nginx

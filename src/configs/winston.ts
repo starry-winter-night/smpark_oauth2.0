@@ -5,7 +5,6 @@ import path from 'path';
 import winston from 'winston';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { TransformableInfo } from '@lib/winston-type';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,10 +19,7 @@ if (!fs.existsSync(logDir)) {
 // 로그 포맷 정의
 const logFormat = combine(
   timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  printf(
-    (info: TransformableInfo) =>
-      `${info.timestamp} ${info.level}: ${info.message}`,
-  ),
+  printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
 );
 
 // info 레벨 파일 트랜스포트

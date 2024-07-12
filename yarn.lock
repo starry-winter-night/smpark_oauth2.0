@@ -2323,13 +2323,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/date-utils@npm:^1.2.5":
-  version: 1.2.5
-  resolution: "@types/date-utils@npm:1.2.5"
-  checksum: 10c0/fb17e36fb698809859e083bed1362fe0c6309d6fd1a23fefa729dd9fad5a728ebf4a1f50fb4dcd35d5d78c6b14de6ab8e3ca02ce2eb0ca41c38fc7031d518be2
-  languageName: node
-  linkType: hard
-
 "@types/emscripten@npm:^1.39.6":
   version: 1.39.13
   resolution: "@types/emscripten@npm:1.39.13"
@@ -4145,13 +4138,6 @@ __metadata:
   dependencies:
     assert-plus: "npm:^1.0.0"
   checksum: 10c0/64589a15c5bd01fa41ff7007e0f2c6552c5ef2028075daa16b188a3721f4ba001841bf306dfc2eee6e2e6e7f76b38f5f17fb21fa847504192290ffa9e150118a
-  languageName: node
-  linkType: hard
-
-"date-utils@npm:^1.2.21":
-  version: 1.2.21
-  resolution: "date-utils@npm:1.2.21"
-  checksum: 10c0/f5a1204477e33df43ebe811d87ac745fbadbb67eca9ba73e9b5a33a76e021792d8ce3331187c782905822f9c3d4ed92fb6bc5e415eaf84091e742edfb78b364a
   languageName: node
   linkType: hard
 
@@ -8297,7 +8283,6 @@ __metadata:
     "@types/connect-mongodb-session": "npm:^2.4.7"
     "@types/cookie-parser": "npm:^1.4.7"
     "@types/cors": "npm:^2.8.17"
-    "@types/date-utils": "npm:^1.2.5"
     "@types/eslint-config-prettier": "npm:^6.11.3"
     "@types/express": "npm:^4.17.21"
     "@types/express-session": "npm:^1.18.0"
@@ -8324,7 +8309,6 @@ __metadata:
     cors: "npm:^2.8.5"
     cross-env: "npm:^7.0.3"
     cypress: "npm:^13.13.0"
-    date-utils: "npm:^1.2.21"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^9.5.0"
     eslint-config-prettier: "npm:^9.1.0"

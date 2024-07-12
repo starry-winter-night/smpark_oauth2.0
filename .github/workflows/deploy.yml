@@ -53,10 +53,24 @@ jobs:
 
       - name: Deploy application
         run: |
+          # Pull the latest image
           docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
-          docker stop oauth2.0_${{ vars.VERSION }} || true
-          docker rm oauth2.0_${{ vars.VERSION }} || true
-          docker network create smpark_oauth_network_${{ env.ENV_NAME }} || true
+          
+          # Stop and remove existing container if it exists
+          if [ $(docker ps -a -q -f name=oauth2.0_${{ vars.VERSION }}) ]; then
+            docker stop oauth2.0_${{ vars.VERSION }}
+            docker rm oauth2.0_${{ vars.VERSION }}
+          fi
+          
+          # Remove existing network if it exists
+          if [ $(docker network ls -q -f name=smpark_oauth_network_${{ env.ENV_NAME }}) ]; then
+            docker network rm smpark_oauth_network_${{ env.ENV_NAME }}
+          fi
+          
+          # Create the network
+          docker network create smpark_oauth_network_${{ env.ENV_NAME }}
+          
+          # Run the container
           docker run -d --name oauth2.0_${{ vars.VERSION }} \
             -p ${{ vars.NGINX_PORT }}:${{ vars.APP_PORT }} \
             -e NODE_ENV=${{ vars.NODE_ENV }} \
@@ -65,6 +79,7 @@ jobs:
             --network smpark_oauth_network_${{ env.ENV_NAME }} \
             ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} \
             yarn ${{ env.ENV_NAME }}
+
 
       - name: Update Nginx configuration (Production only)
         if: ${{ env.NODE_ENV == 'production' }}

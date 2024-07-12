@@ -20,10 +20,9 @@ if (!fs.existsSync(logDir)) {
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   winston.format.printf(
-    (info: winston.Logform.TransformableInfo) =>
-      `${info.timestamp} ${info.level}: ${info.message}`,
+    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
   ),
-); 
+);
 
 // info 레벨 파일 트랜스포트
 const infoTransport = new winston.transports.DailyRotateFile({

@@ -409,7 +409,7 @@ textarea.form-control {
   text-align: center;
 }
 .oauthReg-button {
-  margin-top: 30px;
+  margin: 30px 0;
 }
 .oauth-logo-div .form-group p {
   font-weight: 700;
@@ -448,6 +448,7 @@ textarea.form-control {
 }
 .login-button-div {
   text-align: center;
+  margin: 30px 0;
 }
 .logo-image {
   height: 230px;
@@ -457,7 +458,7 @@ textarea.form-control {
 }
 .login-button {
   display: inline-block;
-  margin: 30px auto 0 auto;
+  margin: 30px auto;
   width: 100px;
 }
 
@@ -1209,5 +1210,11 @@ textarea.form-control {
   }
   .logo-div {
     width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .oauth-regapp-div {
+    padding: 0px 2%;
   }
 }

@@ -23,7 +23,7 @@ const logFormat = winston.format.combine(
     (info: winston.Logform.TransformableInfo) =>
       `${info.timestamp} ${info.level}: ${info.message}`,
   ),
-);
+); 
 
 // info 레벨 파일 트랜스포트
 const infoTransport = new winston.transports.DailyRotateFile({

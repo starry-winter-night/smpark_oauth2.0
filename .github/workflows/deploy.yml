@@ -49,11 +49,3 @@ jobs:
       - name: Build, push, and deploy
         run: |
           yarn start:${{ env.ENV_NAME }}
-
-      - name: Update Nginx port and restart (Production only)
-        if: ${{ env.ENV_NAME == 'prod' }}
-        run: |
-          # 포트 번호만 업데이트 (필요한 경우)
-          sudo sed -i 's/proxy_pass http:\/\/localhost:[0-9]\+;/proxy_pass http:\/\/localhost:${{ vars.NGINX_PORT }};/' /opt/homebrew/etc/nginx/nginx.conf
-          sudo nginx -t
-          sudo brew services restart nginx

@@ -1,5 +1,7 @@
 body {
-  background: #f4f9fe;
+  /* background: #f4f9fe; */
+  background: blue;
+
   overflow-y: auto !important;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;

@@ -48,6 +48,7 @@ const RAW_RUNTIME_STATE =
           ["@types/morgan", "npm:1.9.9"],\
           ["@types/node", "npm:20.14.10"],\
           ["@types/uuid", "npm:9.0.8"],\
+          ["@types/winston", "npm:2.4.4"],\
           ["@typescript-eslint/eslint-plugin", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.16.0"],\
           ["@typescript-eslint/parser", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.16.0"],\
           ["@yarnpkg/pnpify", "npm:4.1.0"],\
@@ -3494,6 +3495,16 @@ const RAW_RUNTIME_STATE =
           ["@types/whatwg-url", "npm:8.2.2"],\
           ["@types/node", "npm:20.14.10"],\
           ["@types/webidl-conversions", "npm:7.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/winston", [\
+      ["npm:2.4.4", {\
+        "packageLocation": "./.yarn/cache/@types-winston-npm-2.4.4-dd7822726c-8b967c089b.zip/node_modules/@types/winston/",\
+        "packageDependencies": [\
+          ["@types/winston", "npm:2.4.4"],\
+          ["winston", "npm:3.13.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10130,6 +10141,7 @@ const RAW_RUNTIME_STATE =
           ["@types/morgan", "npm:1.9.9"],\
           ["@types/node", "npm:20.14.10"],\
           ["@types/uuid", "npm:9.0.8"],\
+          ["@types/winston", "npm:2.4.4"],\
           ["@typescript-eslint/eslint-plugin", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.16.0"],\
           ["@typescript-eslint/parser", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:7.16.0"],\
           ["@yarnpkg/pnpify", "npm:4.1.0"],\
@@ -11403,7 +11415,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/winston-daily-rotate-file-virtual-c6f9c806cb/0/cache/winston-daily-rotate-file-npm-5.0.0-ac4acb48ee-c6dfd8ceff.zip/node_modules/winston-daily-rotate-file/",\
         "packageDependencies": [\
           ["winston-daily-rotate-file", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.0.0"],\
-          ["@types/winston", null],\
+          ["@types/winston", "npm:2.4.4"],\
           ["file-stream-rotator", "npm:0.6.1"],\
           ["object-hash", "npm:3.0.0"],\
           ["triple-beam", "npm:1.4.1"],\

@@ -41,7 +41,7 @@ const configureExpress = async (
       cookie: {
         sameSite: 'strict',
         httpOnly: true,
-        maxAge: Number(env.loginExpiresIn),
+        maxAge: Number(env.loginExpiresIn) * 1000,
       },
     }),
   );

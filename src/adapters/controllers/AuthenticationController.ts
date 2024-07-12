@@ -39,7 +39,7 @@ class AuthenticationController {
         password,
       );
       res.cookie('auth_token', token, {
-        maxAge: Number(this.env.loginExpiresIn),
+        maxAge: Number(this.env.loginExpiresIn) * 1000,
         httpOnly: true,
       });
 

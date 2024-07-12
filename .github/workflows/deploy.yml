@@ -53,6 +53,53 @@ jobs:
 
       - name: Deploy application
         run: |
+          # 변수 설정
+          CONTAINER_NAME="oauth2.0_${{ vars.VERSION }}"
+          NETWORK_NAME="smpark_oauth_network_${{ env.ENV_NAME }}"
+          
+          echo "Preparing to deploy ${CONTAINER_NAME}"
+          
+          # 기존 컨테이너 강제 제거
+          echo "Removing existing container (if any)..."
+          docker rm -f ${CONTAINER_NAME} || true
+          
+          # 이미지 풀
+          echo "Pulling latest image..."
+          docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
+          
+          # 네트워크 생성 (이미 존재하면 무시)
+          echo "Ensuring network exists..."
+          docker network inspect ${NETWORK_NAME} >/dev/null 2>&1 || \
+            docker network create ${NETWORK_NAME}
+          
+          # 볼륨 생성 (이미 존재하면 무시)
+          echo "Ensuring volume exists..."
+          docker volume inspect smpark_log >/dev/null 2>&1 || \
+            docker volume create smpark_log
+          
+          # 새 컨테이너 실행
+          echo "Starting new container..."
+          docker run -d --name ${CONTAINER_NAME} \
+            -p ${{ vars.NGINX_PORT }}:${{ vars.APP_PORT }} \
+            -e NODE_ENV=${{ vars.NODE_ENV }} \
+            --env-file .env.${{ vars.NODE_ENV }} \
+            -v smpark_log:/usr/src/oauth2.0/src/log \
+            --network ${NETWORK_NAME} \
+            ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} \
+            yarn ${{ env.ENV_NAME }}
+          
+          # 실행 중인 컨테이너 확인
+          echo "Verifying container is running..."
+          if docker ps | grep -q ${CONTAINER_NAME}; then
+            echo "Container ${CONTAINER_NAME} is running successfully."
+          else
+            echo "Container failed to start. Checking logs..."
+            docker logs ${CONTAINER_NAME}
+            exit 1
+          fi
+          
+          echo "Deployment completed successfully."
+        run: |
           # 이미지 풀
           docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
           

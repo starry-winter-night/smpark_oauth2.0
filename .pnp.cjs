@@ -44,6 +44,7 @@ const RAW_RUNTIME_STATE =
           ["@types/inversify", "npm:2.0.33"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/jsonwebtoken", "npm:9.0.6"],\
+          ["@types/logform", "npm:1.10.1"],\
           ["@types/mongoose", "npm:5.11.97"],\
           ["@types/morgan", "npm:1.9.9"],\
           ["@types/node", "npm:20.14.10"],\
@@ -3306,6 +3307,16 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/keyv", "npm:3.1.4"],\
           ["@types/node", "npm:20.14.10"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/logform", [\
+      ["npm:1.10.1", {\
+        "packageLocation": "./.yarn/cache/@types-logform-npm-1.10.1-cc9ff5be5f-a8da7435fd.zip/node_modules/@types/logform/",\
+        "packageDependencies": [\
+          ["@types/logform", "npm:1.10.1"],\
+          ["logform", "npm:2.6.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10137,6 +10148,7 @@ const RAW_RUNTIME_STATE =
           ["@types/inversify", "npm:2.0.33"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/jsonwebtoken", "npm:9.0.6"],\
+          ["@types/logform", "npm:1.10.1"],\
           ["@types/mongoose", "npm:5.11.97"],\
           ["@types/morgan", "npm:1.9.9"],\
           ["@types/node", "npm:20.14.10"],\

@@ -2490,6 +2490,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/logform@npm:^1.10.1":
+  version: 1.10.1
+  resolution: "@types/logform@npm:1.10.1"
+  dependencies:
+    logform: "npm:*"
+  checksum: 10c0/a8da7435fd0b8a7f0f8e1136c9736027f9045cd21d4ac56292de4c993b4eb61bb97cea8096b46171d4446f2eba56bae3b059d6921c1f62cf0575e6126eaefeea
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:^1":
   version: 1.3.5
   resolution: "@types/mime@npm:1.3.5"
@@ -6842,7 +6851,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"logform@npm:^2.6.0, logform@npm:^2.6.1":
+"logform@npm:*, logform@npm:^2.6.0, logform@npm:^2.6.1":
   version: 2.6.1
   resolution: "logform@npm:2.6.1"
   dependencies:
@@ -8298,6 +8307,7 @@ __metadata:
     "@types/inversify": "npm:^2.0.33"
     "@types/jest": "npm:^29.5.12"
     "@types/jsonwebtoken": "npm:^9.0.6"
+    "@types/logform": "npm:^1.10.1"
     "@types/mongoose": "npm:^5.11.97"
     "@types/morgan": "npm:^1.9.9"
     "@types/node": "npm:^20.14.9"

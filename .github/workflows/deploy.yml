@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} # 브랜치에 따라 구분
+    environment: ${{ github.ref == 'refs/heads/main' && '.env.production' || '.env.development' }} # 브랜치에 따라 구분
 
     env:
       APP_PORT: ${{ github.ref == 'refs/heads/main' && '5555' || '4000' }}
@@ -17,6 +17,7 @@ jobs:
       NODE_VERSION: 20.14.0
       OAUTH_ISSUER: https://smpark.ddns.net
       VERSION: 1.0.0
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} 
 
     steps:
       - uses: actions/checkout@v2
@@ -29,7 +30,7 @@ jobs:
 
       - name: Create environment file
         run: |
-          cat << EOF > .env.${{ env.NODE_ENV }}
+          cat << EOF > .env.${{ env.ENVIRONMENT }}
           LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
           LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}
           MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
@@ -49,7 +50,7 @@ jobs:
           APP_PORT=${{ env.APP_PORT }}
           VERSION=${{ env.VERSION }}
           EOF
-          cat .env.${{ env.NODE_ENV }}
+          cat .env.${{ env.ENVIRONMENT }}
 
       - name: Build and push Docker image
         run: |

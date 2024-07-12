@@ -2,7 +2,9 @@ name: Deploy to MacBook
 
 on:
   push:
-    branches: [main, dev]
+    branches:
+      - main
+      - develop
 
 jobs:
   deploy:
@@ -10,14 +12,7 @@ jobs:
     environment: ${{ github.ref == 'refs/heads/main' && '.env.production' || '.env.development' }} # 브랜치에 따라 구분
 
     env:
-      APP_PORT: ${{ github.ref == 'refs/heads/main' && '5555' || '4000' }}
-      DOCKER_IMAGE: smpark9596/oauth2.0
-      NGINX_PORT: ${{ github.ref == 'refs/heads/main' && '3333' || '4000' }}
-      NODE_ENV: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
-      NODE_VERSION: 20.14.0
-      OAUTH_ISSUER: https://smpark.ddns.net
-      VERSION: 1.0.0
-      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }} 
+      ENV_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -30,7 +25,7 @@ jobs:
 
       - name: Create environment file
         run: |
-          cat << EOF > .env.${{ env.ENVIRONMENT }}
+          cat << EOF > .env.${{ vars.NODE_ENV }}
           LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
           LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}
           MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
@@ -44,33 +39,32 @@ jobs:
           OAUTH_CODE_EXPIRES_IN=${{ secrets.OAUTH_CODE_EXPIRES_IN }}
           OAUTH_REFRESH_SECRET_KEY=${{ secrets.OAUTH_REFRESH_SECRET_KEY }}
           OAUTH_REFRESH_TOKEN_EXPIRES_IN=${{ secrets.OAUTH_REFRESH_TOKEN_EXPIRES_IN }}
-          NODE_ENV=${{ env.NODE_ENV }}
-          OAUTH_ISSUER=${{ env.OAUTH_ISSUER }}
-          NGINX_PORT=${{ env.NGINX_PORT }}
+          NODE_ENV=${{ vars.NODE_ENV }}
+          OAUTH_ISSUER=${{ vars.OAUTH_ISSUER }}
+          NGINX_PORT=${{ vars.NGINX_PORT }}
           APP_PORT=${{ vars.APP_PORT }}
           VERSION=${{ vars.VERSION }}
           EOF
-          cat .env.${{ env.ENVIRONMENT }}
 
       - name: Build and push Docker image
         run: |
-          yarn docker:${{ env.NODE_ENV }}-build
-          docker push ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+          yarn start:${{ evn.ENV_NAME }}
+          docker push ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
 
       - name: Deploy application
         run: |
-          docker pull ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
-          docker stop oauth2.0_${{ env.VERSION }} || true
-          docker rm oauth2.0_${{ env.VERSION }} || true
-          docker network create smpark_oauth_network_${{ github.event.deployment.environment }} || true
-          docker run -d --name oauth2.0_${{ env.VERSION }} \
-            -p ${{ env.NGINX_PORT }}:${{ env.APP_PORT }} \
-            -e NODE_ENV=${{ env.NODE_ENV }} \
-            --env-file .env.${{ github.event.deployment.environment }} \
+          docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
+          docker stop oauth2.0_${{ vars.VERSION }} || true
+          docker rm oauth2.0_${{ vars.VERSION }} || true
+          docker network create smpark_oauth_network_${{ evn.ENV_NAME }} || true
+          docker run -d --name oauth2.0_${{ vars.VERSION }} \
+            -p ${{ vars.NGINX_PORT }}:${{ vars.APP_PORT }} \
+            -e NODE_ENV=${{ vars.NODE_ENV }} \
+            --env-file .env.${{ vars.NODE_ENV }} \
             -v smpark_log:/usr/src/oauth2.0/src/log \
-            --network smpark_oauth_network_${{ github.event.deployment.environment }} \
-            ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }} \
-            yarn ${{ env.NODE_ENV }}
+            --network smpark_oauth_network_${{ evn.ENV_NAME }} \
+            ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} \
+            yarn ${{ evn.ENV_NAME }}
 
       - name: Update Nginx configuration (Production only)
         if: ${{ github.event.deployment.environment == 'production' }}
@@ -98,7 +92,7 @@ jobs:
                   ssl_certificate_key /etc/letsencrypt/live/smpark.ddns.net/privkey.pem;
                   ssl_protocols TLSv1.2 TLSv1.3;
                   location / {
-                      proxy_pass http://localhost:${{ env.NGINX_PORT }};
+                      proxy_pass http://localhost:${{ vars.NGINX_PORT }};
                       proxy_http_version 1.1;
                       proxy_set_header Upgrade \$http_upgrade;
                       proxy_set_header Connection 'upgrade';

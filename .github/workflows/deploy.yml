@@ -48,7 +48,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          yarn start:${{ evn.ENV_NAME }}
+          yarn start:${{ env.ENV_NAME }}
           docker push ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
 
       - name: Deploy application
@@ -56,15 +56,15 @@ jobs:
           docker pull ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }}
           docker stop oauth2.0_${{ vars.VERSION }} || true
           docker rm oauth2.0_${{ vars.VERSION }} || true
-          docker network create smpark_oauth_network_${{ evn.ENV_NAME }} || true
+          docker network create smpark_oauth_network_${{ env.ENV_NAME }} || true
           docker run -d --name oauth2.0_${{ vars.VERSION }} \
             -p ${{ vars.NGINX_PORT }}:${{ vars.APP_PORT }} \
             -e NODE_ENV=${{ vars.NODE_ENV }} \
             --env-file .env.${{ vars.NODE_ENV }} \
             -v smpark_log:/usr/src/oauth2.0/src/log \
-            --network smpark_oauth_network_${{ evn.ENV_NAME }} \
+            --network smpark_oauth_network_${{ env.ENV_NAME }} \
             ${{ vars.DOCKER_IMAGE }}:${{ vars.VERSION }} \
-            yarn ${{ evn.ENV_NAME }}
+            yarn ${{ env.ENV_NAME }}
 
       - name: Update Nginx configuration (Production only)
         if: ${{ github.event.deployment.environment == 'production' }}

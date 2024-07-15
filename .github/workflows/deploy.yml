@@ -25,7 +25,7 @@ jobs:
 
       - name: Create environment file
         run: |
-          ENV_FILE="/Users/smpark/smpark_oauth2.0/.env.production"
+          ENV_FILE="/Users/smpark/Projects/smpark_oauth2.0/.env.production"
           cat << EOF > "$ENV_FILE"
           LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
           LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}

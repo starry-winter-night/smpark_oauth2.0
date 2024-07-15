@@ -1,3 +1,4 @@
+import xss from 'xss';
 import createError from 'http-errors';
 import { injectable } from 'inversify';
 
@@ -132,7 +133,8 @@ class OAuthRequestValidService {
   }
 
   private normalizeUri(uri: string): string {
-    return uri.endsWith('/') ? uri.slice(0, -1) : uri;
+    const filteredUri = xss(uri);
+    return filteredUri.endsWith('/') ? filteredUri.slice(0, -1) : filteredUri;
   }
 }
 

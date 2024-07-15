@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    environment: ${{ github.ref == 'refs/heads/main' && '.env.production' || '.env.development' }} # 브랜치에 따라 구분
+    environment: ${{ github.ref == 'refs/heads/main' && '.env.production' || '.env.development' }}
 
     env:
       ENV_NAME: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
@@ -18,14 +18,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Create environment file
         run: |
-          cat << EOF > .env.${{ vars.NODE_ENV }}
+          ENV_FILE="/Users/smpark_oauth2.0/.env.${{ env.ENV_NAME }}"
+          cat << EOF > "$ENV_FILE"
           LOGIN_EXPIRES_IN=${{ secrets.LOGIN_EXPIRES_IN }}
           LOGIN_JWT_SECRET_KEY=${{ secrets.LOGIN_JWT_SECRET_KEY }}
           MONGO_DATABASE_NAME=${{ secrets.MONGO_DATABASE_NAME }}
@@ -45,6 +46,8 @@ jobs:
           APP_PORT=${{ vars.APP_PORT }}
           VERSION=${{ vars.VERSION }}
           EOF
+          chmod 600 "$ENV_FILE"
+          echo "Environment file created at $ENV_FILE"
 
       - name: Build, push, and deploy
         run: |

@@ -37,21 +37,28 @@ class TokenGenerationUseCase {
       aud: client_id,
     };
     const tokens = {
-      accessToken: this.generateToken(accessTokenPayload),
-      refreshToken: this.generateToken(refreshTokenPayload),
+      accessToken: this.generateToken(
+        accessTokenPayload,
+        this.env.oauthAccessSecret,
+        Number(this.env.oauthAccessTokenExpiresIn),
+      ),
+      refreshToken: this.generateToken(
+        refreshTokenPayload,
+        this.env.oauthRefreshSecret,
+        Number(this.env.oauthRefreshTokenExpiresIn),
+      ),
     };
     await this.saveOrUpdateToken(id, tokens, user.agreedScopes);
     await this.codeRepository.deleteByCode(id);
     return tokens;
   }
 
-  private generateToken<T extends object>(payload: T): string {
-    const expiresIn = Number(this.env.oauthAccessTokenExpiresIn);
-    return this.tokenService.generateToken(
-      payload,
-      this.env.oauthAccessSecret,
-      expiresIn,
-    );
+  private generateToken<T extends object>(
+    payload: T,
+    secretKey: string,
+    expiresIn: number,
+  ): string {
+    return this.tokenService.generateToken(payload, secretKey, expiresIn);
   }
 
   private async getUser(id: string): Promise<UserDTO> {

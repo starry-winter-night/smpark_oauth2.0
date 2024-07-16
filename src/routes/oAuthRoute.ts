@@ -52,6 +52,8 @@ oauth.get(
   oAuthController.generateCode.bind(oAuthController),
 );
 
+oauth.post('/disagree', oAuthController.disagree.bind(oAuthController));
+
 oauth.post(
   '/token',
   oAuthController.verifyTokenRequest.bind(oAuthController),

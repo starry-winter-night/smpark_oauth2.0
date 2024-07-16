@@ -18,7 +18,7 @@ block content
   .agree-buttonBox
     form#consentForm(action='/oauth/consent', method='get') 
       button.agreeButton(type='submit') 동의함
-    
-    button.noAgreeButton(type='button') 동의안함
+    form#disagreeForm(action='/oauth/disagree', method='post') 
+      button.noAgreeButton(type='submit') 동의안함
 
   block contents

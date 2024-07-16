@@ -217,6 +217,15 @@ class OAuthController {
       next(error);
     }
   }
+
+  disagree(req: Request, res: Response, next: NextFunction): void {
+    const referer = req.session.verifiedRefererUri;
+    if (referer) {
+      res.redirect(referer);
+    } else {
+      next(createError(400, ERROR_MESSAGES.VALIDATION.MISSING.REFERER_URI));
+    }
+  }
 }
 
 export default OAuthController;

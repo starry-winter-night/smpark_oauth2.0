@@ -9,7 +9,11 @@ import env from '@configs/env';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const logDir = path.join(__dirname, '/../log');
+const logDir =
+  env.nodeEnv === 'production'
+    ? '/usr/src/oauth_log'
+    : path.join(__dirname, '/../log');
+
 const { combine, colorize, simple, printf } = winston.format;
 
 if (!fs.existsSync(logDir)) {

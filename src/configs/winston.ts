@@ -5,6 +5,8 @@ import winston from 'winston';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
+import env from '@configs/env';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const logDir = path.join(__dirname, '/../log');
@@ -67,12 +69,12 @@ const errorTransport = new winston.transports.DailyRotateFile({
 
 // 콘솔 트랜스포트
 const consoleTransport = new winston.transports.Console({
-  level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
+  level: env.nodeEnv === 'production' ? 'warn' : 'debug',
   format: combine(colorize(), appendTimestamp({ tz: true }), simple()),
 });
 
 const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  level: env.nodeEnv === 'production' ? 'info' : 'debug',
   format: combine(appendTimestamp({ tz: true }), customFormat),
   transports: [infoAndWarnTransport, errorTransport, consoleTransport],
 });

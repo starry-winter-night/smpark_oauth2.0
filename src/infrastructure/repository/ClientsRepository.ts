@@ -48,8 +48,7 @@ class ClientsRepository implements IClientsRepository {
     clients: ClientsDTO,
   ): Promise<boolean> {
     const result = await this.collection.updateOne({ id }, { $set: clients });
-
-    return result.matchedCount > 0 && result.modifiedCount > 0;
+    return result.acknowledged && result.matchedCount > 0;
   }
 
   async saveClientsDetail(

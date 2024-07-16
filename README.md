@@ -34,20 +34,7 @@ README.md는 OAuth2.0에 대한 간단한 소개 및 사용방법, 폴더 구조
 
 ## IDE
 
-<img alt="VSCode" src="https://img.shields.io/badge/VSCode-v1.91.1-007ACC.svg?&flat&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDVweCIgaGVpZ2h0PSI0NHB4IiB2aWV3Qm94PSIwIDAgNDQgNDQiIHZlcnNpb249IjEuMSI+CjxnIGlkPSJzdXJmYWNlMSI+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMTQuMTE3NjQ3JSw1My43MjU0OSUsNzkuMjE1Njg2JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDEuMjU3ODEyIDE1LjczMDQ2OSBDIDEuMjU3ODEyIDE1LjczMDQ2OSAwLjIxNDg0NCAxNC45NjQ4NDQgMS40NjQ4NDQgMTMuOTQxNDA2IEwgNC4zNzg5MDYgMTEuMjkyOTY5IEMgNC4zNzg5MDYgMTEuMjkyOTY5IDUuMjEwOTM4IDEwLjM5ODQzOCA2LjA5Mzc1IDExLjE3NTc4MSBMIDMyLjk2NDg0NCAzMS44OTQ1MzEgTCAzMi45NjQ4NDQgNDEuODI4MTI1IEMgMzIuOTY0ODQ0IDQxLjgyODEyNSAzMi45NTMxMjUgNDMuMzkwNjI1IDMwLjk4NDM3NSA0My4yMTg3NSBaIE0gMS4yNTc4MTIgMTUuNzMwNDY5ICIvPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDYuMjc0NTElLDQzLjkyMTU2OSUsNzAuMTk2MDc4JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDguMTgzNTk0IDIyLjEzMjgxMiBMIDEuMjU3ODEyIDI4LjU0Njg3NSBDIDEuMjU3ODEyIDI4LjU0Njg3NSAwLjU0Njg3NSAyOS4wODU5MzggMS4yNTc4MTIgMzAuMDQ2ODc1IEwgNC40NzI2NTYgMzMuMDI3MzQ0IEMgNC40NzI2NTYgMzMuMDI3MzQ0IDUuMjM4MjgxIDMzLjg2MzI4MSA2LjM2NzE4OCAzMi45MTAxNTYgTCAxMy43MDcwMzEgMjcuMjQyMTg4IFogTSA4LjE4MzU5NCAyMi4xMzI4MTIgIi8+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMy4xMzcyNTUlLDQ2LjY2NjY2NyUsNzIuNTQ5MDIlKTtmaWxsLW9wYWNpdHk6MTsiIGQ9Ik0gMjAuMzQzNzUgMjIuMTg3NSBMIDMzLjA0Njg3NSAxMi4zMDg1OTQgTCAzMi45NjQ4NDQgMi40MjU3ODEgQyAzMi45NjQ4NDQgMi40MjU3ODEgMzIuNDIxODc1IDAuMjY5NTMxIDMwLjYxMzI4MSAxLjM5MDYyNSBMIDEzLjcwNzAzMSAxNy4wNTg1OTQgWiBNIDIwLjM0Mzc1IDIyLjE4NzUgIi8+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMjMuNTI5NDEyJSw2MCUsODMuMTM3MjU1JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDMwLjk4NDM3NSA0My4yMzA0NjkgQyAzMS43MjI2NTYgNDQgMzIuNjE3MTg4IDQzLjc1IDMyLjYxNzE4OCA0My43NSBMIDQyLjUxNTYyNSAzOC43ODEyNSBDIDQzLjc4NTE1NiAzNy45MDIzNDQgNDMuNjA1NDY5IDM2LjgwODU5NCA0My42MDU0NjkgMzYuODA4NTk0IEwgNDMuNjA1NDY5IDcuMTQ0NTMxIEMgNDMuNjA1NDY5IDUuODQzNzUgNDIuMjk2ODc1IDUuMzkwNjI1IDQyLjI5Njg3NSA1LjM5MDYyNSBMIDMzLjcxNDg0NCAxLjE3OTY4OCBDIDMxLjgzOTg0NCAwIDMwLjYxMzI4MSAxLjM5MDYyNSAzMC42MTMyODEgMS4zOTA2MjUgQyAzMC42MTMyODEgMS4zOTA2MjUgMzIuMTkxNDA2IDAuMjM0Mzc1IDMyLjk2NDg0NCAyLjQyNTc4MSBMIDMyLjk2NDg0NCA0MS42NDg0MzggQyAzMi45NjQ4NDQgNDEuOTE3OTY5IDMyLjkxMDE1NiA0Mi4xODM1OTQgMzIuNzk2ODc1IDQyLjQyMTg3NSBDIDMyLjU3MDMxMiA0Mi44ODY3MTkgMzIuMDc4MTI1IDQzLjMyMDMxMiAzMC45MDIzNDQgNDMuMTM2NzE5IFogTSAzMC45ODQzNzUgNDMuMjMwNDY5ICIvPgo8L2c+Cjwvc3ZnPgo="/>
-<img alt="Node.js" src="https://img.shields.io/badge/Node.js-v20.14.0-339933.svg?&flat&logo=Node.js"/>
-<img alt="Express" src="https://img.shields.io/badge/Express-v4.19.2-333333.svg?&flat&logo=Express"/>
-<img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E.svg?&flat&logo=JavaScript"/>
-<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-v5.5.2-3178C6.svg?&flat&logo=TypeScript"/>
-<img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-v6.7.0-47A248.svg?&flat&logo=MongoDB"/>
-<img alt="Nginx" src="https://img.shields.io/badge/Nginx-v1.27.0-009639.svg?&flat&logo=nginx&logoColor=009639"/>
-<img alt="ESLint" src="https://img.shields.io/badge/ESLint-v9.5.0-6C54E6.svg?&flat&logo=ESLint&logoColor=6C54E6"/>
-<img alt="Prettier" src="https://img.shields.io/badge/Prettier-v3.3.2-F7B93E.svg?&flat&logo=Prettier"/>
-<img alt="Docker" src="https://img.shields.io/badge/Docker-v24.0.2-2496ED.svg?&flat&logo=Docker"/>
-<img alt="Yarn" src="https://img.shields.io/badge/Yarn-v4.3.1-2C8EBB.svg?&flat&logo=Yarn"/>
-<img alt="Git" src="https://img.shields.io/badge/Git-v2.40.1-F05032.svg?&flat&logo=Git"/>
-<img alt="Jest" src="https://img.shields.io/badge/Jest-v29.7.0-C21325.svg?&flat&logo=Jest&logoColor=C21325"/>
-<img alt="Cypress" src="https://img.shields.io/badge/Cypress-v13.13.0-00BFAA.svg?&flat&logo=Cypress"/>
+<img alt="VSCode" src="https://img.shields.io/badge/VSCode-v1.91.1-007ACC.svg?&flat&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNDVweCIgaGVpZ2h0PSI0NHB4IiB2aWV3Qm94PSIwIDAgNDQgNDQiIHZlcnNpb249IjEuMSI+CjxnIGlkPSJzdXJmYWNlMSI+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMTQuMTE3NjQ3JSw1My43MjU0OSUsNzkuMjE1Njg2JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDEuMjU3ODEyIDE1LjczMDQ2OSBDIDEuMjU3ODEyIDE1LjczMDQ2OSAwLjIxNDg0NCAxNC45NjQ4NDQgMS40NjQ4NDQgMTMuOTQxNDA2IEwgNC4zNzg5MDYgMTEuMjkyOTY5IEMgNC4zNzg5MDYgMTEuMjkyOTY5IDUuMjEwOTM4IDEwLjM5ODQzOCA2LjA5Mzc1IDExLjE3NTc4MSBMIDMyLjk2NDg0NCAzMS44OTQ1MzEgTCAzMi45NjQ4NDQgNDEuODI4MTI1IEMgMzIuOTY0ODQ0IDQxLjgyODEyNSAzMi45NTMxMjUgNDMuMzkwNjI1IDMwLjk4NDM3NSA0My4yMTg3NSBaIE0gMS4yNTc4MTIgMTUuNzMwNDY5ICIvPgo8cGF0aCBzdHlsZT0iIHN0cm9rZTpub25lO2ZpbGwtcnVsZTpub256ZXJvO2ZpbGw6cmdiKDYuMjc0NTElLDQzLjkyMTU2OSUsNzAuMTk2MDc4JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDguMTgzNTk0IDIyLjEzMjgxMiBMIDEuMjU3ODEyIDI4LjU0Njg3NSBDIDEuMjU3ODEyIDI4LjU0Njg3NSAwLjU0Njg3NSAyOS4wODU5MzggMS4yNTc4MTIgMzAuMDQ2ODc1IEwgNC40NzI2NTYgMzMuMDI3MzQ0IEMgNC40NzI2NTYgMzMuMDI3MzQ0IDUuMjM4MjgxIDMzLjg2MzI4MSA2LjM2NzE4OCAzMi45MTAxNTYgTCAxMy43MDcwMzEgMjcuMjQyMTg4IFogTSA4LjE4MzU5NCAyMi4xMzI4MTIgIi8+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMy4xMzcyNTUlLDQ2LjY2NjY2NyUsNzIuNTQ5MDIlKTtmaWxsLW9wYWNpdHk6MTsiIGQ9Ik0gMjAuMzQzNzUgMjIuMTg3NSBMIDMzLjA0Njg3NSAxMi4zMDg1OTQgTCAzMi45NjQ4NDQgMi40MjU3ODEgQyAzMi45NjQ4NDQgMi40MjU3ODEgMzIuNDIxODc1IDAuMjY5NTMxIDMwLjYxMzI4MSAxLjM5MDYyNSBMIDEzLjcwNzAzMSAxNy4wNTg1OTQgWiBNIDIwLjM0Mzc1IDIyLjE4NzUgIi8+CjxwYXRoIHN0eWxlPSIgc3Ryb2tlOm5vbmU7ZmlsbC1ydWxlOm5vbnplcm87ZmlsbDpyZ2IoMjMuNTI5NDEyJSw2MCUsODMuMTM3MjU1JSk7ZmlsbC1vcGFjaXR5OjE7IiBkPSJNIDMwLjk4NDM3NSA0My4yMzA0NjkgQyAzMS43MjI2NTYgNDQgMzIuNjE3MTg4IDQzLjc1IDMyLjYxNzE4OCA0My43NSBMIDQyLjUxNTYyNSAzOC43ODEyNSBDIDQzLjc4NTE1NiAzNy45MDIzNDQgNDMuNjA1NDY5IDM2LjgwODU5NCA0My42MDU0NjkgMzYuODA4NTk0IEwgNDMuNjA1NDY5IDcuMTQ0NTMxIEMgNDMuNjA1NDY5IDUuODQzNzUgNDIuMjk2ODc1IDUuMzkwNjI1IDQyLjI5Njg3NSA1LjM5MDYyNSBMIDMzLjcxNDg0NCAxLjE3OTY4OCBDIDMxLjgzOTg0NCAwIDMwLjYxMzI4MSAxLjM5MDYyNSAzMC42MTMyODEgMS4zOTA2MjUgQyAzMC42MTMyODEgMS4zOTA2MjUgMzIuMTkxNDA2IDAuMjM0Mzc1IDMyLjk2NDg0NCAyLjQyNTc4MSBMIDMyLjk2NDg0NCA0MS42NDg0MzggQyAzMi45NjQ4NDQgNDEuOTE3OTY5IDMyLjkxMDE1NiA0Mi4xODM1OTQgMzIuNzk2ODc1IDQyLjQyMTg3NSBDIDMyLjU3MDMxMiA0Mi44ODY3MTkgMzIuMDc4MTI1IDQzLjMyMDMxMiAzMC45MDIzNDQgNDMuMTM2NzE5IFogTSAzMC45ODQzNzUgNDMuMjMwNDY5ICIvPgo8L2c+Cjwvc3ZnPgo="/> <img alt="Node.js" src="https://img.shields.io/badge/Node.js-v20.14.0-339933.svg?&flat&logo=Node.js"/> <img alt="Express" src="https://img.shields.io/badge/Express-v4.19.2-333333.svg?&flat&logo=Express"/> <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E.svg?&flat&logo=JavaScript"/> <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-v5.5.2-3178C6.svg?&flat&logo=TypeScript"/> <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-v6.7.0-47A248.svg?&flat&logo=MongoDB"/> <img alt="Nginx" src="https://img.shields.io/badge/Nginx-v1.27.0-009639.svg?&flat&logo=nginx&logoColor=009639"/> <img alt="ESLint" src="https://img.shields.io/badge/ESLint-v9.5.0-6C54E6.svg?&flat&logo=ESLint&logoColor=6C54E6"/> <img alt="Prettier" src="https://img.shields.io/badge/Prettier-v3.3.2-F7B93E.svg?&flat&logo=Prettier"/> <img alt="Docker" src="https://img.shields.io/badge/Docker-v24.0.2-2496ED.svg?&flat&logo=Docker"/> <img alt="Yarn" src="https://img.shields.io/badge/Yarn-v4.3.1-2C8EBB.svg?&flat&logo=Yarn"/> <img alt="Git" src="https://img.shields.io/badge/Git-v2.40.1-F05032.svg?&flat&logo=Git"/> <img alt="Jest" src="https://img.shields.io/badge/Jest-v29.7.0-C21325.svg?&flat&logo=Jest&logoColor=C21325"/> <img alt="Cypress" src="https://img.shields.io/badge/Cypress-v13.13.0-00BFAA.svg?&flat&logo=Cypress"/>
 
 - **Tool** - `VSCode` _(v1.91.1)_
 - **Back End** - `Node.js` _(v20.14.0)_, `Express` _(v4.19.2)_
@@ -185,11 +172,10 @@ OAuth2.0에서 쓰이는 용어 설명입니다.
 <br>
 
 ## Usage
+
 간단한 이용 방법입니다.
 
-
 #### Register
-
 
 1. [📝[smpark.ddns.net]](https://smpark.ddns.net)에서 회원가입 후 로그인
 2. Client ID, Client Secret 생성
@@ -200,9 +186,9 @@ OAuth2.0에서 쓰이는 용어 설명입니다.
 
 #### Client 토큰 요청 (Example FE JavaScript Code)
 
-1. Client 코드 작성 (1.Flow)
+1. Flow 1: 클라이언트 웹페이지에서 OAuth Server로 URI 전송
 
-- `smPark OAuth2.0 Server`의 정보를 원하는 클라이언트 웹페이지에서 아래와 같은 방식으로 URI를 보냅니다.
+- `OAuth Server`의 정보를 원하는 클라이언트 웹페이지에서 아래와 같은 방식으로 URI를 보냅니다.
   혹은 Next Auth 패키지의 도움을 받아 전달하여도 가능합니다.
 
 ```javascript
@@ -219,50 +205,77 @@ const uri = `https://smpark.ddns.net/oauth/authorize?client_id=${client_id}&redi
 window.location.href = uri;
 ```
 
-<br>
-
-2. `smPark OAuth2.0 Server` 인증 과정 진행 (2.Flow )
-   <img src="src/public/image/login.png" alt='login'>
+2. Flow 1-1: `OAuth Server` 인증 과정 진행
+   <br>
+   <img src="src/public/image/login.png" alt='login page'>
    <br>
 
-3. `smPark OAuth2.0 Server`에서 callback으로 전달받은 code, state parsing 후 redirect token (3.Flow -> 4.Flow)
+3. Flow 1-2: 클라이언트에게 Scope 범위에 따른 정보 제공 동의 여부 묻기
+   <br>
+   <br>
+   <img src="src/public/image/consent.png" alt='consent page'>
+   <br>
+
+  <br>
+4. Flow 2: 동의 후 클라이언트에게 code 전달
+
+<br>
 
 ```javascript
-// example const code = params.get('code');
-// example const state = params.get('state');
+const { redirect_uri, state } = req.session;
+const code = await this.codeGenerationUseCase.execute(id);
 
-const valid = await bcrypt.compare(prevState, state); // state verification
-if (!valid) throw new Error(`인증과정 중 외부 간섭의 위험이 있습니다.`);
+return res.redirect(`${redirect_uri}?code=${code}&state=${state}`);
+```
 
-const data = {
-  code,
+<br>
+
+5. Flow 3: 클라이언트는 전달받은 code와 state를 파싱하여 token 요청
+
+```javascript
+const response = await axios.post('https://smpark.ddns.net/oauth/token', {
   client_id: process.env.CLIENT_ID,
-  client_secret: process.env.SECRET_KEY, //  smpark.ddns.net -> Client_secret
+  client_secret: process.env.CLIENT_SECRET,
+  code,
+  state,
   redirect_uri: process.env.REDIRECT_URI,
-  grant_type: 'code',
-};
-
-// uri redirect -> method POST
-const response = await this.smp_oauth.post('token', data);
+  grant_type: 'authorization_code',
+});
 ```
 
-<br>
-
-4. `smPark OAuth2.0 Server`에서 전달받은 access_token을 `SMP Resource Server`로 bearer 전달 (5.Flow -> 6.Flow)
+5. Flow 4: `OAuth Server`는 받은 code를 검증하고 `access_token`과 `refresh_token`을 생성하여 클라이언트에 전달
 
 ```javascript
-const token = oauthRes.data.access_token;
-this.smp_resource.defaults.headers.common = {
-  Authorization: `bearer ${token.access_token}`,
-};
+const tokens = await this.tokenGenerationUseCase.execute(ids);
 
-const response = await this.smp_resource.get('scope');
-// finish
-const userData = resourceRes.data.userData;
+return res.json({
+  access_token: tokens.accessToken,
+  refresh_token: tokens.refreshToken,
+  token_type: 'Bearer',
+});
 ```
 
-<br>
- 
+6. Flow 5: 클라이언트는 `OAuth Server`에서 받은` access_token`을 Resource Server에 전달
+
+```javascript
+const response = await axios.get('https://resource-server.example.com/scope', {
+  headers: {
+    Authorization: `Bearer ${accessToken}`,
+  },
+});
+```
+
+7. Flow 6: 리소스 서버는 `access_token`을 검증하고 동의된 Scope와 요청 Scope에 따라 클라이언트에 정보 전달
+
+```javascript
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  ... 검증 ...
+
+  res.json({ userData });
+```
+
 <!-- ## ETC
 
 #### Structure
@@ -282,38 +295,25 @@ const userData = resourceRes.data.userData;
 
 위와 같은 `Structure`를 구현하여 이용해본 결과, 폴더와 파일 각각의 위치와 역할이 정해져 있고 그 안에서 로직을 함수로 명명함으로써 시간이 지나도 헷갈리지 않고 유지보수 시 필요한 요소를 빠르게 찾을 수 있으며, 문제 발생 시 문제의 원인을 빠르게 구분할 수 있었습니다. -->
 
-
 #### Log
 
-`SMP OAuth Login` 유저의 접속 기록과 에러 상황을 Log를 통해 각각 기록합니다. 특히 Error의 경우 어느 곳, 어떤 함수에서 에러가 발생했는지 기록하고 있습니다.
+`winston`과 `margan`을 사용하여 접속과 에러 상황을 로그로 기록합니다. 또한, 콘솔에도 정보를 출력하여 개발을 원활하게 진행할 수 있도록 하였습니다.
 
 ```javascript
-const winston = require('winston');
-const infoTransport = new winston.transports.File({
-  filename: 'info.log',
-  dirname: logDir,
-  level: 'info',
-});
-
-const errorTransport = new winston.transports.File({
-  filename: 'error.log',
-  dirname: logDir,
-  level: 'error',
+const consoleTransport = new winston.transports.Console({
+  level: env.nodeEnv === 'production' ? 'warn' : 'debug',
+  format: combine(colorize(), appendTimestamp({ tz: true }), simple()),
 });
 ```
 
 info.log
-<img src="src/public/image/info.PNG" alt='info-log'>
+<img src="src/public/image/info-log.png" alt='info-log'>
 
 <br>
 
-#### End Comment
+error.log
+<img src="src/public/image/error-log.png" alt='info-log'>
 
-`smpark` - 해당 프로젝트는 그동안 사용해온 es5와 commonJS를 제 안에서 갈무리한다는 생각으로 만들어본 마지막 es5 프로젝트 입니다.
-번아웃으로 개발에 흥미를 잃었던 저에게 최소한의 단서로 Flow를 따라가며 '아마 이렇게 구현하면 되지 않을까?' 상상하는 재미를, 그리고 그것을 내 뜻대로 구현하는 개발의 즐거움을 다시 일깨워준 프로젝트입니다.
-Readme는 여기까지입니다.
-읽어주셔서 감사합니다.
+## architecture
 
-```
-
-```
+작성중 ...

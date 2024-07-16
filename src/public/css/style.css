@@ -71,9 +71,9 @@ textarea {
   font-size: 14px;
   line-height: 1.42857143;
   color: #555;
-  background-color: #fff;
+  background-color: #ffffff;
   background-image: none;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   box-sizing: border-box;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -147,8 +147,8 @@ fieldset[disabled] .btn {
 
 .btn-default {
   color: #333;
-  background-color: #fff;
-  border-color: #ccc;
+  background-color: #ffffff;
+  border-color: #cccccc;
 }
 
 .btn-default.active,
@@ -186,13 +186,13 @@ fieldset[disabled] .btn-default.focus,
 fieldset[disabled] .btn-default:active,
 fieldset[disabled] .btn-default:focus,
 fieldset[disabled] .btn-default:hover {
-  background-color: #fff;
-  border-color: #ccc;
+  background-color: #ffffff;
+  border-color: #cccccc;
 }
 
 .btn-default .badge {
-  color: #fff;
-  background-color: #333;
+  color: #ffffff;
+  background-color: #333333;
 }
 
 input[type='checkbox'],
@@ -206,7 +206,7 @@ input[type='radio'] {
 .form-control[readonly],
 fieldset[disabled] .form-control {
   cursor: not-allowed;
-  background-color: #eee;
+  background-color: #eeeeee;
   opacity: 1;
 }
 
@@ -224,8 +224,8 @@ textarea.form-control {
 }
 .agree-listBox {
   text-align: center;
-  border: 1px solid #000;
-  width: 68%;
+  border: 1px solid #333333;
+  max-width: 640px;
   margin: 0 auto;
   height: 80px;
 }
@@ -244,41 +244,37 @@ textarea.form-control {
   margin-right: 10%;
 }
 .agreeButton {
-  top: 80px;
-  left: 10%;
-  position: absolute;
   font-size: 20px;
   padding: 0;
-  background-color: #fff;
-  border: 1px solid #000;
+  background-color: #ffffff;
+  border: 1px solid #333333;
   outline: 0;
   width: 100px;
   height: 50px;
   font-weight: 700;
 }
 .agreeButton:hover {
-  background-color: #eee;
+  background-color: #eeeeee;
 }
 .noAgreeButton:hover {
-  background-color: #eee;
+  background-color: #eeeeee;
 }
 .noAgreeButton {
   font-weight: 700;
-  top: 80px;
-  right: 10%;
-  position: absolute;
   font-size: 20px;
   width: 100px;
   height: 50px;
   padding: 0;
-  background-color: #fff;
-  border: 1px solid #000;
+  background-color: #ffffff;
+  border: 1px solid #333333;
   outline: 0;
 }
 .agree-buttonBox {
-  position: relative;
-  width: 60%;
+  max-width: 480px;
   margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 100px;
 }
 /********************* 메인 *********************/
 .main-title h2 {

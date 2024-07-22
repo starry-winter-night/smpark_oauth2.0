@@ -10,6 +10,7 @@ export interface IOAuthVerifierService {
     client_id: string;
   };
   verifyUser(user: UserDTO | null): UserDTO;
+  verifyAgreedScopes(agreedScopes?: ScopeDTO): ScopeDTO;
   verifyRegUser(user: UserDTO | null): boolean;
   verifyClient(clients: ClientsDTO | null): ClientsDTO;
   verifyCodeExists(code: CodeDTO | null): CodeDTO;

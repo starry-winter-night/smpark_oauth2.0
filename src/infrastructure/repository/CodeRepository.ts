@@ -1,9 +1,9 @@
 import { injectable, inject } from 'inversify';
-import { Collection, DeleteResult } from 'mongodb';
+import { Collection } from 'mongodb';
 
 import MongoDB from '@database/MongoDB';
 import { CodeDTO } from '@dtos/CodeDTO';
-import { ICodeRepository } from 'src/infrastructure/interfaces/ICodeRepository';
+import { ICodeRepository } from '@domain-interfaces/repository/ICodeRepository';
 
 @injectable()
 class CodeRepository implements ICodeRepository {
@@ -23,7 +23,7 @@ class CodeRepository implements ICodeRepository {
     return result || null;
   }
 
-  async updateByCode(code: CodeDTO): Promise<boolean> {
+  async update(code: CodeDTO): Promise<boolean> {
     const result = await this.collection.updateOne(
       { id: code.id },
       { $set: code },
@@ -33,8 +33,9 @@ class CodeRepository implements ICodeRepository {
     return result.modifiedCount > 0 || result.upsertedCount > 0;
   }
 
-  async deleteByCode(code: string): Promise<DeleteResult> {
-    return await this.collection.deleteOne({ code });
+  async delete(code: string): Promise<boolean> {
+    const result = await this.collection.deleteOne({ code });
+    return result.acknowledged;
   }
 }
 

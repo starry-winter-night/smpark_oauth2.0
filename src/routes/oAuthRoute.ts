@@ -1,14 +1,15 @@
 import { Router } from 'express';
 import { container } from '@configs/inversify';
-import ClientsController from '@controllers/ClientsController';
-import AuthenticationMiddleware from '@middleware/routeMiddleware/AuthenticationMiddleware';
-import OAuthController from '@controllers/OAuthController';
 import dynamicCSPMiddleware from '@middleware/routeMiddleware/dynamicCSPMiddleware';
+import { IOAuthController } from '@adapters-interfaces/controllers/IOAuthController';
+import { IClientsController } from '@adapters-interfaces/controllers/IClientsController';
+import { IAuthenticationMiddleware } from '@middleware/interfaces/routeMiddleware/IAuthenticationMiddleware';
 
-const oAuthController = container.get<OAuthController>(OAuthController);
-const clientsController = container.get<ClientsController>(ClientsController);
-const authenticationMiddleware = container.get<AuthenticationMiddleware>(
-  AuthenticationMiddleware,
+const oAuthController = container.get<IOAuthController>('IOAuthController');
+const clientsController =
+  container.get<IClientsController>('IClientsController');
+const authenticationMiddleware = container.get<IAuthenticationMiddleware>(
+  'IAuthenticationMiddleware',
 );
 
 const oauth = Router();

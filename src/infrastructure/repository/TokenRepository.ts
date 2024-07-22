@@ -3,10 +3,10 @@ import { Collection, ClientSession, DeleteResult } from 'mongodb';
 
 import MongoDB from '@database/MongoDB';
 import { TokenDTO } from '@dtos/TokenDTO';
-import { ITokenRepository } from 'src/infrastructure/interfaces/ITokenRepository';
+import { ITokenRepository } from '@domain-interfaces/repository/ITokenRepository';
 
 @injectable()
-class TokenRepository implements ITokenRepository {
+class TokenRepository implements ITokenRepository<ClientSession> {
   private collection: Collection<TokenDTO>;
 
   constructor(@inject(MongoDB) database: MongoDB) {
@@ -18,22 +18,24 @@ class TokenRepository implements ITokenRepository {
     return result || null;
   }
 
-  async updateByToken(id: string, token: TokenDTO): Promise<boolean> {
-    const result = await this.collection.updateOne({ id }, { $set: token });
-
-    return result.matchedCount > 0 && result.modifiedCount > 0;
-  }
-
-  async deleteByToken(code: string): Promise<DeleteResult> {
-    return await this.collection.deleteOne({ code });
-  }
-
-  async saveToken(
+  async upsert(
     token: TokenDTO,
-    option?: { session: ClientSession },
+    options?: { transactionContext?: ClientSession },
   ): Promise<boolean> {
-    const result = await this.collection.insertOne(token, option);
-    return result.acknowledged;
+    const session = options?.transactionContext;
+    const result = await this.collection.updateOne(
+      { id: token.id },
+      { $set: token },
+      { upsert: true, session },
+    );
+    return (
+      result.acknowledged &&
+      (result.modifiedCount > 0 || result.upsertedCount > 0)
+    );
+  }
+
+  async delete(code: string): Promise<DeleteResult> {
+    return await this.collection.deleteOne({ code });
   }
 }
 

@@ -1,27 +1,31 @@
 import { injectable } from 'inversify';
 
 import User from '@entities/User';
-import { UserDTO } from '@dtos/UserDTO';
+import { UserDTO, LoginDTO, UserResponseDTO, RegisterDTO } from '@dtos/UserDTO';
 
 @injectable()
 class UserMapper {
-  toDTO(user: User, hashedPassword: string): UserDTO {
-    return new UserDTO(
-      user.id,
-      hashedPassword,
-      user.name,
-      user.email,
-      user.agreedScopes,
-    );
+  toUserDTO(user: User, password: string): UserDTO {
+    return new UserDTO(user.id, password, user.name, user.email, user.agreedScopes);
   }
 
-  toEntity(userDTO: UserDTO): User {
-    return new User(
-      userDTO.id,
-      userDTO.name,
-      userDTO.email,
-      userDTO.agreedScopes,
-    );
+  toRegisterDTO(register: RegisterDTO): RegisterDTO {
+    return new RegisterDTO(register.id, register.password, register.name, register.email);
+  }
+
+  toLoginDTO(id?: string, password?: string): LoginDTO {
+    return new LoginDTO(id, password);
+  }
+
+  toUserResponseDTO(
+    authenticatedUser: { id: string; name: string; email: string },
+    token: string,
+  ): UserResponseDTO {
+    return new UserResponseDTO(authenticatedUser, token);
+  }
+
+  toEntity({ id, name, email, agreedScopes }: UserDTO): User {
+    return new User(id, name, email, agreedScopes);
   }
 }
 

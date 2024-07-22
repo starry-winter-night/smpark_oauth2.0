@@ -5,10 +5,10 @@ import MongoDB from '@database/MongoDB';
 import UserMapper from '@mapper/UserMapper';
 import { UserDTO } from '@dtos/UserDTO';
 import { ScopeDTO } from '@dtos/TokenDTO';
-import { IUserRepository } from 'src/infrastructure/interfaces/IUserRepository';
+import { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
 
 @injectable()
-class UserRepository implements IUserRepository {
+class UserRepository implements IUserRepository<ClientSession> {
   private collection: Collection<UserDTO>;
 
   constructor(
@@ -21,17 +21,23 @@ class UserRepository implements IUserRepository {
   async findById(id: string): Promise<UserDTO | null> {
     const result = await this.collection.findOne({ id });
     return result
-      ? this.userMapper.toDTO(this.userMapper.toEntity(result), result.password)
+      ? this.userMapper.toUserDTO(
+          this.userMapper.toEntity(result),
+          result.password,
+        )
       : null;
   }
   async findByEmail(email: string): Promise<UserDTO | null> {
     const result = await this.collection.findOne({ email: email });
     return result
-      ? this.userMapper.toDTO(this.userMapper.toEntity(result), result.password)
+      ? this.userMapper.toUserDTO(
+          this.userMapper.toEntity(result),
+          result.password,
+        )
       : null;
   }
 
-  async updateByAgreedScope(
+  async updateAgreedScope(
     id: string,
     agreedScopes: ScopeDTO,
   ): Promise<boolean> {
@@ -44,11 +50,12 @@ class UserRepository implements IUserRepository {
     return result.modifiedCount > 0 || result.upsertedCount > 0;
   }
 
-  async saveUser(
+  async save(
     userInfo: UserDTO,
-    option?: { session: ClientSession },
+    options?: { transactionContext?: ClientSession },
   ): Promise<boolean> {
-    const result = await this.collection.insertOne(userInfo, option);
+    const session = options?.transactionContext;
+    const result = await this.collection.insertOne(userInfo, { session });
     return result.acknowledged;
   }
 }

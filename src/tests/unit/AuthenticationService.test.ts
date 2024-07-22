@@ -42,11 +42,11 @@ describe('AuthenticationService', () => {
     });
   });
 
-  describe('validateSignupInfo', () => {
+  describe('verifySignUpInfo', () => {
     it('아이디 포맷 불일치 시 에러 발생(400, 메시지)', () => {
       mockUser.isValidId.mockReturnValue(false);
 
-      expect(() => authService.validateSignupInfo(mockUser)).toThrow(
+      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.USERNAME,
           status: 400,
@@ -58,7 +58,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidId.mockReturnValue(true);
       mockUser.isValidEmail.mockReturnValue(false);
 
-      expect(() => authService.validateSignupInfo(mockUser)).toThrow(
+      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.EMAIL,
           status: 400,
@@ -71,7 +71,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidEmail.mockReturnValue(true);
       mockUser.isValidName.mockReturnValue(false);
 
-      expect(() => authService.validateSignupInfo(mockUser)).toThrow(
+      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.NAME,
           status: 400,
@@ -84,7 +84,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidEmail.mockReturnValue(true);
       mockUser.isValidName.mockReturnValue(true);
 
-      expect(() => authService.validateSignupInfo(mockUser)).not.toThrow();
+      expect(() => authService.verifySignUpInfo(mockUser)).not.toThrow();
     });
   });
 

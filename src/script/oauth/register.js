@@ -19,14 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const managerId = document.getElementById('regInputSmpChatManagerId').value;
     const blank = blankPattern(managerId, '#regInputSmpChatManagerId');
     if (blank) {
-      const managerIdList = document.getElementById(
-        'regListSmpChatManagerId',
-      ).value;
+      const managerIdList = document.getElementById('regListSmpChatManagerId').value;
 
       if (managerIdList.trim() === '') {
         arrList.push(managerId);
-        document.getElementById('regListSmpChatManagerId').innerText =
-          managerId;
+        document.getElementById('regListSmpChatManagerId').innerText = managerId;
         return;
       } else {
         const splitWord = managerIdList.trim().split(',');
@@ -57,9 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const managerId = document.getElementById('regInputSmpChatManagerId').value;
     const blank = blankPattern(managerId, '#regInputSmpChatManagerId');
     if (blank) {
-      const managerIdList = document.getElementById(
-        'regListSmpChatManagerId',
-      ).value;
+      const managerIdList = document.getElementById('regListSmpChatManagerId').value;
       const splitWord = managerIdList.trim().split(',');
       for (const word of splitWord) {
         if (word.trim() === managerId) {
@@ -85,9 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const generateCredentials = async (type) => {
-    const userConfirmed = window.confirm(
-      '새로운 인증 정보를 생성하고 저장하시겠습니까?',
-    );
+    const userConfirmed = window.confirm('새로운 인증 정보를 생성하고 저장하시겠습니까?');
 
     if (!userConfirmed) {
       return;
@@ -120,12 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const result = await response.json();
       if (response.ok) {
-        document.getElementById('regInputClientId').value =
-          result.client.client_id;
-        document.getElementById('regInputClientSecret').value =
-          result.client.client_secret;
-        document.getElementById('regInputChatApiKey').value =
-          result.client.api_key;
+        document.getElementById('regInputClientId').value = result.client.client_id;
+        document.getElementById('regInputClientSecret').value = result.client.client_secret;
+        document.getElementById('regInputChatApiKey').value = result.client.api_key;
       } else {
         throw new Error(result.message);
       }
@@ -136,12 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const oauthRegCheck = async () => {
     const AppName = document.getElementById('regInputAppName').value.trim();
-    const HomepageAddr = document
-      .getElementById('regInputHomepageAddr')
-      .value.trim();
-    const AuthCallbackURL = document
-      .getElementById('regInputCallBackUrl')
-      .value.trim();
+    const HomepageAddr = document.getElementById('regInputHomepageAddr').value.trim();
+    const AuthCallbackURL = document.getElementById('regInputCallBackUrl').value.trim();
 
     if (!AppName) {
       alert('어플리케이션 이름을 입력하세요.');
@@ -173,9 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       chkReqInfo[input.value] = input.checked;
     });
 
-    const managerIdList = document.getElementById(
-      'regListSmpChatManagerId',
-    ).value;
+    const managerIdList = document.getElementById('regListSmpChatManagerId').value;
     const managerList = [];
     const splitWord = managerIdList.split(',');
     for (const word of splitWord) {
@@ -218,15 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   addEventListenerIfExists('chatManagerIdRemove', 'click', removeChatManagerId);
-  addEventListenerIfExists('idCopy', 'click', () =>
-    copyToClipboard('regInputClientId'),
-  );
-  addEventListenerIfExists('secretCopy', 'click', () =>
-    copyToClipboard('regInputClientSecret'),
-  );
-  addEventListenerIfExists('chatApiKeyCopy', 'click', () =>
-    copyToClipboard('regInputChatApiKey'),
-  );
+  addEventListenerIfExists('idCopy', 'click', () => copyToClipboard('regInputClientId'));
+  addEventListenerIfExists('secretCopy', 'click', () => copyToClipboard('regInputClientSecret'));
+  addEventListenerIfExists('chatApiKeyCopy', 'click', () => copyToClipboard('regInputChatApiKey'));
 
   const oauthLogoImage = document.querySelector('.oauth-logo-image');
   if (oauthLogoImage) {
@@ -235,23 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const inputIds = [
-    'regInputAppName',
-    'regInputHomepageAddr',
-    'regInputCallBackUrl',
-  ];
+  const inputIds = ['regInputAppName', 'regInputHomepageAddr', 'regInputCallBackUrl'];
   inputIds.forEach((id) => {
     addEnterKeyListener(id, oauthRegCheck);
   });
 
   addEventListenerIfExists('oauthRegisterButton', 'click', oauthRegCheck);
-  addEventListenerIfExists('idCreate', 'click', () =>
-    generateCredentials('id'),
-  );
-  addEventListenerIfExists('secretCreate', 'click', () =>
-    generateCredentials('secret'),
-  );
-  addEventListenerIfExists('chatApiKeyCreate', 'click', () =>
-    generateCredentials('apiKey'),
-  );
+  addEventListenerIfExists('idCreate', 'click', () => generateCredentials('id'));
+  addEventListenerIfExists('secretCreate', 'click', () => generateCredentials('secret'));
+  addEventListenerIfExists('chatApiKeyCreate', 'click', () => generateCredentials('apiKey'));
 });

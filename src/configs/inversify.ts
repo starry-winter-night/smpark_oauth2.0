@@ -14,12 +14,14 @@ import AuthenticationController from '@controllers/AuthenticationController';
 import ClientsController from '@controllers/ClientsController';
 import OAuthController from '@controllers/OAuthController';
 
-import TokenGenerationUseCase from '@usecases/token/TokenGenerationUseCase';
+import ClientDetailsLoaderUseCase from '@usecases/clients/ClientDetailsLoaderUseCase';
+import ClientDetailsRegistrationUseCase from '@usecases/clients/ClientDetailsRegistrationUseCase';
 import ClientGenerationUseCase from '@usecases/clients/ClientGenerationUseCase';
 import CodeGenerationUseCase from '@usecases/oauth/CodeGenerationUseCase';
 import LoadOAuthDataUseCase from '@usecases/clients/ClientDetailsLoaderUseCase';
 import RegisterOAuthDataUseCase from '@usecases/clients/ClientDetailsRegistrationUseCase';
 import ScopeComparatorUseCase from '@usecases/oauth/ScopeComparatorUseCase';
+import TokenGenerationUseCase from '@usecases/token/TokenGenerationUseCase';
 import TokenPreparationUseCase from '@usecases/oauth/TokenPreparationUseCase';
 import UserAuthorizationUseCase from '@usecases/oauth/UserAuthorizationUseCase';
 import UserLoginUseCase from '@usecases/auth/UserLoginUseCase';
@@ -35,43 +37,46 @@ import AuthenticationMiddleware from '@middleware/routeMiddleware/Authentication
 
 import ClientsMapper from '@mapper/ClientsMapper';
 import UserMapper from '@mapper/UserMapper';
+import CodeMapper from '@mapper/CodeMapper';
 
 const container = new Container();
 
 const registerUseCaseDependencies = (): void => {
-  container.bind(TokenGenerationUseCase).to(TokenGenerationUseCase);
-  container.bind(ClientGenerationUseCase).to(ClientGenerationUseCase);
-  container.bind(CodeGenerationUseCase).to(CodeGenerationUseCase);
-  container.bind(LoadOAuthDataUseCase).to(LoadOAuthDataUseCase);
-  container.bind(RegisterOAuthDataUseCase).to(RegisterOAuthDataUseCase);
-  container.bind(ScopeComparatorUseCase).to(ScopeComparatorUseCase);
-  container.bind(TokenPreparationUseCase).to(TokenPreparationUseCase);
-  container.bind(UserAuthorizationUseCase).to(UserAuthorizationUseCase);
-  container.bind(UserLoginUseCase).to(UserLoginUseCase);
-  container.bind(UserRegistrationUseCase).to(UserRegistrationUseCase);
-  container.bind(UserScopeUpdaterUseCase).to(UserScopeUpdaterUseCase);
+  container.bind('ITokenGenerationUseCase').to(TokenGenerationUseCase);
+  container.bind('IClientGenerationUseCase').to(ClientGenerationUseCase);
+  container.bind('ICodeGenerationUseCase').to(CodeGenerationUseCase);
+  container.bind('ILoadOAuthDataUseCase').to(LoadOAuthDataUseCase);
+  container.bind('IRegisterOAuthDataUseCase').to(RegisterOAuthDataUseCase);
+  container.bind('IScopeComparatorUseCase').to(ScopeComparatorUseCase);
+  container.bind('ITokenPreparationUseCase').to(TokenPreparationUseCase);
+  container.bind('IUserAuthorizationUseCase').to(UserAuthorizationUseCase);
+  container.bind('IUserLoginUseCase').to(UserLoginUseCase);
+  container.bind('IUserRegistrationUseCase').to(UserRegistrationUseCase);
+  container.bind('IUserScopeUpdaterUseCase').to(UserScopeUpdaterUseCase);
+  container.bind('IClientDetailsLoaderUseCase').to(ClientDetailsLoaderUseCase);
+  container.bind('IClientDetailsRegistrationUseCase').to(ClientDetailsRegistrationUseCase);  
 };
 
 const registerServiceDependencies = (): void => {
-  container.bind(AuthenticationService).to(AuthenticationService);
-  container.bind(OAuthRequestValidService).to(OAuthRequestValidService);
-  container.bind(ClientsService).to(ClientsService);
-  container.bind(CodeService).to(CodeService);
-  container.bind(OAuthVerifierService).to(OAuthVerifierService);
-  container.bind(TokenService).to(TokenService);
+  container.bind('IAuthenticationService').to(AuthenticationService);
+  container.bind('IOAuthRequestValidService').to(OAuthRequestValidService);
+  container.bind("IClientsService").to(ClientsService);
+  container.bind('ICodeService').to(CodeService);
+  container.bind('IOAuthVerifierService').to(OAuthVerifierService);
+  container.bind('ITokenService').to(TokenService);
 };
 
 const registerRepositoryDependencies = (): void => {
-  container.bind(ClientsRepository).to(ClientsRepository);
-  container.bind(CodeRepository).to(CodeRepository);
-  container.bind(TokenRepository).to(TokenRepository);
-  container.bind(UserRepository).to(UserRepository);
+  container.bind('ICodeRepository').to(CodeRepository);
+  container.bind('ITokenRepository').to(TokenRepository);
+  container.bind('IUserRepository').to(UserRepository);
+  container.bind('IClientsRepository').to(ClientsRepository);
 };
 
 const registerControllerDependencies = (): void => {
-  container.bind(AuthenticationController).to(AuthenticationController);
-  container.bind(ClientsController).to(ClientsController);
-  container.bind(OAuthController).to(OAuthController);
+  container.bind('IAuthenticationController').to(AuthenticationController);
+  container.bind('IClientsController').to(ClientsController);
+  container.bind('IOAuthController').to(OAuthController);
 };
 
 const registerMongoDependencies = (dbURL: string, dbName: string): void => {
@@ -85,12 +90,13 @@ const registerEnvDependencies = (): void => {
 };
 
 const registerMiddlewareDependencies = (): void => {
-  container.bind(AuthenticationMiddleware).to(AuthenticationMiddleware);
+  container.bind('IAuthenticationMiddleware').to(AuthenticationMiddleware);
 };
 
 const registerMapperDependencies = (): void => {
   container.bind(ClientsMapper).to(ClientsMapper);
   container.bind(UserMapper).to(UserMapper);
+  container.bind(CodeMapper).to(CodeMapper);
 };
 
 const registerAllDependencies = (dbURL: string, dbName: string): void => {

@@ -1,9 +1,4 @@
-import {
-  checkSpace,
-  validateId,
-  validateEmail,
-  addEnterKeyListener,
-} from '../utils/utils.js';
+import { checkSpace, validateId, validateEmail, addEnterKeyListener } from '../utils/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   addEnterKeyListener('regInputId', registerCheck);

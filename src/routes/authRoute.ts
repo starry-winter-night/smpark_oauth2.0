@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
 import { container } from '@configs/inversify';
-import AuthenticationController from '@controllers/AuthenticationController';
 import authBlockMiddleware from '@middleware/routeMiddleware/authBlockMiddleware';
+import type { IAuthenticationController } from '@adapters-interfaces/controllers/IAuthenticationController';
 
-const authenticationController = container.get<AuthenticationController>(
-  AuthenticationController,
+const authenticationController = container.get<IAuthenticationController>(
+  'IAuthenticationController',
 );
 
 const auth = Router();

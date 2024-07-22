@@ -1,13 +1,13 @@
 import { injectable, inject } from 'inversify';
-import { Collection, ClientSession } from 'mongodb';
+import { ClientSession, Collection } from 'mongodb';
 
 import MongoDB from '@database/MongoDB';
 import ClientsMapper from '@mapper/ClientsMapper';
 import { ClientsDTO, ClientsResponseDTO } from '@dtos/ClientsDTO';
-import { IClientsRepository } from 'src/infrastructure/interfaces/IClientsRepository';
+import { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
 
 @injectable()
-class ClientsRepository implements IClientsRepository {
+class ClientsRepository implements IClientsRepository<ClientSession> {
   private collection: Collection<ClientsDTO>;
 
   constructor(
@@ -22,41 +22,41 @@ class ClientsRepository implements IClientsRepository {
     return result || null;
   }
 
-  async findByClients(clients: {
-    client_id: string;
-    client_secret: string;
+  async findByClients(credentials: {
+    clientId: string;
+    clientSecret: string;
   }): Promise<ClientsDTO | null> {
-    const result = await this.collection.findOne(clients);
+    const result = await this.collection.findOne({
+      client_id: credentials.clientId,
+      client_secret: credentials.clientSecret,
+    });
     return result || null;
   }
 
-  async updateByClients(
+  async update(
     id: string,
-    clients: { client_id?: string; client_secret?: string; api_key?: string },
+    updates: Partial<ClientsDTO>,
   ): Promise<ClientsResponseDTO | null> {
     const result = await this.collection.findOneAndUpdate(
       { id },
-      { $set: clients },
+      { $set: updates },
       { returnDocument: 'after', upsert: true },
     );
 
     return result ? this.clientsMapper.toClientsResponseDTO(result) : null;
   }
 
-  async updateByClientsDetail(
-    id: string,
-    clients: ClientsDTO,
+  async save(
+    client: ClientsDTO,
+    options?: { transactionContext?: ClientSession },
   ): Promise<boolean> {
-    const result = await this.collection.updateOne({ id }, { $set: clients });
+    const session = options?.transactionContext;
+    const result = await this.collection.updateOne(
+      { id: client.id },
+      { $set: client },
+      { upsert: true, session },
+    );
     return result.acknowledged && result.matchedCount > 0;
-  }
-
-  async saveClientsDetail(
-    clients: ClientsDTO,
-    option?: { session: ClientSession },
-  ): Promise<boolean> {
-    const result = await this.collection.insertOne(clients, option);
-    return result.acknowledged;
   }
 }
 

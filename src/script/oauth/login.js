@@ -1,16 +1,14 @@
 import { checkSpace, checkSpecial } from '../utils/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-  document
-    .querySelectorAll('#oauthInputId, #oauthInputPassword')
-    .forEach((input) => {
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault(); // 폼 제출 방지
-          oauthLoginCheck();
-        }
-      });
+  document.querySelectorAll('#oauthInputId, #oauthInputPassword').forEach((input) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // 폼 제출 방지
+        oauthLoginCheck();
+      }
     });
+  });
 
   // 버튼 클릭으로 로그인 체크 함수 호출
   const oauthLoginButton = document.getElementById('oauthLoginButton');

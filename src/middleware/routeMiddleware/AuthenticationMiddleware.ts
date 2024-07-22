@@ -4,16 +4,17 @@ import { inject, injectable } from 'inversify';
 import { JwtPayload } from 'jsonwebtoken';
 
 import User from '@entities/User';
-import TokenService from '@services/TokenService';
 import type { EnvConfig } from '@lib/dotenv-env';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
-import { IOauthRequest } from 'src/adapters/interfaces/IOauthRequest';
+import type { IOauthRequest } from '@adapters-interfaces/express/IOauthRequest';
+import type { ITokenService } from '@domain-interfaces/services/ITokenService';
+import { IAuthenticationMiddleware } from '@middleware/interfaces/routeMiddleware/IAuthenticationMiddleware';
 
 @injectable()
-class AuthenticationMiddleware {
+class AuthenticationMiddleware implements IAuthenticationMiddleware{
   constructor(
     @inject('env') private env: EnvConfig,
-    @inject(TokenService) private tokenService: TokenService,
+    @inject('ITokenService') private tokenService: ITokenService,
   ) {}
 
   public handle = (

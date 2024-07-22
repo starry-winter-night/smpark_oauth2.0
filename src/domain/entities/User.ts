@@ -3,7 +3,7 @@ class User {
     public id: string,
     public name: string,
     public email: string,
-    public agreedScopes: { id: boolean; email: boolean; name: boolean },
+    public agreedScopes?: { id: boolean; email: boolean; name: boolean },
   ) {
     this.id = id;
     this.name = name;

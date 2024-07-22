@@ -3,7 +3,7 @@ import createError from 'http-errors';
 import helmet from 'helmet';
 
 import { ERROR_MESSAGES } from '@constants/errorMessages';
-import { IOauthRequest } from 'src/adapters/interfaces/IOauthRequest';
+import { IOauthRequest } from '@adapters-interfaces/express/IOauthRequest';
 
 const dynamicCSPMiddleware = (
   req: IOauthRequest,

@@ -9,10 +9,11 @@ import {
 } from '@dtos/OAuthDTO';
 import { RequestValidDTO } from '@dtos/ClientsDTO';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
-import { GrantType } from 'src/types/union/oauth';
+import { GrantType } from '@enums/oauth';
+import { IOAuthRequestValidService } from '@domain-interfaces/services/IOAuthRequestValidService';
 
 @injectable()
-class OAuthRequestValidService {
+class OAuthRequestValidService implements IOAuthRequestValidService {
   validateAuthorizationRequest(
     request: AuthorizeRequestDTO,
     clients?: RequestValidDTO | null,

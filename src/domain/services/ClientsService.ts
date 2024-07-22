@@ -4,9 +4,10 @@ import { injectable } from 'inversify';
 
 import Clients from '@entities/Clients';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
+import { IClientsService } from '@domain-interfaces/services/IClientsService';
 
 @injectable()
-class ClientsService {
+class ClientsService implements IClientsService {
   generateClientId(id: string): string {
     return `${uuidv4().substring(0, 15)}-${id}`;
   }

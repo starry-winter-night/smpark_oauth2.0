@@ -3,9 +3,10 @@ import { injectable } from 'inversify';
 
 import { ScopeDTO } from '@dtos/TokenDTO';
 import { DEFAULT_SCOPE } from '@constants/scopes';
+import { ITokenService } from '@domain-interfaces/services/ITokenService';
 
 @injectable()
-class TokenService {
+class TokenService implements ITokenService {
   generateToken(
     payload: object,
     jwtSecretKey: string,
@@ -48,11 +49,11 @@ class TokenService {
     return resultScope;
   }
 
-  calculateJwtExpiresAt = (jwtExpiresIn: number): number => {
+  calculateJwtExpiresAt(jwtExpiresIn: number): number {
     const currentTimestamp = Math.floor(Date.now() / 1000); // 현재 시간 (초 단위)
     const jwtExpiresAt = currentTimestamp + jwtExpiresIn; // 만료 시점 계산
     return jwtExpiresAt;
-  };
+  }
 }
 
 export default TokenService;

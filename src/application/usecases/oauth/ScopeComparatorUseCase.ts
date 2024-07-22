@@ -1,20 +1,20 @@
 import { injectable, inject } from 'inversify';
 
-import UserRepository from '@repository/UserRepository';
 import { ScopeDTO } from '@dtos/TokenDTO';
-import TokenService from '@services/TokenService';
-import ClientsRepository from '@repository/ClientsRepository';
 import { deepEqual } from '@utils/deepEqual';
-import OAuthVerifierService from '@services/OAuthVerifierService';
+import type { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
+import type { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import type { ITokenService } from '@domain-interfaces/services/ITokenService';
+import { IScopeComparatorUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
 
 @injectable()
-class ScopeComparatorUseCase {
+class ScopeComparatorUseCase implements IScopeComparatorUseCase{
   constructor(
-    @inject(UserRepository) private userRepository: UserRepository,
-    @inject(TokenService) private tokenService: TokenService,
-    @inject(ClientsRepository) private clientsRepository: ClientsRepository,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('IClientsRepository') private clientsRepository: IClientsRepository,
+    @inject('ITokenService') private tokenService: ITokenService,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
   async execute(
     requestScope?: string,

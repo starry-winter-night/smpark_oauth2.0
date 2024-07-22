@@ -1,18 +1,19 @@
 import { injectable, inject } from 'inversify';
-import CodeService from '@services/CodeService';
-import CodeRepository from '@repository/CodeRepository';
-import OAuthVerifierService from '@services/OAuthVerifierService';
-import { CodeDTO } from '@dtos/CodeDTO';
 import type { EnvConfig } from '@lib/dotenv-env';
+import CodeMapper from '@mapper/CodeMapper';
+import type { ICodeRepository } from '@domain-interfaces/repository/ICodeRepository';
+import type { ICodeService } from '@domain-interfaces/services/ICodeService';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { ICodeGenerationUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
 
 @injectable()
-class CodeGenerationUseCase {
+class CodeGenerationUseCase implements ICodeGenerationUseCase{
   constructor(
     @inject('env') private env: EnvConfig,
-    @inject(CodeService) private codeService: CodeService,
-    @inject(CodeRepository) private codeRepository: CodeRepository,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('ICodeRepository') private codeRepository: ICodeRepository,
+    @inject('ICodeService') private codeService: ICodeService,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
+    @inject(CodeMapper) private codeMapper: CodeMapper,
   ) {}
 
   async execute(id?: string): Promise<string> {
@@ -22,14 +23,11 @@ class CodeGenerationUseCase {
       Number(this.env.oauthCodeExpiresIn),
     );
 
-    await this.updateCode({ id: verifiedId, code, expiresAt });
-    return code;
-  }
-
-  private async updateCode(code: CodeDTO): Promise<void> {
-    const isUpdated = await this.codeRepository.updateByCode(code);
-
+    const codeDTO = this.codeMapper.toDTO(verifiedId, code, expiresAt);
+    const isUpdated = await this.codeRepository.update(codeDTO);
     this.oAuthVerifierService.verifyOperation(isUpdated);
+
+    return code;
   }
 }
 

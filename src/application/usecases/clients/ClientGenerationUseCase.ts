@@ -1,17 +1,17 @@
 import { injectable, inject } from 'inversify';
 
-import ClientsService from '@services/ClientsService';
-import ClientsRepository from '@repository/ClientsRepository';
 import { ClientsRequestDTO, ClientsResponseDTO } from '@dtos/ClientsDTO';
-import OAuthVerifierService from '@services/OAuthVerifierService';
+import type { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
+import type { IClientsService } from '@domain-interfaces/services/IClientsService';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { IClientGenerationUseCase } from '@application-interfaces/usecases/IClientsUseCase';
 
 @injectable()
-class ClientGenerationUseCase {
+class ClientGenerationUseCase implements IClientGenerationUseCase {
   constructor(
-    @inject(ClientsService) public clientsService: ClientsService,
-    @inject(ClientsRepository) public clientsRepository: ClientsRepository,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('IClientsService') public clientsService: IClientsService,
+    @inject('IClientsRepository') public clientsRepository: IClientsRepository,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
   async execute(
@@ -42,7 +42,7 @@ class ClientGenerationUseCase {
       };
     }
 
-    const fetchedClients = await this.clientsRepository.updateByClients(
+    const fetchedClients = await this.clientsRepository.update(
       verifiedId,
       updatedClients,
     );

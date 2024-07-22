@@ -1,26 +1,27 @@
 import { injectable, inject } from 'inversify';
 
 import UserMapper from '@mapper/UserMapper';
-import { UserResponseDTO } from '@dtos/UserDTO';
-import AuthenticationService from '@services/AuthenticationService';
-import TokenService from '@services/TokenService';
-import OAuthVerifierService from '@services/OAuthVerifierService';
-import UserRepository from '@repository/UserRepository';
+import { LoginDTO, UserResponseDTO } from '@dtos/UserDTO';
 import type { EnvConfig } from '@lib/dotenv-env';
+import type { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
+import type { IAuthenticationService } from '@domain-interfaces/services/IAuthenticationService';
+import type { ITokenService } from '@domain-interfaces/services/ITokenService';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { IUserLoginUseCase } from '@application-interfaces/usecases/IAuthUseCase';
 
 @injectable()
-class UserLoginUseCase {
+class UserLoginUseCase implements IUserLoginUseCase {
   constructor(
     @inject('env') private env: EnvConfig,
-    @inject(TokenService) private tokenService: TokenService,
-    @inject(AuthenticationService) private authService: AuthenticationService,
-    @inject(UserRepository) private userRepository: UserRepository,
     @inject(UserMapper) private userMapper: UserMapper,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('ITokenService') private tokenService: ITokenService,
+    @inject('IAuthenticationService') private authService: IAuthenticationService,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
-  async execute(id: string, password: string): Promise<UserResponseDTO> {
+  async execute(loginDTO: LoginDTO): Promise<UserResponseDTO> {
+    const { id, password } = this.authService.verifySignInInfo(loginDTO);
     const fetchedUser = await this.userRepository.findById(id);
     const verifiedUser = this.oAuthVerifierService.verifyUser(fetchedUser);
     const user = this.userMapper.toEntity(verifiedUser);
@@ -32,13 +33,13 @@ class UserLoginUseCase {
       this.env.loginJWTSecretKey,
       Number(this.env.loginExpiresIn),
     );
-    const sessionUser = {
+    const authenticatedUser = {
       id: user.id,
       name: user.name,
       email: user.email,
     };
 
-    return { sessionUser, token };
+    return this.userMapper.toUserResponseDTO(authenticatedUser, token);
   }
 }
 

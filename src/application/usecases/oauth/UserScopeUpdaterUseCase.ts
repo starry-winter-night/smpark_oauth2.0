@@ -1,15 +1,15 @@
 import { injectable, inject } from 'inversify';
 
-import UserRepository from '@repository/UserRepository';
 import { ScopeDTO } from '@dtos/TokenDTO';
-import OAuthVerifierService from '@services/OAuthVerifierService';
+import type { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { IUserScopeUpdaterUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
 
 @injectable()
-class UserScopeUpdaterUseCase {
+class UserScopeUpdaterUseCase implements IUserScopeUpdaterUseCase{
   constructor(
-    @inject(UserRepository) private userRepository: UserRepository,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
   async execute(
@@ -22,7 +22,7 @@ class UserScopeUpdaterUseCase {
     this.oAuthVerifierService.verifyUpdated(updated);
 
     if (updated) {
-      const isUpdated = await this.userRepository.updateByAgreedScope(
+      const isUpdated = await this.userRepository.updateAgreedScope(
         verifiedId,
         verifiedScope,
       );

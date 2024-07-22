@@ -1,23 +1,23 @@
 import { injectable, inject } from 'inversify';
 
-import TokenService from '@services/TokenService';
-import OAuthVerifierService from '@services/OAuthVerifierService';
-import UserRepository from '@repository/UserRepository';
-import TokenRepository from '@repository/TokenRepository';
-import CodeRepository from '@repository/CodeRepository';
 import { UserDTO } from '@dtos/UserDTO';
 import type { EnvConfig } from '@lib/dotenv-env';
+import type { ITokenRepository } from '@domain-interfaces/repository/ITokenRepository';
+import type { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
+import type { ICodeRepository } from '@domain-interfaces/repository/ICodeRepository';
+import type { ITokenService } from '@domain-interfaces/services/ITokenService';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { ITokenGenerationUseCase } from '@application-interfaces/usecases/ITokenUseCase';
 
 @injectable()
-class TokenGenerationUseCase {
+class TokenGenerationUseCase implements ITokenGenerationUseCase{
   constructor(
     @inject('env') private env: EnvConfig,
-    @inject(TokenService) public tokenService: TokenService,
-    @inject(TokenRepository) public tokenRepository: TokenRepository,
-    @inject(UserRepository) public userRepository: UserRepository,
-    @inject(CodeRepository) public codeRepository: CodeRepository,
-    @inject(OAuthVerifierService)
-    public oAuthVerifierService: OAuthVerifierService,
+    @inject('ITokenService') public tokenService: ITokenService,
+    @inject('ITokenRepository') public tokenRepository: ITokenRepository,
+    @inject('IUserRepository') public userRepository: IUserRepository,
+    @inject('ICodeRepository') public codeRepository: ICodeRepository,
+    @inject('IOAuthVerifierService') public oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
   async execute(
@@ -49,7 +49,7 @@ class TokenGenerationUseCase {
       ),
     };
     await this.saveOrUpdateToken(id, tokens, user.agreedScopes);
-    await this.codeRepository.deleteByCode(id);
+    await this.codeRepository.delete(id);
     return tokens;
   }
 
@@ -83,14 +83,8 @@ class TokenGenerationUseCase {
       tokenGrantedScopes: agreedScopes,
       expiresAt: this.tokenService.calculateJwtExpiresAt(jwtExpiresIn),
     };
-    const fetchedToken = await this.tokenRepository.findById(id);
-    if (!fetchedToken) {
-      const isSaved = await this.tokenRepository.saveToken(token);
-      this.oAuthVerifierService.verifyOperation(isSaved);
-    } else {
-      const isUpdated = await this.tokenRepository.updateByToken(id, token);
-      this.oAuthVerifierService.verifyOperation(isUpdated);
-    }
+    const isUpserted = await this.tokenRepository.upsert(token);
+    this.oAuthVerifierService.verifyOperation(isUpserted);
   }
 }
 export default TokenGenerationUseCase;

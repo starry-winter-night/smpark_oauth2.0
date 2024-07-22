@@ -1,27 +1,29 @@
 import { injectable, inject } from 'inversify';
 
 import UserMapper from '@mapper/UserMapper';
-import { UserDTO } from '@dtos/UserDTO';
-import AuthenticationService from '@services/AuthenticationService';
-import OAuthVerifierService from '@services/OAuthVerifierService';
-import UserRepository from '@repository/UserRepository';
+import { RegisterDTO } from '@dtos/UserDTO';
+import type { IUserRepository } from '@domain-interfaces/repository/IUserRepository';
+import type { IAuthenticationService } from '@domain-interfaces/services/IAuthenticationService';
+import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
+import { IUserRegistrationUseCase } from '@application-interfaces/usecases/IAuthUseCase';
 
 @injectable()
-class UserRegistrationUseCase {
+class UserRegistrationUseCase implements IUserRegistrationUseCase {
   constructor(
-    @inject(AuthenticationService) private authService: AuthenticationService,
-    @inject(UserRepository) private userRepository: UserRepository,
     @inject(UserMapper) private userMapper: UserMapper,
-    @inject(OAuthVerifierService)
-    private oAuthVerifierService: OAuthVerifierService,
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('IAuthenticationService') private authService: IAuthenticationService,
+    @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
-  async execute(userRegisterInfo: UserDTO): Promise<void> {
-    const user = this.userMapper.toEntity(userRegisterInfo);
+  async execute(userInfo: RegisterDTO): Promise<void> {
+    const verifiedInfo = this.authService.verifySignUpInfo(userInfo);
 
-    this.authService.validateSignupInfo(user);
+    const user = this.userMapper.toEntity(verifiedInfo);
 
-    const { id, password } = userRegisterInfo;
+    this.authService.validSignUpInfo(user);
+
+    const { id, password } = verifiedInfo;
 
     const fetchedUser = await this.userRepository.findById(id);
 
@@ -30,12 +32,12 @@ class UserRegistrationUseCase {
     // const userByEmail = await this.userRepository.findByEmail(email); // 이메일 관련 기능 보류
 
     const hashedPassword = await this.authService.hashedPassword(password);
-    const updateuserRegisterInfo = {
-      ...userRegisterInfo,
+    const updatedInfo = {
+      ...verifiedInfo,
       password: hashedPassword,
     };
 
-    const isSaved = await this.userRepository.saveUser(updateuserRegisterInfo);
+    const isSaved = await this.userRepository.save(updatedInfo);
 
     this.oAuthVerifierService.verifyOperation(isSaved);
   }

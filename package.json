@@ -80,11 +80,12 @@
     "test": "jest && cypress run",
     "lint": "eslint .",
     "start:dev": "yarn docker:dev-build && yarn docker:dev-up",
-    "start:prod": "yarn build && yarn docker:prod-build && yarn docker:prod-up",
+    "start:prod": "yarn build && yarn docker:prod-build && yarn docker:prod-push && yarn docker:prod-up",
     "docker:dev-build": "docker-compose -f docker-compose.dev.yml --env-file .env.development build",
     "docker:dev-up": "docker-compose -f docker-compose.dev.yml --env-file .env.development up",
     "docker:dev-down": "docker-compose -f docker-compose.dev.yml --env-file .env.development down",
     "docker:prod-build": "docker-compose -f docker-compose.yml --env-file .env.production build",
+    "docker:prod-push": "docker-compose -f docker-compose.yml --env-file .env.production push",
     "docker:prod-up": "docker-compose -f docker-compose.yml --env-file .env.production up -d",
     "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down"
   },

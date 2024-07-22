@@ -1,4 +1,4 @@
-import { GrantType } from '@enums/oauth';
+import { GrantType, ResponseType } from '@enums/oauth';
 
 export class AuthorizeRequestDTO {
   constructor(

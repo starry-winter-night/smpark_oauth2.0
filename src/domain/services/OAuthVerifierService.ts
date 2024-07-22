@@ -10,11 +10,7 @@ import { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifie
 
 @injectable()
 class OAuthVerifierService implements IOAuthVerifierService {
-  private verify<T>(
-    entity: T | null | undefined,
-    errorMessage: string,
-    errorCode?: number,
-  ): T {
+  private verify<T>(entity: T | null | undefined, errorMessage: string, errorCode?: number): T {
     if (!entity) {
       throw createError(errorCode || 401, errorMessage);
     }
@@ -36,12 +32,12 @@ class OAuthVerifierService implements IOAuthVerifierService {
     return this.verify(user, ERROR_MESSAGES.NOT_FOUND.USER);
   }
 
+  verifyAgreedScopes(agreedScopes?: ScopeDTO): ScopeDTO {
+    return this.verify(agreedScopes, ERROR_MESSAGES.NOT_FOUND.AGREED_SCOPES);
+  }
+
   verifyRegUser(user: UserDTO | null): boolean {
-    return this.verify(
-      user ? false : true,
-      ERROR_MESSAGES.VALIDATION.DUPLICATE.ID,
-      409,
-    );
+    return this.verify(user ? false : true, ERROR_MESSAGES.VALIDATION.DUPLICATE.ID, 409);
   }
   verifyClient(clients: ClientsDTO | null): ClientsDTO {
     return this.verify(clients, ERROR_MESSAGES.NOT_FOUND.CLIENT);

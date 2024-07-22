@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import { authSerialize } from '@utils/serialize';
 import { AuthorizeRequestDTO } from '@dtos/OAuthDTO';
+import UserMapper from '@mapper/UserMapper';
 
 import { ERROR_MESSAGES } from '@constants/errorMessages';
 import { TRANSLATIONS } from '@constants/scopes';
@@ -22,20 +23,15 @@ import type { ITokenGenerationUseCase } from '@application-interfaces/usecases/I
 @injectable()
 class OAuthController implements IOAuthController {
   constructor(
-    @inject('IUserLoginUseCase')
-    private userLoginUseCase: IUserLoginUseCase,
-    @inject('ICodeGenerationUseCase')
-    private codeGenerationUseCase: ICodeGenerationUseCase,
-    @inject('ITokenGenerationUseCase')
-    private tokenGenerationUseCase: ITokenGenerationUseCase,
-    @inject('IUserScopeUpdaterUseCase')
-    private userScopeUpdaterUseCase: IUserScopeUpdaterUseCase,
+    @inject(UserMapper) private userMapper: UserMapper,
+    @inject('IUserLoginUseCase') private userLoginUseCase: IUserLoginUseCase,
+    @inject('ICodeGenerationUseCase') private codeGenerationUseCase: ICodeGenerationUseCase,
+    @inject('ITokenGenerationUseCase') private tokenGenerationUseCase: ITokenGenerationUseCase,
+    @inject('IUserScopeUpdaterUseCase') private userScopeUpdaterUseCase: IUserScopeUpdaterUseCase,
     @inject('IUserAuthorizationUseCase')
     private userAuthorizationUseCase: IUserAuthorizationUseCase,
-    @inject('ITokenPreparationUseCase')
-    private tokenPreparationUseCase: ITokenPreparationUseCase,
-    @inject('IScopeComparatorUseCase')
-    private scopeComparatorUseCase: IScopeComparatorUseCase,
+    @inject('ITokenPreparationUseCase') private tokenPreparationUseCase: ITokenPreparationUseCase,
+    @inject('IScopeComparatorUseCase') private scopeComparatorUseCase: IScopeComparatorUseCase,
   ) {}
 
   async verifyOauthRequest(
@@ -70,28 +66,18 @@ class OAuthController implements IOAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void | Response> {
-    const {
-      id,
-      password,
-      client_id,
-      redirect_uri,
-      state,
-      scope,
-      response_type,
-    } = req.body;
+    const { id, password, client_id, redirect_uri, state, scope, response_type } = req.body;
 
     try {
-      const { sessionUser, token } = await this.userLoginUseCase.execute(
-        id,
-        password,
-      );
+      const loginDTO = this.userMapper.toLoginDTO(id, password);
+      const { authenticatedUser, token } = await this.userLoginUseCase.execute(loginDTO);
 
       res.cookie('auth_token', token, {
         maxAge: 1000 * 60 * 60 * 24 * 3,
         httpOnly: true,
       });
 
-      req.session.user = sessionUser;
+      req.session.user = authenticatedUser;
 
       req.body = authSerialize(req.body, ['password']);
 
@@ -113,8 +99,10 @@ class OAuthController implements IOAuthController {
     const id = req.session.user?.id;
 
     try {
-      const { scope: comparedScope, updated } =
-        await this.scopeComparatorUseCase.execute(scope, id);
+      const { scope: comparedScope, updated } = await this.scopeComparatorUseCase.execute(
+        scope,
+        id,
+      );
 
       Object.assign(req.session, {
         scope: comparedScope,
@@ -158,15 +146,11 @@ class OAuthController implements IOAuthController {
     const authHeader = req.headers['authorization'];
 
     if (!authHeader || !authHeader.startsWith('Basic ')) {
-      return next(
-        createError(401, ERROR_MESSAGES.VALIDATION.FORMAT.AUTHENTICATION),
-      );
+      return next(createError(401, ERROR_MESSAGES.VALIDATION.FORMAT.AUTHENTICATION));
     }
 
     const base64Credentials = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString(
-      'ascii',
-    );
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [client_id, client_secret] = credentials.split(':');
     const tokenRequest = req.body;
 

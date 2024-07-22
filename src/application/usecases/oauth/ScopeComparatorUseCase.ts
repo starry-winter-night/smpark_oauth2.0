@@ -9,7 +9,7 @@ import type { ITokenService } from '@domain-interfaces/services/ITokenService';
 import { IScopeComparatorUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
 
 @injectable()
-class ScopeComparatorUseCase implements IScopeComparatorUseCase{
+class ScopeComparatorUseCase implements IScopeComparatorUseCase {
   constructor(
     @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('IClientsRepository') private clientsRepository: IClientsRepository,
@@ -23,13 +23,13 @@ class ScopeComparatorUseCase implements IScopeComparatorUseCase{
     const verifiedId = this.oAuthVerifierService.verifyId(id);
     const fetchedUser = await this.userRepository.findById(verifiedId);
     const verifiedUser = this.oAuthVerifierService.verifyUser(fetchedUser);
-    const { agreedScopes } = verifiedUser;
+    const verifiedScopes = this.oAuthVerifierService.verifyAgreedScopes(verifiedUser.agreedScopes);
 
     if (!requestScope) {
-      return this.handleDefaultScope(agreedScopes);
+      return this.handleDefaultScope(verifiedScopes);
     }
 
-    return this.handleRequestScope(verifiedId, requestScope, agreedScopes);
+    return this.handleRequestScope(verifiedId, requestScope, verifiedScopes);
   }
 
   private handleDefaultScope(agreedScopes: ScopeDTO): {
@@ -52,10 +52,7 @@ class ScopeComparatorUseCase implements IScopeComparatorUseCase{
     }
 
     const { clientAllowedScopes } = fetchedClients;
-    const resultScope = this.tokenService.validateScope(
-      clientAllowedScopes,
-      requestScope,
-    );
+    const resultScope = this.tokenService.validateScope(clientAllowedScopes, requestScope);
 
     return this.compareAndReturnScope(resultScope, agreedScopes);
   }

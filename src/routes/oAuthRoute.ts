@@ -6,11 +6,8 @@ import { IClientsController } from '@adapters-interfaces/controllers/IClientsCon
 import { IAuthenticationMiddleware } from '@middleware/interfaces/routeMiddleware/IAuthenticationMiddleware';
 
 const oAuthController = container.get<IOAuthController>('IOAuthController');
-const clientsController =
-  container.get<IClientsController>('IClientsController');
-const authenticationMiddleware = container.get<IAuthenticationMiddleware>(
-  'IAuthenticationMiddleware',
-);
+const clientsController = container.get<IClientsController>('IClientsController');
+const authenticationMiddleware = container.get<IAuthenticationMiddleware>('IAuthenticationMiddleware');
 
 const oauth = Router();
 

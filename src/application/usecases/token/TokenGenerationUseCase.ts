@@ -10,7 +10,7 @@ import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVe
 import { ITokenGenerationUseCase } from '@application-interfaces/usecases/ITokenUseCase';
 
 @injectable()
-class TokenGenerationUseCase implements ITokenGenerationUseCase{
+class TokenGenerationUseCase implements ITokenGenerationUseCase {
   constructor(
     @inject('env') private env: EnvConfig,
     @inject('ITokenService') public tokenService: ITokenService,
@@ -69,18 +69,19 @@ class TokenGenerationUseCase implements ITokenGenerationUseCase{
   private async saveOrUpdateToken(
     id: string,
     tokens: { accessToken: string; refreshToken: string },
-    agreedScopes: {
+    agreedScopes?: {
       id: boolean;
       email: boolean;
       name: boolean;
     },
   ): Promise<void> {
+    const verifiedScopes = this.oAuthVerifierService.verifyAgreedScopes(agreedScopes);
     const jwtExpiresIn = Number(this.env.oauthAccessTokenExpiresIn);
     const token = {
       id,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
-      tokenGrantedScopes: agreedScopes,
+      tokenGrantedScopes: verifiedScopes,
       expiresAt: this.tokenService.calculateJwtExpiresAt(jwtExpiresIn),
     };
     const isUpserted = await this.tokenRepository.upsert(token);

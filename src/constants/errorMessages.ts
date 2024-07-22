@@ -19,6 +19,7 @@ export const ERROR_MESSAGES = {
     CODE: '등록되지 않은 코드입니다.',
     CLIENT: '등록되지 않은 client_id입니다.',
     PAGE: '페이지를 찾을 수 없습니다.',
+    AGREED_SCOPES: '허용 데이터 제공 범위가 없습니다.'
   },
   VALIDATION: {
     MISSING: {

@@ -5,34 +5,37 @@ import { Request, Response, NextFunction } from 'express';
 import { authSerialize } from '@utils/serialize';
 import { AuthorizeRequestDTO } from '@dtos/OAuthDTO';
 
-import UserLoginUseCase from '@usecases/auth/UserLoginUseCase';
-import TokenGenerationUseCase from '@usecases/token/TokenGenerationUseCase';
-import CodeGenerationUseCase from '@usecases/oauth/CodeGenerationUseCase';
-import UserScopeUpdaterUseCase from '@usecases/oauth/UserScopeUpdaterUseCase';
-import UserAuthorizationUseCase from '@usecases/oauth/UserAuthorizationUseCase';
-import TokenPreparationUseCase from '@usecases/oauth/TokenPreparationUseCase';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
 import { TRANSLATIONS } from '@constants/scopes';
-import ScopeComparatorUseCase from '@usecases/oauth/ScopeComparatorUseCase';
-import { IOauthRequest } from 'src/adapters/interfaces/IOauthRequest';
+import { IOAuthController } from '@adapters-interfaces/controllers/IOAuthController';
+import { IOauthRequest } from '@adapters-interfaces/express/IOauthRequest';
+import type { IUserLoginUseCase } from '@application-interfaces/usecases/IAuthUseCase';
+import type {
+  ICodeGenerationUseCase,
+  IUserScopeUpdaterUseCase,
+  IUserAuthorizationUseCase,
+  ITokenPreparationUseCase,
+  IScopeComparatorUseCase,
+} from '@application-interfaces/usecases/IOAuthUseCase';
+import type { ITokenGenerationUseCase } from '@application-interfaces/usecases/ITokenUseCase';
 
 @injectable()
-class OAuthController {
+class OAuthController implements IOAuthController {
   constructor(
-    @inject(UserLoginUseCase)
-    private userLoginUseCase: UserLoginUseCase,
-    @inject(CodeGenerationUseCase)
-    private codeGenerationUseCase: CodeGenerationUseCase,
-    @inject(TokenGenerationUseCase)
-    private tokenGenerationUseCase: TokenGenerationUseCase,
-    @inject(UserScopeUpdaterUseCase)
-    private userScopeUpdaterUseCase: UserScopeUpdaterUseCase,
-    @inject(UserAuthorizationUseCase)
-    private userAuthorizationUseCase: UserAuthorizationUseCase,
-    @inject(TokenPreparationUseCase)
-    private tokenPreparationUseCase: TokenPreparationUseCase,
-    @inject(ScopeComparatorUseCase)
-    private scopeComparatorUseCase: ScopeComparatorUseCase,
+    @inject('IUserLoginUseCase')
+    private userLoginUseCase: IUserLoginUseCase,
+    @inject('ICodeGenerationUseCase')
+    private codeGenerationUseCase: ICodeGenerationUseCase,
+    @inject('ITokenGenerationUseCase')
+    private tokenGenerationUseCase: ITokenGenerationUseCase,
+    @inject('IUserScopeUpdaterUseCase')
+    private userScopeUpdaterUseCase: IUserScopeUpdaterUseCase,
+    @inject('IUserAuthorizationUseCase')
+    private userAuthorizationUseCase: IUserAuthorizationUseCase,
+    @inject('ITokenPreparationUseCase')
+    private tokenPreparationUseCase: ITokenPreparationUseCase,
+    @inject('IScopeComparatorUseCase')
+    private scopeComparatorUseCase: IScopeComparatorUseCase,
   ) {}
 
   async verifyOauthRequest(

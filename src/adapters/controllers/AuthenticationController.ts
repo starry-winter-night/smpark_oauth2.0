@@ -1,74 +1,64 @@
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'inversify';
 
-import UserLoginUseCase from '@usecases/auth/UserLoginUseCase';
-import UserRegistrationUseCase from '@usecases/auth/UserRegistrationUseCase';
 import { authSerialize } from '@utils/serialize';
+import { IAuthenticationController } from '@adapters-interfaces/controllers/IAuthenticationController';
 import type { EnvConfig } from '@lib/dotenv-env';
+import type {
+  IUserLoginUseCase,
+  IUserRegistrationUseCase,
+} from '@application-interfaces/usecases/IAuthUseCase';
+import UserMapper from '@mapper/UserMapper';
 
 @injectable()
-class AuthenticationController {
+class AuthenticationController implements IAuthenticationController {
   constructor(
     @inject('env') private env: EnvConfig,
-    @inject(UserLoginUseCase) private userLoginUseCase: UserLoginUseCase,
-    @inject(UserRegistrationUseCase)
-    private userRegistrationUseCase: UserRegistrationUseCase,
+    @inject(UserMapper) private userMapper: UserMapper,
+    @inject('IUserLoginUseCase') private userLoginUseCase: IUserLoginUseCase,
+    @inject('IUserRegistrationUseCase')
+    private userRegistrationUseCase: IUserRegistrationUseCase,
   ) {}
+
   renderLoginPage(req: Request, res: Response): void {
-    req.session.user
-      ? res.redirect('/oauth/register')
-      : res.render('auth/login');
+    req.session.user ? res.redirect('/oauth/register') : res.render('auth/login');
   }
 
   renderRegisterPage(req: Request, res: Response): void {
-    req.session.user
-      ? res.redirect('/oauth/register')
-      : res.render('auth/register');
+    req.session.user ? res.redirect('/oauth/register') : res.render('auth/register');
   }
 
-  async userLogin(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void | Response> {
+  async userLogin(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     const { id, password } = req.body;
 
     try {
-      const { sessionUser, token } = await this.userLoginUseCase.execute(
-        id,
-        password,
-      );
+      const loginDTO = this.userMapper.toLoginDTO(id, password);
+      const { authenticatedUser, token } = await this.userLoginUseCase.execute(loginDTO);
+
       res.cookie('auth_token', token, {
         maxAge: Number(this.env.loginExpiresIn) * 1000,
         httpOnly: true,
       });
 
-      req.session.user = sessionUser;
+      req.session.user = authenticatedUser;
 
       req.body = authSerialize(req.body, ['password']);
 
-      return res
-        .status(200)
-        .send({ message: '로그인 성공', redirect: '/oauth/register' });
+      return res.status(200).send({ message: '로그인 성공', redirect: '/oauth/register' });
     } catch (error) {
       return next(error);
     }
   }
-  async userRegister(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void | Response> {
+  async userRegister(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     const userRegisterInfo = req.body;
 
     try {
-      await this.userRegistrationUseCase.execute(userRegisterInfo);
+      const registerDTO = this.userMapper.toRegisterDTO(userRegisterInfo);
+      await this.userRegistrationUseCase.execute(registerDTO);
 
       req.body = authSerialize(req.body, ['password']);
 
-      return res
-        .status(200)
-        .send({ message: '회원가입 성공', redirect: '/login' });
+      return res.status(200).send({ message: '회원가입 성공', redirect: '/login' });
     } catch (error) {
       return next(error);
     }

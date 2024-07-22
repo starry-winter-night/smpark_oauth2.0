@@ -1,20 +1,23 @@
 import { injectable, inject } from 'inversify';
 import { Response, NextFunction } from 'express';
 
-import ClientDetailsLoaderUseCase from '@usecases/clients/ClientDetailsLoaderUseCase';
-import ClientGenerationUseCase from '@usecases/clients/ClientGenerationUseCase';
-import ClientDetailsRegistrationUseCase from '@usecases/clients/ClientDetailsRegistrationUseCase';
-import { IOauthRequest } from 'src/adapters/interfaces/IOauthRequest';
+import { IClientsController } from '@adapters-interfaces/controllers/IClientsController';
+import { IOauthRequest } from '@adapters-interfaces/express/IOauthRequest';
+import type {
+  IClientDetailsLoaderUseCase,
+  IClientGenerationUseCase,
+  IClientDetailsRegistrationUseCase,
+} from '@application-interfaces/usecases/IClientsUseCase';
 
 @injectable()
-class ClientsController {
+class ClientsController implements IClientsController {
   constructor(
-    @inject(ClientDetailsLoaderUseCase)
-    private clientDetailsLoaderUseCase: ClientDetailsLoaderUseCase,
-    @inject(ClientGenerationUseCase)
-    private clientGenerationUseCase: ClientGenerationUseCase,
-    @inject(ClientDetailsRegistrationUseCase)
-    private clientDetailsRegistrationUseCase: ClientDetailsRegistrationUseCase,
+    @inject('IClientDetailsLoaderUseCase')
+    private clientDetailsLoaderUseCase: IClientDetailsLoaderUseCase,
+    @inject('IClientGenerationUseCase')
+    private clientGenerationUseCase: IClientGenerationUseCase,
+    @inject('IClientDetailsRegistrationUseCase')
+    private clientDetailsRegistrationUseCase: IClientDetailsRegistrationUseCase,
   ) {}
 
   async renderClientRegistrationPage(

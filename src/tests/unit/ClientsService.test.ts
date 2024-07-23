@@ -57,12 +57,12 @@ describe('ClientsService', () => {
     });
   });
 
-  describe('validateClientsDetail', () => {
+  describe('validClientsDetail', () => {
     it('유효하지 않은 address_uri 시 에러 발생(422, 메시지)', () => {
       mockClients.isValidURI.mockReturnValue(false);
       mockClients.address_uri = 'invalid_uri';
 
-      expect(() => service.validateClientsDetail(mockClients)).toThrow(
+      expect(() => service.validClientsDetail(mockClients)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.ADDRESS_URI,
           statusCode: 422,
@@ -74,7 +74,7 @@ describe('ClientsService', () => {
       mockClients.isValidURI.mockReturnValue(true);
       mockClients.address_uri = 'http://valid.uri';
 
-      expect(() => service.validateClientsDetail(mockClients)).not.toThrow();
+      expect(() => service.validClientsDetail(mockClients)).not.toThrow();
     });
   });
 });

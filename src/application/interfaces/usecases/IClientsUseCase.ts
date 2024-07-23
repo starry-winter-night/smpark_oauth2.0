@@ -1,7 +1,8 @@
 import {
   ClientsDTO,
+  CredentialRequestDTO,
+  CredentialResponseDTO,
   ClientsRequestDTO,
-  ClientsResponseDTO,
 } from '@dtos/ClientsDTO';
 
 export interface IClientDetailsLoaderUseCase {
@@ -9,12 +10,12 @@ export interface IClientDetailsLoaderUseCase {
 }
 
 export interface IClientDetailsRegistrationUseCase {
-  execute(clientsData: ClientsDTO, id?: string): Promise<void>;
+  execute(clientsData: ClientsRequestDTO): Promise<void>;
 }
 
 export interface IClientGenerationUseCase {
   execute(
-    clientRequested: ClientsRequestDTO,
+    credentialRequest: CredentialRequestDTO,
     id?: string,
-  ): Promise<ClientsResponseDTO | null>;
+  ): Promise<CredentialResponseDTO | null>;
 }

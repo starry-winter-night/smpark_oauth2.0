@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 
-import { ClientsRequestDTO, ClientsResponseDTO } from '@dtos/ClientsDTO';
+import { CredentialRequestDTO, CredentialResponseDTO } from '@dtos/ClientsDTO';
 import type { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
 import type { IClientsService } from '@domain-interfaces/services/IClientsService';
 import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
@@ -14,13 +14,10 @@ class ClientGenerationUseCase implements IClientGenerationUseCase {
     @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
 
-  async execute(
-    clientRequested: ClientsRequestDTO,
-    id?: string,
-  ): Promise<ClientsResponseDTO | null> {
-    const verifiedId = this.oAuthVerifierService.verifyId(id);
-
-    const { client_id, client_secret, api_key } = clientRequested;
+  async execute(credentialRequest: CredentialRequestDTO): Promise<CredentialResponseDTO | null> {
+    const verifiedId = this.oAuthVerifierService.verifyId(credentialRequest.id);
+    const verifiedCredential = this.clientsService.verifyCredentialRequest(credentialRequest);
+    const { client_id, client_secret, api_key } = verifiedCredential;
     let updatedClients = {};
 
     if (client_id) {
@@ -42,10 +39,7 @@ class ClientGenerationUseCase implements IClientGenerationUseCase {
       };
     }
 
-    const fetchedClients = await this.clientsRepository.update(
-      verifiedId,
-      updatedClients,
-    );
+    const fetchedClients = await this.clientsRepository.update(verifiedId, updatedClients);
 
     this.oAuthVerifierService.verifyOperation(fetchedClients ? true : false);
 

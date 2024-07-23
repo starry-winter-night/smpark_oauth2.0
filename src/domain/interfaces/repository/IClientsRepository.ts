@@ -1,4 +1,4 @@
-import { ClientsDTO, ClientsResponseDTO } from '@dtos/ClientsDTO';
+import { ClientsDetailDTO, ClientsDTO, CredentialResponseDTO } from '@dtos/ClientsDTO';
 
 export interface IClientsRepository<TContext = void> {
   findById(id: string): Promise<ClientsDTO | null>;
@@ -8,13 +8,7 @@ export interface IClientsRepository<TContext = void> {
     clientSecret: string;
   }): Promise<ClientsDTO | null>;
 
-  update(
-    id: string,
-    updates: Partial<ClientsDTO>,
-  ): Promise<ClientsResponseDTO | null>;
+  update(id: string, updates: Partial<ClientsDTO>): Promise<CredentialResponseDTO | null>;
 
-  save(
-    client: ClientsDTO,
-    options?: { transactionContext?: TContext },
-  ): Promise<boolean>;
+  save(client: ClientsDetailDTO, options?: { transactionContext?: TContext }): Promise<boolean>;
 }

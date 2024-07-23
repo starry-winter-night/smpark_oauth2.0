@@ -17,9 +17,10 @@ export const ERROR_MESSAGES = {
   NOT_FOUND: {
     USER: '등록되지 않은 유저입니다.',
     CODE: '등록되지 않은 코드입니다.',
-    CLIENT: '등록되지 않은 client_id입니다.',
+    CLIENT: '등록되지 않은 클라이언트 입니다.',
     PAGE: '페이지를 찾을 수 없습니다.',
-    AGREED_SCOPES: '허용 데이터 제공 범위가 없습니다.'
+    AGREED_SCOPES: '허용 데이터 제공 범위가 없습니다.',
+    CREDENTIAL: '생성 요청이 모두 누락되었습니다.',
   },
   VALIDATION: {
     MISSING: {
@@ -37,6 +38,8 @@ export const ERROR_MESSAGES = {
       RESPONSE_TYPE: 'response_type이 존재하지 않습니다.',
       SCOPE: 'scope가 존재하지 않습니다.',
       CONSENT_UPDATE: 'consent_update가 존재하지 않습니다.',
+      ADDRESS_URI: 'address_uri가 존재하지 않습니다.',
+      APPLICATION_NAME: 'application_name이 존재하지 않습니다.',
     },
     MISMATCH: {
       CLIENT_ID: '등록된 client_id와 요청된 client_id가 일치하지 않습니다.',
@@ -52,6 +55,7 @@ export const ERROR_MESSAGES = {
       EMAIL: '이메일 주소가 형식에 맞지 않습니다.',
       NAME: '이름은 1~200자로 구성되어야 합니다.',
       ADDRESS_URI: 'address_uri가 형식에 맞지 않습니다.',
+      REDIRECT_URI: 'redirect_uri(Authorization Callback URL)가 형식에 맞지 않습니다.',
       TOKEN: '토큰 형식이 올바르지 않습니다. 유효한 토큰을 제공해 주세요.',
       AUTHENTICATION: '잘못된 형식의 클라이언트 인증 정보입니다. "Basic" 형식을 사용해야 합니다.',
     },

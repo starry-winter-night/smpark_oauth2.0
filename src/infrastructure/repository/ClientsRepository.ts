@@ -3,7 +3,7 @@ import { ClientSession, Collection } from 'mongodb';
 
 import MongoDB from '@database/MongoDB';
 import ClientsMapper from '@mapper/ClientsMapper';
-import { ClientsDTO, ClientsResponseDTO } from '@dtos/ClientsDTO';
+import { ClientsDTO, CredentialResponseDTO } from '@dtos/ClientsDTO';
 import { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
 
 @injectable()
@@ -33,17 +33,14 @@ class ClientsRepository implements IClientsRepository<ClientSession> {
     return result || null;
   }
 
-  async update(
-    id: string,
-    updates: Partial<ClientsDTO>,
-  ): Promise<ClientsResponseDTO | null> {
+  async update(id: string, updates: Partial<ClientsDTO>): Promise<CredentialResponseDTO | null> {
     const result = await this.collection.findOneAndUpdate(
       { id },
       { $set: updates },
       { returnDocument: 'after', upsert: true },
     );
 
-    return result ? this.clientsMapper.toClientsResponseDTO(result) : null;
+    return result ? this.clientsMapper.toCredentialResponseDTO(result) : null;
   }
 
   async save(

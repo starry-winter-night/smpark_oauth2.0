@@ -8,14 +8,15 @@ import type {
   IClientGenerationUseCase,
   IClientDetailsRegistrationUseCase,
 } from '@application-interfaces/usecases/IClientsUseCase';
+import ClientsMapper from '@mapper/ClientsMapper';
 
 @injectable()
 class ClientsController implements IClientsController {
   constructor(
+    @inject(ClientsMapper) private clientMapper: ClientsMapper,
     @inject('IClientDetailsLoaderUseCase')
     private clientDetailsLoaderUseCase: IClientDetailsLoaderUseCase,
-    @inject('IClientGenerationUseCase')
-    private clientGenerationUseCase: IClientGenerationUseCase,
+    @inject('IClientGenerationUseCase') private clientGenerationUseCase: IClientGenerationUseCase,
     @inject('IClientDetailsRegistrationUseCase')
     private clientDetailsRegistrationUseCase: IClientDetailsRegistrationUseCase,
   ) {}
@@ -43,10 +44,9 @@ class ClientsController implements IClientsController {
     next: NextFunction,
   ): Promise<void | Response> {
     const id = req.session.user?.id;
-
     try {
-      const clientsRequested = req.body;
-      await this.clientDetailsRegistrationUseCase.execute(clientsRequested, id);
+      const clientsRequestDTO = this.clientMapper.toClientsRequestDTO({ id, ...req.body });
+      await this.clientDetailsRegistrationUseCase.execute(clientsRequestDTO);
 
       return res.status(200).send({ message: 'OAuth 등록 완료' });
     } catch (error) {
@@ -62,12 +62,8 @@ class ClientsController implements IClientsController {
     const id = req.session.user?.id;
 
     try {
-      const clientRequested = req.body;
-
-      const clients = await this.clientGenerationUseCase.execute(
-        clientRequested,
-        id,
-      );
+      const credentialRequestDTO = this.clientMapper.toCredentialRequestDTO({ id, ...req.body });
+      const clients = await this.clientGenerationUseCase.execute(credentialRequestDTO);
 
       return res.status(200).send({ client: clients });
     } catch (error) {

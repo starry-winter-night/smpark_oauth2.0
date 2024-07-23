@@ -87,7 +87,8 @@
     "docker:prod-build": "docker-compose -f docker-compose.yml --env-file .env.production build",
     "docker:prod-push": "docker-compose -f docker-compose.yml --env-file .env.production push",
     "docker:prod-up": "docker-compose -f docker-compose.yml --env-file .env.production up -d",
-    "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down"
+    "docker:prod-down": "docker-compose -f docker-compose.yml --env-file .env.production down",
+    "docker:prod-pull": "docker-compose -f docker-compose.yml --env-file .env.production pull"
   },
   "packageManager": "yarn@4.3.1"
 }

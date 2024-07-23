@@ -125,9 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const oauthRegCheck = async () => {
+    const ClientId = document.getElementById('regInputClientId').value.trim();
+    const ClientSecret = document.getElementById('regInputClientSecret').value.trim();
     const AppName = document.getElementById('regInputAppName').value.trim();
     const HomepageAddr = document.getElementById('regInputHomepageAddr').value.trim();
     const AuthCallbackURL = document.getElementById('regInputCallBackUrl').value.trim();
+
+    if (!ClientId) {
+      alert('클라이언트 아이디를 생성하세요.');
+      return false;
+    }
+
+    if (!ClientSecret) {
+      alert('클라이언트 시크릿울 생성하세요.');
+      return false;
+    }
 
     if (!AppName) {
       alert('어플리케이션 이름을 입력하세요.');
@@ -173,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          client_id: ClientId,
+          client_secret: ClientSecret,
           address_uri: HomepageAddr,
           redirect_uri: AuthCallbackURL,
           clientAllowedScopes: chkReqInfo,

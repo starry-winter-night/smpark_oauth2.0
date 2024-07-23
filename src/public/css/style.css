@@ -51,6 +51,10 @@ textarea {
   overflow: auto;
 }
 
+.required {
+  color: red;
+}
+
 .form-group {
   margin-bottom: 15px;
 }
@@ -315,16 +319,16 @@ textarea.form-control {
   align-items: center;
   justify-content: space-between;
 }
-.infomationP {
+.information_p {
   font-weight: 700;
 }
-.regIdlabel {
+.regIdLabel {
   display: block;
 }
-.regSecretlabel {
+.regSecretLabel {
   display: block;
 }
-.regChatApiKeylabel {
+.regChatApiKeyLabel {
   display: block;
 }
 #regInputClientId,
@@ -333,7 +337,7 @@ textarea.form-control {
   width: 60%;
   display: inline-block;
 }
-.regSmpChatManagerIdlabel {
+.regSmpChatManagerIdLabel {
   display: block;
 }
 #regInputSmpChatManagerId {
@@ -1020,12 +1024,7 @@ textarea.form-control {
   right: 5%;
   color: #fff;
 }
-.viewChatmodal
-  > .modal-dialog
-  > .modal-content
-  > .chatBox
-  > .chatTop
-  > .chatName {
+.viewChatmodal > .modal-dialog > .modal-content > .chatBox > .chatTop > .chatName {
   color: #fff;
   font-weight: bold;
   font-size: 24px;

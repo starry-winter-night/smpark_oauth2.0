@@ -50,6 +50,7 @@ README.md는 OAuth2.0에 대한 간단한 소개 및 사용방법, 폴더 구조
 - **Deployment Environment** - `macOS` _(v14.5 Sonoma on MacBook)_
 
 <br>
+
 [📑[rfc6749]](https://datatracker.ietf.org/doc/html/rfc6749)의 구조와 권고를 베이스로 제작하였습니다.
 
 [🚀[smpark.ddns.net]](https://smpark.ddns.net) 사이트 이동

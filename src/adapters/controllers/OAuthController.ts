@@ -3,8 +3,8 @@ import { injectable, inject } from 'inversify';
 import { Request, Response, NextFunction } from 'express';
 
 import { authSerialize } from '@utils/serialize';
-import { AuthorizeRequestDTO } from '@dtos/OAuthDTO';
 import UserMapper from '@mapper/UserMapper';
+import OAuthMapper from '@mapper/OAuthMapper';
 
 import { ERROR_MESSAGES } from '@constants/errorMessages';
 import { TRANSLATIONS } from '@constants/scopes';
@@ -19,11 +19,14 @@ import type {
   IScopeComparatorUseCase,
 } from '@application-interfaces/usecases/IOAuthUseCase';
 import type { ITokenGenerationUseCase } from '@application-interfaces/usecases/ITokenUseCase';
+import TokenMapper from '@mapper/TokenMapper';
 
 @injectable()
 class OAuthController implements IOAuthController {
   constructor(
     @inject(UserMapper) private userMapper: UserMapper,
+    @inject(OAuthMapper) private oAuthMapper: OAuthMapper,
+    @inject(TokenMapper) private tokenMapper: TokenMapper,
     @inject('IUserLoginUseCase') private userLoginUseCase: IUserLoginUseCase,
     @inject('ICodeGenerationUseCase') private codeGenerationUseCase: ICodeGenerationUseCase,
     @inject('ITokenGenerationUseCase') private tokenGenerationUseCase: ITokenGenerationUseCase,
@@ -39,22 +42,16 @@ class OAuthController implements IOAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void | Response> {
-    const request = {
-      ...req.query,
-      ...req.body,
-    };
-
-    const unVerifiedParams: AuthorizeRequestDTO = {
-      ...request,
-      referer_uri: req.headers.referer || req.session.unVerifiedRefererUri,
-    };
-
-    const id = req.session.user?.id;
-
     try {
-      await this.userAuthorizationUseCase.execute(unVerifiedParams, id);
+      const authorizeRequestDTO = this.oAuthMapper.toAuthorizeRequestDTO({
+        id: req.session.user?.id,
+        ...req.query,
+        ...req.body,
+        referer_uri: req.headers.referer || req.session.unVerifiedRefererUri,
+      });
+      await this.userAuthorizationUseCase.execute(authorizeRequestDTO);
 
-      req.session.verifiedRefererUri = unVerifiedParams.referer_uri;
+      req.session.verifiedRefererUri = authorizeRequestDTO.referer_uri;
     } catch (error) {
       next(error);
     }
@@ -95,14 +92,15 @@ class OAuthController implements IOAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void | Response> {
-    const { scope, redirect_uri, state } = req.query;
-    const id = req.session.user?.id;
+    const { client_id, scope, redirect_uri, state } = req.query;
 
     try {
-      const { scope: comparedScope, updated } = await this.scopeComparatorUseCase.execute(
+      const scopeRequestDTO = this.oAuthMapper.toScopeRequestDTO({
+        client_id,
         scope,
-        id,
-      );
+      });
+      const { scope: comparedScope, updated } =
+        await this.scopeComparatorUseCase.execute(scopeRequestDTO);
 
       Object.assign(req.session, {
         scope: comparedScope,
@@ -126,11 +124,12 @@ class OAuthController implements IOAuthController {
     res: Response,
     next: NextFunction,
   ): Promise<void | Response> {
-    const { scope, updated } = req.session;
+    const { scope: agreedScope, updated } = req.session;
     const id = req.session.user?.id;
 
     try {
-      await this.userScopeUpdaterUseCase.execute(scope, updated, id);
+      const scopeRequestDTO = this.oAuthMapper.toScopeRequestDTO({ agreedScope, updated, id });
+      await this.userScopeUpdaterUseCase.execute(scopeRequestDTO);
 
       next();
     } catch (error) {
@@ -152,16 +151,13 @@ class OAuthController implements IOAuthController {
     const base64Credentials = authHeader.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
     const [client_id, client_secret] = credentials.split(':');
-    const tokenRequest = req.body;
-
-    const extendedTokenRequest = {
-      ...tokenRequest,
+    const tokenRequestDTO = this.oAuthMapper.toTokenRequestDTO({
+      ...req.body,
       client_id,
       client_secret,
-    };
+    });
     try {
-      req.session.codeValidatedIds =
-        await this.tokenPreparationUseCase.execute(extendedTokenRequest);
+      req.session.codeValidatedIds = await this.tokenPreparationUseCase.execute(tokenRequestDTO);
       next();
     } catch (error) {
       next(error);

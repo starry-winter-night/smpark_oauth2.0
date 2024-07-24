@@ -19,9 +19,18 @@ export class CredentialRequestDTO {
 
 export class RequestValidDTO {
   constructor(
+    public client_id?: string,
+    public redirect_uri?: string,
+    public address_uri?: string,
+  ) {}
+}
+
+export class ResponseValidDTO {
+  constructor(
     public client_id: string,
     public redirect_uri: string,
     public address_uri: string,
+    public response_type: string,
   ) {}
 }
 
@@ -31,7 +40,7 @@ export class ClientsDetailDTO {
     public application_name: string,
     public redirect_uri: string,
     public address_uri: string,
-    public clientAllowedScopes: { id: boolean; email: boolean; name: boolean },
+    public clientAllowedScopes?: { id: boolean; email: boolean; name: boolean },
     public grant_type?: GrantType,
     public manager_list?: string[],
   ) {}
@@ -60,7 +69,7 @@ export class ClientsDTO {
     public application_name: string,
     public redirect_uri: string,
     public address_uri: string,
-    public clientAllowedScopes: { id: boolean; email: boolean; name: boolean },
+    public clientAllowedScopes?: { id: boolean; email: boolean; name: boolean },
     public grant_type?: GrantType,
     public api_key?: string,
     public manager_list?: string[],

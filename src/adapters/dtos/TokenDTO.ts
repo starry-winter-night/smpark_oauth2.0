@@ -8,6 +8,13 @@ export class TokenDTO {
   ) {}
 }
 
+export class TokenResponseDTO {
+  constructor(
+    public accessToken: string,
+    public refreshToken: string,
+  ) {}
+}
+
 export interface ScopeDTO {
   id: boolean;
   email: boolean;

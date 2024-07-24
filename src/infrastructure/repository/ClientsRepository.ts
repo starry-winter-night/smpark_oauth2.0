@@ -22,6 +22,11 @@ class ClientsRepository implements IClientsRepository<ClientSession> {
     return result || null;
   }
 
+  async findByClientId(clientId: string): Promise<ClientsDTO | null> {
+    const result = await this.collection.findOne({ client_id: clientId });
+    return result || null;
+  }
+
   async findByClients(credentials: {
     clientId: string;
     clientSecret: string;

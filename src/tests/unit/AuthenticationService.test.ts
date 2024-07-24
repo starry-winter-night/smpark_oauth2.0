@@ -26,7 +26,7 @@ describe('AuthenticationService', () => {
       jest.mocked(argon2.hash).mockImplementation(async () => 'hashedPassword');
       const result = await authService.hashedPassword('password');
       expect(result).toBe('hashedPassword');
-      expect(argon2.hash).toHaveBeenCalledWith('password', 10);
+      expect(argon2.hash).toHaveBeenCalledWith('password');
     });
   });
 
@@ -34,19 +34,19 @@ describe('AuthenticationService', () => {
     it('패스워드 비교', async () => {
       jest.mocked(argon2.verify).mockImplementation(async () => true);
       const result = await authService.comparePassword(
-        'hashedPassword',
         'password',
+        'hashedPassword',
       );
       expect(result).toBe(true);
       expect(argon2.verify).toHaveBeenCalledWith('hashedPassword', 'password');
     });
   });
 
-  describe('verifySignUpInfo', () => {
+  describe('validSignUpInfo', () => {
     it('아이디 포맷 불일치 시 에러 발생(400, 메시지)', () => {
       mockUser.isValidId.mockReturnValue(false);
 
-      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
+      expect(() => authService.validSignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.USERNAME,
           status: 400,
@@ -58,7 +58,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidId.mockReturnValue(true);
       mockUser.isValidEmail.mockReturnValue(false);
 
-      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
+      expect(() => authService.validSignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.EMAIL,
           status: 400,
@@ -71,7 +71,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidEmail.mockReturnValue(true);
       mockUser.isValidName.mockReturnValue(false);
 
-      expect(() => authService.verifySignUpInfo(mockUser)).toThrow(
+      expect(() => authService.validSignUpInfo(mockUser)).toThrow(
         expect.objectContaining({
           message: ERROR_MESSAGES.VALIDATION.FORMAT.NAME,
           status: 400,
@@ -84,7 +84,7 @@ describe('AuthenticationService', () => {
       mockUser.isValidEmail.mockReturnValue(true);
       mockUser.isValidName.mockReturnValue(true);
 
-      expect(() => authService.verifySignUpInfo(mockUser)).not.toThrow();
+      expect(() => authService.validSignUpInfo(mockUser)).not.toThrow();
     });
   });
 

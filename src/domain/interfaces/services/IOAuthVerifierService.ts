@@ -17,6 +17,6 @@ export interface IOAuthVerifierService {
   verifyCodeExpiration(expired: boolean): void;
   verifyOperation(success: boolean | null): void;
   verifyAgreedScopes(agreedScopes?: ScopeDTO): ScopeDTO;
-  verifyScope(scope?: ScopeDTO): ScopeDTO;
+  verifyScope(scope?: ScopeDTO | null): ScopeDTO;
   verifyUpdated(updated?: boolean): boolean;
 }

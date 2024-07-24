@@ -60,7 +60,7 @@ class OAuthVerifierService implements IOAuthVerifierService {
     this.verify(success, ERROR_MESSAGES.SERVER.ISSUE, 500);
   }
 
-  verifyScope(scope?: ScopeDTO): ScopeDTO {
+  verifyScope(scope?: ScopeDTO | null): ScopeDTO {
     return this.verify(scope, ERROR_MESSAGES.VALIDATION.MISSING.SCOPE, 500);
   }
 

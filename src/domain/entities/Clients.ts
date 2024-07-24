@@ -5,7 +5,7 @@ class Clients {
     public application_name: string,
     public redirect_uri: string,
     public address_uri: string,
-    public clientAllowedScopes: { id: boolean; email: boolean; name: boolean },
+    public clientAllowedScopes?: { id: boolean; email: boolean; name: boolean },
     public grant_type?: 'authorization_code' | 'refresh_token',
     public api_key?: string,
     public manager_list?: string[],

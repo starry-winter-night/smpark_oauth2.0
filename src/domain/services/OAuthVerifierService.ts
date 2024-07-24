@@ -39,6 +39,11 @@ class OAuthVerifierService implements IOAuthVerifierService {
   verifyRegUser(user: UserDTO | null): boolean {
     return this.verify(user ? false : true, ERROR_MESSAGES.VALIDATION.DUPLICATE.ID, 409);
   }
+
+  verifyClientId(clientId?: string): string {
+    return this.verify(clientId, ERROR_MESSAGES.NOT_FOUND.CLIENT_ID);
+  }
+
   verifyClient(clients: ClientsDTO | null): ClientsDTO {
     return this.verify(clients, ERROR_MESSAGES.NOT_FOUND.CLIENT);
   }
@@ -55,7 +60,7 @@ class OAuthVerifierService implements IOAuthVerifierService {
     this.verify(success, ERROR_MESSAGES.SERVER.ISSUE, 500);
   }
 
-  verifyScope(scope?: ScopeDTO | null): ScopeDTO {
+  verifyScope(scope?: ScopeDTO): ScopeDTO {
     return this.verify(scope, ERROR_MESSAGES.VALIDATION.MISSING.SCOPE, 500);
   }
 

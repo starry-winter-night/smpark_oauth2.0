@@ -2,12 +2,8 @@ import xss from 'xss';
 import createError from 'http-errors';
 import { injectable } from 'inversify';
 
-import {
-  AuthorizeRequestDTO,
-  TokenRequestDTO,
-  TokenResponseDTO,
-} from '@dtos/OAuthDTO';
-import { RequestValidDTO } from '@dtos/ClientsDTO';
+import { AuthorizeRequestDTO, TokenRequestDTO, TokenValidateDTO } from '@dtos/OAuthDTO';
+import { RequestValidDTO, ResponseValidDTO } from '@dtos/ClientsDTO';
 import { ERROR_MESSAGES } from '@constants/errorMessages';
 import { GrantType } from '@enums/oauth';
 import { IOAuthRequestValidService } from '@domain-interfaces/services/IOAuthRequestValidService';
@@ -17,29 +13,28 @@ class OAuthRequestValidService implements IOAuthRequestValidService {
   validateAuthorizationRequest(
     request: AuthorizeRequestDTO,
     clients?: RequestValidDTO | null,
-  ): void {
-    this.validateField(
+  ): ResponseValidDTO {
+    const client_id = this.validateField(
       ERROR_MESSAGES.VALIDATION.MISSING.CLIENT_ID,
       ERROR_MESSAGES.VALIDATION.MISMATCH.CLIENT_ID,
       request.client_id,
       clients?.client_id,
     );
 
-    this.validateField(
+    const redirect_uri = this.validateField(
       ERROR_MESSAGES.VALIDATION.MISSING.REDIRECT_URI,
       ERROR_MESSAGES.VALIDATION.MISMATCH.REDIRECT_URI,
       request.redirect_uri,
       clients?.redirect_uri,
     );
 
-    this.validateReferer(request.referer_uri, clients?.address_uri);
-    this.validateResponseType(request.response_type);
+    const address_uri = this.validateReferer(request.referer_uri, clients?.address_uri);
+    const response_type = this.validateResponseType(request.response_type);
+
+    return { client_id, redirect_uri, address_uri, response_type };
   }
 
-  validateTokenRequest(
-    request: TokenRequestDTO,
-    oauth?: TokenRequestDTO | null,
-  ): TokenResponseDTO {
+  validateTokenRequest(request: TokenRequestDTO, oauth?: TokenRequestDTO | null): TokenValidateDTO {
     const client_id = this.validateField(
       ERROR_MESSAGES.VALIDATION.MISSING.CLIENT_ID,
       ERROR_MESSAGES.VALIDATION.MISMATCH.CLIENT_ID,
@@ -97,10 +92,7 @@ class OAuthRequestValidService implements IOAuthRequestValidService {
       throw createError(400, ERROR_MESSAGES.VALIDATION.MISSING.REFERER_URI);
     }
 
-    if (
-      addressUri &&
-      this.normalizeUri(refererUri) !== this.normalizeUri(addressUri)
-    ) {
+    if (addressUri && this.normalizeUri(refererUri) !== this.normalizeUri(addressUri)) {
       throw createError(401, ERROR_MESSAGES.VALIDATION.MISMATCH.ADDRESS_URI);
     }
 
@@ -109,10 +101,7 @@ class OAuthRequestValidService implements IOAuthRequestValidService {
 
   private validateResponseType(responseType?: string): string {
     if (responseType && responseType.toLowerCase() !== 'code') {
-      throw createError(
-        401,
-        ERROR_MESSAGES.VALIDATION.UNSUPPORTED.RESPONSE_TYPE,
-      );
+      throw createError(401, ERROR_MESSAGES.VALIDATION.UNSUPPORTED.RESPONSE_TYPE);
     }
 
     if (!responseType) {

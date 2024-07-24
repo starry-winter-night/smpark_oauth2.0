@@ -10,12 +10,13 @@ export interface IOAuthVerifierService {
     client_id: string;
   };
   verifyUser(user: UserDTO | null): UserDTO;
-  verifyAgreedScopes(agreedScopes?: ScopeDTO): ScopeDTO;
   verifyRegUser(user: UserDTO | null): boolean;
+  verifyClientId(clientId?: string): string 
   verifyClient(clients: ClientsDTO | null): ClientsDTO;
   verifyCodeExists(code: CodeDTO | null): CodeDTO;
   verifyCodeExpiration(expired: boolean): void;
   verifyOperation(success: boolean | null): void;
-  verifyScope(scope?: ScopeDTO | null): ScopeDTO;
+  verifyAgreedScopes(agreedScopes?: ScopeDTO): ScopeDTO;
+  verifyScope(scope?: ScopeDTO): ScopeDTO;
   verifyUpdated(updated?: boolean): boolean;
 }

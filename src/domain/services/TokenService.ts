@@ -7,11 +7,7 @@ import { ITokenService } from '@domain-interfaces/services/ITokenService';
 
 @injectable()
 class TokenService implements ITokenService {
-  generateToken(
-    payload: object,
-    jwtSecretKey: string,
-    expiresIn: number,
-  ): string {
+  generateToken(payload: object, jwtSecretKey: string, expiresIn: number): string {
     const jwtToken = jwt.sign(payload, jwtSecretKey, {
       expiresIn,
     });
@@ -27,10 +23,7 @@ class TokenService implements ITokenService {
     return DEFAULT_SCOPE;
   }
 
-  validateScope(
-    allowedScope: ScopeDTO,
-    requestScope: string,
-  ): Partial<ScopeDTO> {
+  validateScope(allowedScope: ScopeDTO, requestScope: string): Partial<ScopeDTO> {
     const requestScopesArray = requestScope.toLowerCase().split(' ');
     const resultScope: Partial<ScopeDTO> = {};
 

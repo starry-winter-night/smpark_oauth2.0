@@ -7,31 +7,22 @@ import type { IOAuthRequestValidService } from '@domain-interfaces/services/IOAu
 import { IUserAuthorizationUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
 
 @injectable()
-class UserAuthorizationUseCase implements IUserAuthorizationUseCase{
+class UserAuthorizationUseCase implements IUserAuthorizationUseCase {
   constructor(
     @inject('IClientsRepository') private clientsRepository: IClientsRepository,
-    @inject('IOAuthRequestValidService') private oAuthRequestValidService: IOAuthRequestValidService,
+    @inject('IOAuthRequestValidService')
+    private oAuthRequestValidService: IOAuthRequestValidService,
     @inject(ClientsMapper) private clientsMapper: ClientsMapper,
   ) {}
 
-  async execute(
-    authorizeRequest: AuthorizeRequestDTO,
-    id?: string,
-  ): Promise<void> {
-    if (id) {
-      const fetchedClient = await this.clientsRepository.findById(id);
-
-      this.oAuthRequestValidService.validateAuthorizationRequest(
-        authorizeRequest,
-        fetchedClient
-          ? this.clientsMapper.toRequestValidDTO(fetchedClient)
-          : null,
-      );
-    } else {
-      this.oAuthRequestValidService.validateAuthorizationRequest(
-        authorizeRequest,
-      );
-    }
+  async execute(authorizeRequest: AuthorizeRequestDTO): Promise<void> {
+    const { client_id } =
+      this.oAuthRequestValidService.validateAuthorizationRequest(authorizeRequest);
+    const fetchedClient = await this.clientsRepository.findByClientId(client_id);
+    this.oAuthRequestValidService.validateAuthorizationRequest(
+      authorizeRequest,
+      fetchedClient ? this.clientsMapper.toRequestValidDTO(fetchedClient) : null,
+    );
   }
 }
 

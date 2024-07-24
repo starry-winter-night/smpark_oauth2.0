@@ -7,62 +7,52 @@ import type { IUserRepository } from '@domain-interfaces/repository/IUserReposit
 import type { IOAuthVerifierService } from '@domain-interfaces/services/IOAuthVerifierService';
 import type { ITokenService } from '@domain-interfaces/services/ITokenService';
 import { IScopeComparatorUseCase } from '@application-interfaces/usecases/IOAuthUseCase';
+import { ScopeRequestDTO, ScopeResponseDTO } from '@dtos/OAuthDTO';
+import OAuthMapper from '@mapper/OAuthMapper';
 
 @injectable()
 class ScopeComparatorUseCase implements IScopeComparatorUseCase {
   constructor(
+    @inject(OAuthMapper) private oAuthMapper: OAuthMapper,
     @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('IClientsRepository') private clientsRepository: IClientsRepository,
     @inject('ITokenService') private tokenService: ITokenService,
     @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
   ) {}
   async execute(
-    requestScope?: string,
-    id?: string,
+    requestScope: ScopeRequestDTO,
   ): Promise<{ scope: Partial<ScopeDTO>; updated: boolean }> {
-    const verifiedId = this.oAuthVerifierService.verifyId(id);
-    const fetchedUser = await this.userRepository.findById(verifiedId);
-    const verifiedUser = this.oAuthVerifierService.verifyUser(fetchedUser);
-    const verifiedScopes = this.oAuthVerifierService.verifyAgreedScopes(verifiedUser.agreedScopes);
+    const { client_id, scope } = requestScope;
+    const verifiedClientId = this.oAuthVerifierService.verifyClientId(client_id);
+    const fetchedClients = await this.clientsRepository.findByClientId(verifiedClientId);
+    const { id, clientAllowedScopes } = this.oAuthVerifierService.verifyClient(fetchedClients);
+    const fetchedUser = await this.userRepository.findById(id);
+    const { agreedScopes } = this.oAuthVerifierService.verifyUser(fetchedUser);
 
-    if (!requestScope) {
-      return this.handleDefaultScope(verifiedScopes);
+    return this.determineScope(scope, clientAllowedScopes, agreedScopes);
+  }
+
+  private determineScope(
+    scope?: string,
+    clientAllowedScopes?: ScopeDTO,
+    agreedScopes?: ScopeDTO,
+  ): ScopeResponseDTO {
+    if (!clientAllowedScopes) {
+      const defaultScope = this.tokenService.getDefaultScope();
+      return this.oAuthMapper.toScopeResponseDTO(defaultScope, false);
     }
 
-    return this.handleRequestScope(verifiedId, requestScope, verifiedScopes);
-  }
-
-  private handleDefaultScope(agreedScopes: ScopeDTO): {
-    scope: Partial<ScopeDTO>;
-    updated: boolean;
-  } {
-    const defaultScope = this.tokenService.getDefaultScope();
-    return this.compareAndReturnScope(defaultScope, agreedScopes);
-  }
-
-  private async handleRequestScope(
-    id: string,
-    requestScope: string,
-    agreedScopes: ScopeDTO,
-  ): Promise<{ scope: Partial<ScopeDTO>; updated: boolean }> {
-    const fetchedClients = await this.clientsRepository.findById(id);
-
-    if (!fetchedClients) {
-      return this.handleDefaultScope(agreedScopes);
+    if (!scope) {
+      return this.oAuthMapper.toScopeResponseDTO(clientAllowedScopes, false);
     }
 
-    const { clientAllowedScopes } = fetchedClients;
-    const resultScope = this.tokenService.validateScope(clientAllowedScopes, requestScope);
-
-    return this.compareAndReturnScope(resultScope, agreedScopes);
+    const resultScope = this.tokenService.validateScope(clientAllowedScopes, scope);
+    const isEqual = this.compareScope(resultScope, agreedScopes);
+    return this.oAuthMapper.toScopeResponseDTO(resultScope, !isEqual);
   }
 
-  private compareAndReturnScope(
-    newScope: Partial<ScopeDTO>,
-    agreedScopes: ScopeDTO,
-  ): { scope: Partial<ScopeDTO>; updated: boolean } {
-    const isEqual = deepEqual(newScope, agreedScopes);
-    return { scope: newScope, updated: !isEqual };
+  private compareScope(newScope: Partial<ScopeDTO>, agreedScopes?: ScopeDTO): boolean {
+    return agreedScopes ? deepEqual(newScope, agreedScopes) : false;
   }
 }
 

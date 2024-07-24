@@ -1,7 +1,8 @@
 import { injectable, inject } from 'inversify';
-import { TokenRequestDTO, TokenResponseDTO } from '@dtos/OAuthDTO';
+import { TokenRequestDTO, TokenValidateDTO } from '@dtos/OAuthDTO';
 import { ClientsDTO } from '@dtos/ClientsDTO';
 import { CodeDTO } from '@dtos/CodeDTO';
+import OAuthMapper from '@mapper/OAuthMapper';
 import type { IClientsRepository } from '@domain-interfaces/repository/IClientsRepository';
 import type { ICodeRepository } from '@domain-interfaces/repository/ICodeRepository';
 import type { ICodeService } from '@domain-interfaces/services/ICodeService';
@@ -12,36 +13,29 @@ import { ITokenPreparationUseCase } from '@application-interfaces/usecases/IOAut
 @injectable()
 class TokenPreparationUseCase implements ITokenPreparationUseCase {
   constructor(
+    @inject(OAuthMapper) private oAuthMapper: OAuthMapper,
     @inject('ICodeRepository') private codeRepository: ICodeRepository,
     @inject('IClientsRepository') private clientsRepository: IClientsRepository,
-    @inject('IOAuthRequestValidService') private oAuthRequestValidService: IOAuthRequestValidService,
+    @inject('IOAuthRequestValidService')
+    private oAuthRequestValidService: IOAuthRequestValidService,
     @inject('IOAuthVerifierService') private oAuthVerifierService: IOAuthVerifierService,
     @inject('ICodeService') private codeService: ICodeService,
   ) {}
 
-  async execute(
-    tokenRequest: TokenRequestDTO,
-  ): Promise<{ id: string; client_id: string }> {
-    const validatedRequest =
-      this.oAuthRequestValidService.validateTokenRequest(tokenRequest);
-
+  async execute(tokenRequest: TokenRequestDTO): Promise<{ id: string; client_id: string }> {
+    const validatedRequest = this.oAuthRequestValidService.validateTokenRequest(tokenRequest);
     const client = await this.getClient(validatedRequest);
     const code = await this.getCode(validatedRequest.code);
-
     const isExpired = this.codeService.validateCodeExpiresAt(code.expiresAt);
-
     await this.deleteCode(code.id, isExpired);
-
     this.oAuthVerifierService.verifyCodeExpiration(isExpired);
-
     const extendsClientCode = this.extendedClientAndCode(client, code);
+    this.oAuthRequestValidService.validateTokenRequest(tokenRequest, extendsClientCode);
 
-    this.oAuthRequestValidService.validateTokenRequest(
-      tokenRequest,
-      extendsClientCode,
-    );
-
-    return { id: code.id, client_id: client.client_id };
+    return this.oAuthMapper.toTokenResponseDTO({
+      id: code.id,
+      client_id: client.client_id,
+    });
   }
 
   private async deleteCode(id: string, isExpired: boolean): Promise<void> {
@@ -50,10 +44,10 @@ class TokenPreparationUseCase implements ITokenPreparationUseCase {
     }
   }
 
-  private async getClient(tokenRequest: TokenResponseDTO): Promise<ClientsDTO> {
+  private async getClient({ client_id, client_secret }: TokenValidateDTO): Promise<ClientsDTO> {
     const client = await this.clientsRepository.findByClients({
-      clientId: tokenRequest.client_id,
-      clientSecret: tokenRequest.client_secret,
+      clientId: client_id,
+      clientSecret: client_secret,
     });
 
     const verifiedClient = this.oAuthVerifierService.verifyClient(client);
@@ -64,16 +58,12 @@ class TokenPreparationUseCase implements ITokenPreparationUseCase {
   private async getCode(code: string): Promise<CodeDTO> {
     const fetchedCode = await this.codeRepository.findByCode(code);
 
-    const verifiedCode =
-      this.oAuthVerifierService.verifyCodeExists(fetchedCode);
+    const verifiedCode = this.oAuthVerifierService.verifyCodeExists(fetchedCode);
 
     return verifiedCode;
   }
 
-  private extendedClientAndCode(
-    clients: ClientsDTO,
-    code: CodeDTO,
-  ): TokenRequestDTO {
+  private extendedClientAndCode(clients: ClientsDTO, code: CodeDTO): TokenRequestDTO {
     return {
       client_id: clients.client_id,
       client_secret: clients.client_secret,

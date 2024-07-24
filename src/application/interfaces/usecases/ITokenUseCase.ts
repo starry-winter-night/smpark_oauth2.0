@@ -1,5 +1,6 @@
+import { TokenResponseDTO } from '@dtos/TokenDTO';
+import { ValidIdsDTO } from '@dtos/OAuthDTO';
+
 export interface ITokenGenerationUseCase {
-  execute(
-    ids?: { id: string; client_id: string } | null,
-  ): Promise<{ accessToken: string; refreshToken: string }>;
+  execute(ids?: ValidIdsDTO | null): Promise<TokenResponseDTO>;
 }

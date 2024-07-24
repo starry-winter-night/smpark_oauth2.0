@@ -1,27 +1,22 @@
 import { AuthorizeRequestDTO, TokenRequestDTO } from '@dtos/OAuthDTO';
-import { ScopeDTO } from '@dtos/TokenDTO';
+import { ScopeRequestDTO, ScopeResponseDTO, ValidIdsDTO } from '@dtos/OAuthDTO';
 
 export interface ICodeGenerationUseCase {
   execute(id?: string): Promise<string>;
 }
 
 export interface IScopeComparatorUseCase {
-  execute(
-    requestScope?: string,
-    id?: string,
-  ): Promise<{ scope: Partial<ScopeDTO>; updated: boolean }>;
+  execute(requestScope: ScopeRequestDTO): Promise<ScopeResponseDTO>;
 }
 
 export interface ITokenPreparationUseCase {
-  execute(
-    tokenRequest: TokenRequestDTO,
-  ): Promise<{ id: string; client_id: string }>;
+  execute(tokenRequest: TokenRequestDTO): Promise<ValidIdsDTO>;
 }
 
 export interface IUserAuthorizationUseCase {
-  execute(authorizeRequest: AuthorizeRequestDTO, id?: string): Promise<void>;
+  execute(authorizeRequest: AuthorizeRequestDTO): Promise<void>;
 }
 
 export interface IUserScopeUpdaterUseCase {
-  execute(scope?: ScopeDTO, updated?: boolean, id?: string): Promise<void>;
+  execute(scopeRequest: ScopeRequestDTO): Promise<void>;
 }

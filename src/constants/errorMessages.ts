@@ -18,6 +18,7 @@ export const ERROR_MESSAGES = {
     USER: '등록되지 않은 유저입니다.',
     CODE: '등록되지 않은 코드입니다.',
     CLIENT: '등록되지 않은 클라이언트 입니다.',
+    CLIENT_ID: '등록되지 않은 클라이언트 아이디 입니다.',
     PAGE: '페이지를 찾을 수 없습니다.',
     AGREED_SCOPES: '허용 데이터 제공 범위가 없습니다.',
     CREDENTIAL: '생성 요청이 모두 누락되었습니다.',

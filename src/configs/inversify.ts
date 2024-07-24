@@ -38,6 +38,8 @@ import AuthenticationMiddleware from '@middleware/routeMiddleware/Authentication
 import ClientsMapper from '@mapper/ClientsMapper';
 import UserMapper from '@mapper/UserMapper';
 import CodeMapper from '@mapper/CodeMapper';
+import OAuthMapper from '@mapper/OAuthMapper';
+import TokenMapper from '@mapper/TokenMapper';
 
 const container = new Container();
 
@@ -54,13 +56,13 @@ const registerUseCaseDependencies = (): void => {
   container.bind('IUserRegistrationUseCase').to(UserRegistrationUseCase);
   container.bind('IUserScopeUpdaterUseCase').to(UserScopeUpdaterUseCase);
   container.bind('IClientDetailsLoaderUseCase').to(ClientDetailsLoaderUseCase);
-  container.bind('IClientDetailsRegistrationUseCase').to(ClientDetailsRegistrationUseCase);  
+  container.bind('IClientDetailsRegistrationUseCase').to(ClientDetailsRegistrationUseCase);
 };
 
 const registerServiceDependencies = (): void => {
   container.bind('IAuthenticationService').to(AuthenticationService);
   container.bind('IOAuthRequestValidService').to(OAuthRequestValidService);
-  container.bind("IClientsService").to(ClientsService);
+  container.bind('IClientsService').to(ClientsService);
   container.bind('ICodeService').to(CodeService);
   container.bind('IOAuthVerifierService').to(OAuthVerifierService);
   container.bind('ITokenService').to(TokenService);
@@ -97,6 +99,8 @@ const registerMapperDependencies = (): void => {
   container.bind(ClientsMapper).to(ClientsMapper);
   container.bind(UserMapper).to(UserMapper);
   container.bind(CodeMapper).to(CodeMapper);
+  container.bind(OAuthMapper).to(OAuthMapper);
+  container.bind(TokenMapper).to(TokenMapper);
 };
 
 const registerAllDependencies = (dbURL: string, dbName: string): void => {
